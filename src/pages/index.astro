@@ -12,6 +12,7 @@ const featuredExperiment = allExperiments.find(e => e.id.includes('where-ai-actu
 const otherExperiments = allExperiments.filter(e => e.id !== featuredExperiment?.id).slice(0, 3);
 const recentWork = allWork.sort((a, b) => b.data.date.localeCompare(a.data.date)).slice(0, 2);
 const recentNotes = allNotes.sort((a, b) => b.data.date.localeCompare(a.data.date)).slice(0, 3);
+const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.data.date)).slice(0, 3);
 ---
 
 <BaseLayout title="Architecture AI Lab — Jorge Ludeña">
