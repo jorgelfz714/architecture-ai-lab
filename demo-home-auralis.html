@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Architecture AI Lab — Jorge Ludeña</title>
+  <meta name="description" content="Digital laboratory exploring the intersection of architecture, artificial intelligence, housing, and computational workflows." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #F7F7F4;
+      --bg-2: #FFFFFF;
+      --bg-3: #EFEFEA;
+      --text-1: #0D0D0D;
+      --text-2: #383834;
+      --text-3: #686862;
+      --text-4: #989890;
+      --border: rgba(0, 0, 0, 0.08);
+      --border-mid: rgba(0, 0, 0, 0.16);
+      --sans: 'Inter', system-ui, -apple-system, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+      --serif: 'Newsreader', Georgia, serif;
+      --pill: 9999px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text-1);
+      -webkit-font-smoothing: antialiased;
+      scroll-behavior: smooth;
+      font-size: 15px;
+    }
+    body { min-height: 100vh; display: flex; flex-direction: column; }
+    a { color: inherit; text-decoration: none; }
+
+    /* HEADER */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: rgba(247, 247, 244, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 2.5rem;
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+    .nav-brand { display: flex; flex-direction: column; }
+    .nav-brand-name { font-family: var(--serif); font-size: 1.2rem; font-weight: 500; color: var(--text-1); letter-spacing: -0.01em; }
+    .nav-brand-sub { font-family: var(--mono); font-size: 0.58rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; }
+    
+    .nav-links { display: flex; gap: 1.75rem; align-items: center; }
+    .nav-lk { font-family: var(--mono); font-size: 0.7rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500; transition: color .15s; }
+    .nav-lk:hover, .nav-lk.act { color: var(--text-1); }
+    .nav-lk.act { font-weight: 700; border-bottom: 2px solid var(--text-1); padding-bottom: 2px; }
+    
+    .nav-status { font-family: var(--mono); font-size: 0.62rem; color: var(--text-3); display: flex; align-items: center; gap: 0.45rem; }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #10B981; box-shadow: 0 0 8px rgba(16, 185, 129, 0.6); }
+
+    /* LAYOUT WRAPPER */
+    .home-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 5rem;
+      width: 100%;
+    }
+
+    /* HERO SECTION WITH AURALIS GLOW */
+    .hero-section {
+      position: relative;
+      padding: 3.5rem 0 3rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3.5rem;
+    }
+    .ambient-mesh-glow {
+      position: absolute;
+      top: -40px;
+      right: 5%;
+      width: 500px;
+      height: 280px;
+      background: linear-gradient(135deg, rgba(232, 121, 249, 0.22), rgba(96, 165, 250, 0.22), rgba(52, 211, 153, 0.18));
+      filter: blur(64px);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .hero-header-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      position: relative;
+      z-index: 1;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .status-pill {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: var(--text-2);
+      background: rgba(0, 0, 0, 0.04);
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--pill);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+    .mono-meta {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      color: var(--text-3);
+      letter-spacing: 0.06em;
+    }
+
+    .hero-main-title {
+      font-size: clamp(2.4rem, 4.8vw, 3.8rem);
+      font-weight: 900;
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+      color: var(--text-1);
+      max-width: 980px;
+      margin-bottom: 1.35rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-lead-text {
+      font-size: 1.12rem;
+      line-height: 1.75;
+      color: var(--text-2);
+      max-width: 840px;
+      margin-bottom: 1.75rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .principle-box {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--text-1);
+      padding: 0.85rem 1.25rem;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-bottom: 2.25rem;
+      position: relative;
+      z-index: 1;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    }
+    .principle-lbl { font-weight: 700; color: var(--text-1); }
+    .principle-txt { color: var(--text-2); }
+
+    /* KPI RIBBON */
+    .kpi-ribbon {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+      padding-top: 1.75rem;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .kpi-item { display: flex; flex-direction: column; }
+    .kpi-val { font-size: 1.45rem; font-weight: 900; color: var(--text-1); letter-spacing: -0.03em; }
+    .kpi-lbl { font-family: var(--mono); font-size: 0.58rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.15rem; }
+    .kpi-sep { color: rgba(0, 0, 0, 0.15); font-family: var(--mono); font-size: 1.2rem; }
+
+    /* FEATURED DOSSIER SECTION */
+    .featured-section {
+      margin-bottom: 4.5rem;
+    }
+    .sec-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .sec-kicker {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-1);
+    }
+    .sec-title {
+      font-size: 1.65rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: var(--text-1);
+      margin-bottom: 0.25rem;
+    }
+    .sec-sub { font-size: 0.88rem; color: var(--text-3); margin-bottom: 0; }
+    .sec-link {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--text-1);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+      padding-bottom: 2px;
+      transition: all 0.15s;
+    }
+    .sec-link:hover { border-color: var(--text-1); padding-right: 3px; }
+
+    .featured-dossier-card {
+      background: var(--bg-2);
+      border: 1.5px solid var(--text-1);
+      border-radius: 20px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.05);
+      transition: box-shadow .2s;
+    }
+    .featured-dossier-card:hover {
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+    }
+    .dossier-left {
+      padding: 2.75rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .dossier-tag-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.15rem;
+    }
+    .badge-featured {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      background: var(--text-1);
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--pill);
+    }
+    .badge-peer {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: #059669;
+      background: rgba(5, 150, 105, 0.1);
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--pill);
+    }
+    .badge-doi {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      color: var(--text-3);
+    }
+    .dossier-title {
+      font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      color: var(--text-1);
+      margin-bottom: 1rem;
+    }
+    .dossier-title a { color: inherit; }
+    .dossier-desc {
+      font-size: 0.94rem;
+      line-height: 1.68;
+      color: var(--text-2);
+      margin-bottom: 1.75rem;
+    }
+
+    /* MINI ACCURACY BARS IN HERO */
+    .mini-accuracy-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin-bottom: 2rem;
+      background: var(--bg);
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+    .bar-col { display: flex; flex-direction: column; gap: 0.25rem; }
+    .bar-header { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.62rem; color: var(--text-2); }
+    .bar-header b { font-weight: 800; color: var(--text-1); }
+    .bar-bg { width: 100%; height: 5px; background: rgba(0, 0, 0, 0.08); border-radius: var(--pill); overflow: hidden; }
+    .bar-fill { height: 100%; background: var(--text-1); border-radius: var(--pill); }
+
+    .dossier-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .author-inline { display: flex; align-items: center; gap: 0.65rem; font-size: 0.78rem; }
+    .author-circle {
+      width: 32px;
+      height: 32px;
+      background: var(--text-1);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.7rem;
+    }
+    .author-inline strong { display: block; color: var(--text-1); }
+    .author-inline span { font-size: 0.65rem; color: var(--text-3); font-family: var(--mono); }
+
+    .btn-dossier-cta {
+      background: var(--text-1);
+      color: #FFFFFF;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.55rem 1.35rem;
+      border-radius: var(--pill);
+      transition: transform 0.15s, opacity 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-dossier-cta:hover { transform: translateY(-1px); opacity: 0.9; }
+
+    /* RIGHT MESH PREVIEW BOX */
+    .dossier-right {
+      background: linear-gradient(135deg, #E879F9, #C084FC, #818CF8, #60A5FA, #34D399, #F472B6);
+      background-size: 300% 300%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .mesh-preview-box { width: 100%; max-width: 380px; position: relative; z-index: 2; }
+    .glass-inner-quote {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 16px;
+      padding: 1.75rem;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+    }
+    .quote-header {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.85rem;
+    }
+    .qh-status { color: #059669; font-weight: 700; }
+    .quote-text {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      line-height: 1.5;
+      font-style: italic;
+      color: var(--text-1);
+      margin-bottom: 1.25rem;
+    }
+    .quote-toolchain {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      color: var(--text-3);
+      padding-top: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+    .chip-sm {
+      background: rgba(0, 0, 0, 0.04);
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      color: var(--text-2);
+    }
+
+    /* CARD GRID */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+    .content-section { margin-bottom: 4.5rem; }
+
+    .auralis-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.02);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .auralis-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    }
+    .auralis-card.featured { border: 1.5px solid var(--text-1); }
+    .card-top { margin-bottom: 1.25rem; }
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.62rem;
+      color: var(--text-3);
+      margin-bottom: 0.65rem;
+      font-family: var(--mono);
+    }
+    .category-badge {
+      text-transform: uppercase;
+      color: var(--text-1);
+      font-weight: 700;
+      background: rgba(0, 0, 0, 0.045);
+      padding: 0.15rem 0.5rem;
+      border-radius: var(--pill);
+    }
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+      color: var(--text-1);
+      margin-bottom: 0.55rem;
+    }
+    .card-desc { font-size: 0.86rem; line-height: 1.62; color: var(--text-2); }
+    .card-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+      gap: 0.75rem;
+    }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .tag {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      color: var(--text-3);
+      background: var(--bg-3);
+      padding: 0.15rem 0.5rem;
+      border-radius: var(--pill);
+    }
+    .card-arrow {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--text-1);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .split-section { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+    .vertical-cards { display: flex; flex-direction: column; gap: 1.25rem; }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      background: var(--bg-2);
+      padding: 1.75rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: auto;
+    }
+    footer div { font-family: var(--mono); line-height: 1.5; }
+    footer .fl { font-size: 0.64rem; color: var(--text-3); }
+    footer .fr { font-size: 0.62rem; color: var(--text-4); }
+
+    @media (max-width: 900px) {
+      .featured-dossier-card { grid-template-columns: 1fr; }
+      .dossier-right { padding: 2rem 1.5rem; }
+      .split-section { grid-template-columns: 1fr; gap: 2.5rem; }
+      .kpi-ribbon { gap: 1rem; }
+      .kpi-sep { display: none; }
+      .nav-top { padding: 0.75rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="nav">
+    <div class="nav-top">
+      <a href="/demo-home-auralis.html" class="nav-brand">
+        <span class="nav-brand-name">Architecture AI Lab</span>
+        <span class="nav-brand-sub">Empirical Research &amp; Computational Heuristics</span>
+      </a>
+      <nav class="nav-links">
+        <a href="/demo-home-auralis.html" class="nav-lk act">Home</a>
+        <a href="/demo-auralis-style.html" class="nav-lk">Dossier EXP_004</a>
+        <a href="/Google_Stitch/index.html" class="nav-lk">Stitch Archive</a>
+      </nav>
+      <div class="nav-status">
+        <span class="status-dot"></span>
+        <span>Node Online</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="home-wrap">
+    
+    <!-- HERO / IDENTITY -->
+    <section class="hero-section">
+      <div class="ambient-mesh-glow"></div>
+      
+      <div class="hero-header-meta">
+        <span class="status-pill">
+          <span class="status-dot"></span>
+          DIGITAL RESEARCH LABORATORY // MADRID &bull; ETSAM
+        </span>
+        <span class="mono-meta">CYCLE 2026.2 &bull; OPEN SCIENCE</span>
+      </div>
+
+      <h1 class="hero-main-title">
+        Arquitectura, Inteligencia Artificial y Razonamiento Espacial
+      </h1>
+
+      <p class="hero-lead-text">
+        Espacio de investigación empírica y computacional dirigido por <strong>Jorge Ludeña</strong> (ETSAM). Evaluamos con rigor matemático los modelos de frontera, la síntesis topológica IFC y los límites físicos reales de la IA en la disciplina arquitectónica.
+      </p>
+
+      <div class="principle-box">
+        <span class="principle-lbl">Principio Rector:</span>
+        <span class="principle-txt">Jorge Ludeña selecciona, dirige y aprueba &bull; La IA investiga, desarrolla, diseña e implementa.</span>
+      </div>
+
+      <div class="kpi-ribbon">
+        <div class="kpi-item">
+          <span class="kpi-val">4</span>
+          <span class="kpi-lbl">Modelos Testeados</span>
+        </div>
+        <div class="kpi-sep">/</div>
+        <div class="kpi-item">
+          <span class="kpi-val">9</span>
+          <span class="kpi-lbl">Dominios de Tareas AEC</span>
+        </div>
+        <div class="kpi-sep">/</div>
+        <div class="kpi-item">
+          <span class="kpi-val">100%</span>
+          <span class="kpi-lbl">Evaluación Empírica</span>
+        </div>
+        <div class="kpi-sep">/</div>
+        <div class="kpi-item">
+          <span class="kpi-val">$0.00</span>
+          <span class="kpi-lbl">Infraestructura Serverless</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURED BENCHMARK DOSSIER CARD -->
+    <section class="featured-section">
+      <div class="sec-label-row">
+        <span class="sec-kicker">★ INVESTIGACIÓN CENTRAL // DOSSIER ACTIVO</span>
+        <a href="/Google_Stitch/index.html" class="sec-link">Explorar Versiones en Google Stitch &rarr;</a>
+      </div>
+
+      <div class="featured-dossier-card">
+        <div class="dossier-left">
+          <div class="dossier-tag-row">
+            <span class="badge-featured">EXPERIMENT 01</span>
+            <span class="badge-peer">PEER-REVIEWED DRAFT</span>
+            <span class="badge-doi">DOI: 10.1038/arch.ai.2026.042</span>
+          </div>
+
+          <h2 class="dossier-title">
+            <a href="/demo-auralis-style.html">Where AI Actually Works in AEC (and Where It Fails)</a>
+          </h2>
+
+          <p class="dossier-desc">
+            Benchmark empírico que mapea con precisión matemática en qué flujos de trabajo la IA acelera la producción (RAG normativo 94%, Grasshopper 88%) y en cuáles tropieza con una barrera física insalvable (coordinación 2D/3D y edición topológica directa de IFC).
+          </p>
+
+          <div class="mini-accuracy-bars">
+            <div class="bar-col">
+              <div class="bar-header"><span>Building Code &amp; Zoning RAG</span><b>94%</b></div>
+              <div class="bar-bg"><div class="bar-fill" style="width: 94%;"></div></div>
+            </div>
+            <div class="bar-col">
+              <div class="bar-header"><span>Grasshopper Parametric Python</span><b>88%</b></div>
+              <div class="bar-bg"><div class="bar-fill" style="width: 88%;"></div></div>
+            </div>
+            <div class="bar-col">
+              <div class="bar-header"><span>Multi-drawing Coordination</span><b style="color:#DC2626;">0% (Falla Estructural)</b></div>
+              <div class="bar-bg"><div class="bar-fill" style="width: 4%; background:#DC2626;"></div></div>
+            </div>
+          </div>
+
+          <div class="dossier-footer">
+            <div class="author-inline">
+              <div class="author-circle">JL</div>
+              <div>
+                <strong>Jorge Ludeña</strong>
+                <span>ETSAM Dept. Mecánica Estructural</span>
+              </div>
+            </div>
+            <a href="/demo-auralis-style.html" class="btn-dossier-cta">
+              Explorar Dossier Técnico Completo &rarr;
+            </a>
+          </div>
+        </div>
+
+        <!-- RIGHT MESH PREVIEW BOX -->
+        <div class="dossier-right">
+          <div class="mesh-preview-box">
+            <div class="glass-inner-quote">
+              <div class="quote-header">
+                <span class="qh-lbl">Pregunta Central // Inquirir</span>
+                <span class="qh-status">&bull; Lab Inquiry</span>
+              </div>
+              <p class="quote-text">
+                &ldquo;Why does frontier AI struggle with authentic spatial reasoning in AEC, and in which specific computational inflection points does it deliver undeniable structural and workflow value?&rdquo;
+              </p>
+              <div class="quote-toolchain">
+                <span>Stack:</span>
+                <span class="chip-sm">GPT-4o</span>
+                <span class="chip-sm">Claude 3.5</span>
+                <span class="chip-sm">IFC 4.3</span>
+                <span class="chip-sm">Speckle</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OTHER RESEARCH & EXPERIMENTS -->
+    <section class="content-section">
+      <div class="sec-label-row">
+        <div>
+          <h2 class="sec-title">Ensayos Técnicos &amp; Métodos</h2>
+          <p class="sec-sub">Protocolos abiertos, análisis de geometría y pruebas de estrés de modelos.</p>
+        </div>
+        <a href="/demo-auralis-style.html" class="sec-link">Ver dossier completo &rarr;</a>
+      </div>
+
+      <div class="card-grid">
+        <article class="auralis-card featured">
+          <div class="card-top">
+            <div class="card-meta">
+              <span class="category-badge">BENCHMARK</span>
+              <span class="id-badge" style="color:#059669; font-weight:700;">EXP_004</span>
+              <span class="read-time">14 min read</span>
+            </div>
+            <h3 class="card-title">
+              <a href="/demo-auralis-style.html">Where AI Actually Works in AEC (and Where It Fails)</a>
+            </h3>
+            <p class="card-desc">Evaluación cuantitativa de modelos de frontera en 9 dominios arquitectónicos. De la síntesis de código a la ceguera espacial.</p>
+          </div>
+          <div class="card-bottom">
+            <div class="tag-list">
+              <span class="tag">AI</span>
+              <span class="tag">AEC</span>
+              <span class="tag">IFC 4.3</span>
+              <span class="tag">Heuristics</span>
+            </div>
+            <a href="/demo-auralis-style.html" class="card-arrow"><span>Leer</span> &rarr;</a>
+          </div>
+        </article>
+
+        <article class="auralis-card">
+          <div class="card-top">
+            <div class="card-meta">
+              <span class="category-badge">SISTEMAS</span>
+              <span class="read-time">8 min read</span>
+            </div>
+            <h3 class="card-title">Sistema de Clasificación Espacial Automatizado</h3>
+            <p class="card-desc">Pipeline computacional para enriquecer modelos IFC con taxonomías espaciales y cumplimiento de programas funcionales.</p>
+          </div>
+          <div class="card-bottom">
+            <div class="tag-list">
+              <span class="tag">IFC</span>
+              <span class="tag">Taxonomía</span>
+              <span class="tag">BIM</span>
+            </div>
+            <span class="card-arrow" style="opacity:0.6;">Próximamente</span>
+          </div>
+        </article>
+
+        <article class="auralis-card">
+          <div class="card-top">
+            <div class="card-meta">
+              <span class="category-badge">MANIFIESTO</span>
+              <span class="read-time">5 min read</span>
+            </div>
+            <h3 class="card-title">Manifiesto del Laboratorio: Tectónica &amp; Precisión</h3>
+            <p class="card-desc">Por qué la arquitectura necesita verificación física y modelos deterministas frente a la seducción de las imágenes difusas.</p>
+          </div>
+          <div class="card-bottom">
+            <div class="tag-list">
+              <span class="tag">Manifiesto</span>
+              <span class="tag">Epistemología</span>
+            </div>
+            <span class="card-arrow" style="opacity:0.6;">Lectura</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="fl">
+      <strong>Architecture AI Lab</strong> &bull; Jorge Ludeña &bull; ETSAM Dept. Mecánica Estructural &bull; Madrid, Spain
+    </div>
+    <div class="fr">
+      Open Science &bull; MIT License &bull; Costo Recurrente $0.00/mes
+    </div>
+  </footer>
+
+</body>
+</html>

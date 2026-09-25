@@ -1,0 +1,54 @@
+{
+  "project": "Architecture AI Lab — AEC AI Empirical Evaluation",
+  "author": "Jorge Ludeña",
+  "stitchExportVersion": "2.1",
+  "generatedAt": "2026-09-24T17:30:00-05:00",
+  "targetURL": "http://localhost:4321",
+  "activeVersion": "v2-auralis-canonical",
+  "versions": [
+    {
+      "id": "v2-auralis-canonical",
+      "name": "Versión Canónica — Auralis Original + Estructura Comprimida (Activa)",
+      "file": "v2-auralis-dark-accent.html",
+      "isPrimary": true,
+      "description": "Colores originales de Auralis (piedra cálida, blanco puro, negro azabache #0D0D0D, gradiente de malla animado multicromático, frosted glass y caja CTA oscura) fusionados con la estructura comprimida de la nueva versión (subnav de pasos, hero compacto, sidebar DOCUMENT SECTIONS con botones anterior/siguiente y páginas, y navegación entre secciones).",
+      "palette": {
+        "bg": "#F7F7F4",
+        "card": "#FFFFFF",
+        "ctaBox": "#0D0D0D",
+        "meshGlow": "#E879F9, #60A5FA, #34D399",
+        "text1": "#0D0D0D"
+      },
+      "localUrl": "http://localhost:4321/demo-auralis-style.html"
+    },
+    {
+      "id": "v1-paper-editorial",
+      "name": "Versión 1 — Paper Editorial Clásico",
+      "file": "v1-paper-editorial.html",
+      "isPrimary": false,
+      "description": "Diagramación editorial original con tipografía Newsreader serif, layout de 2 columnas comprimido, TOC lateral y estética científica sobria monocromática.",
+      "palette": {
+        "bg": "#FAFAF7",
+        "card": "#FFFFFF",
+        "border": "#E8E8E2",
+        "text": "#1A1A1A"
+      },
+      "localUrl": "http://localhost:4321/demo-where-ai-works-aec.html"
+    },
+    {
+      "id": "v3-paper-auralis-pastel",
+      "name": "Versión 3 — Exploración Paper Editorial + Pastel",
+      "file": "v3-paper-auralis-pastel.html",
+      "isPrimary": false,
+      "description": "Exploración de la diagramación del Paper Editorial enriquecido con tonalidades suaves y pasteles (salvia, lavanda, durazno) y fondos claros sin negro.",
+      "palette": {
+        "bg": "#F8F9F6",
+        "card": "#FFFFFF",
+        "pastelSage": "#C8D7CE",
+        "pastelLavender": "#E8E2F5",
+        "pastelPeach": "#FDE8DE"
+      },
+      "localUrl": "http://localhost:4321/demo-paper-auralis-pastel.html"
+    }
+  ]
+}

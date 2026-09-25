@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Card from '../../components/Card.astro';
+import { getCollection } from 'astro:content';
+
+const allWork = await getCollection('work');
+const sortedWork = allWork.sort((a, b) => b.data.date.localeCompare(a.data.date));
+---
+
+<BaseLayout 
+  title="Proyectos & Sistemas (Work)"
+  description="Investigaciones mayores, sistemas espaciales y prototipos desarrollados en Architecture AI Lab."
+>
+  <header style="margin-bottom: 3rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-subtle);">
+    <p class="mono" style="color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">
+      Colección / Work
+    </p>
+    <h1>Proyectos &amp; Sistemas</h1>
+    <p style="font-size: 1.15rem; color: var(--text-secondary); max-width: 680px;">
+      Investigaciones profundas, metodologías de diseño algorítmico y prototipos espaciales desarrollados o dirigidos por Jorge Ludeña.
+    </p>
+  </header>
+
+  <div class="grid">
+    {sortedWork.map((item) => (
+      <Card
+        title={item.data.title}
+        description={item.data.description}
+        date={item.data.date}
+        href={`/work/${item.id}`}
+        category="work"
+        tags={item.data.tags}
+      />
+    ))}
+  </div>
+</BaseLayout>

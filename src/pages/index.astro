@@ -1,0 +1,615 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Card from '../components/Card.astro';
+import { getCollection } from 'astro:content';
+
+const allExperiments = await getCollection('experiments');
+const allWork = await getCollection('work');
+const allNotes = await getCollection('notes');
+const allResources = await getCollection('resources');
+
+const featuredExperiment = allExperiments.find(e => e.id.includes('where-ai-actually-works-in-aec')) || allExperiments[0];
+const otherExperiments = allExperiments.filter(e => e.id !== featuredExperiment?.id).slice(0, 3);
+const recentWork = allWork.sort((a, b) => b.data.date.localeCompare(a.data.date)).slice(0, 2);
+const recentNotes = allNotes.sort((a, b) => b.data.date.localeCompare(a.data.date)).slice(0, 3);
+---
+
+<BaseLayout title="Architecture AI Lab — Jorge Ludeña">
+  <div class="home-wrap">
+    
+    <!-- HERO / IDENTITY WITH AURALIS GLOW -->
+    <section class="hero-section">
+      <div class="ambient-mesh-glow"></div>
+      
+      <div class="hero-header-meta">
+        <span class="status-pill">
+          <span class="status-dot"></span>
+          DIGITAL RESEARCH LABORATORY // MADRID &bull; ETSAM
+        </span>
+        <span class="mono-meta">CYCLE 2026.2 &bull; OPEN SCIENCE</span>
+      </div>
+
+      <h1 class="hero-main-title">
+        Arquitectura, Inteligencia Artificial y Razonamiento Espacial
+      </h1>
+
+      <p class="hero-lead-text">
+        Espacio de investigación empírica y computacional dirigido por <strong>Jorge Ludeña</strong>. Evaluamos con rigor los modelos de frontera, la síntesis topológica IFC y los límites físicos reales de la IA en la disciplina arquitectónica.
+      </p>
+
+      <!-- Operational Principle Badge -->
+      <div class="principle-box">
+        <span class="principle-lbl">Principio Rector:</span>
+        <span class="principle-txt">Jorge Ludeña selecciona, dirige y aprueba &bull; La IA investiga, desarrolla, diseña e implementa.</span>
+      </div>
+
+      <!-- Quick Metrics Ribbon -->
+      <div class="kpi-ribbon">
+        <div class="kpi-item">
+          <span class="kpi-val">4</span>
+          <span class="kpi-lbl">Modelos de Frontera Testeados</span>
+        </div>
+        <div class="kpi-sep">/</div>
+        <div class="kpi-item">
+          <span class="kpi-val">9</span>
+          <span class="kpi-lbl">Dominios de Tareas AEC</span>
+        </div>
+        <div class="kpi-sep">/</div>
+        <div class="kpi-item">
+          <span class="kpi-val">100%</span>
+          <span class="kpi-lbl">Evaluación Empírica Reproducible</span>
+        </div>
+        <div class="kpi-sep">/</div>
+        <div class="kpi-item">
+          <span class="kpi-val">$0.00</span>
+          <span class="kpi-lbl">Costo Recurrente / Serverless Puro</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURED BENCHMARK DOSSIER (AURALIS HERO CARD) -->
+    {featuredExperiment && (
+      <section class="featured-section">
+        <div class="sec-label-row">
+          <span class="sec-kicker">★ INVESTIGACIÓN CENTRAL // DOSSIER ACTIVO</span>
+          <a href="/experiments" class="sec-link">Ver catálogo completo &rarr;</a>
+        </div>
+
+        <div class="featured-dossier-card">
+          <div class="dossier-left">
+            <div class="dossier-tag-row">
+              <span class="badge-featured">EXPERIMENT 01</span>
+              <span class="badge-peer">PEER-REVIEWED DRAFT</span>
+              <span class="badge-doi">DOI: {featuredExperiment.data.doi || '10.1038/arch.ai.2026.042'}</span>
+            </div>
+
+            <h2 class="dossier-title">
+              <a href={`/experiments/${featuredExperiment.id}`}>{featuredExperiment.data.title}</a>
+            </h2>
+
+            <p class="dossier-desc">
+              Benchmark empírico que mapea con precisión matemática en qué flujos de trabajo la IA acelera la producción (RAG normativo 94%, Grasshopper 88%) y en cuáles tropieza con una barrera física insalvable (coordinación 2D/3D y edición topológica directa de IFC).
+            </p>
+
+            <!-- Accuracy Mini-Bars -->
+            <div class="mini-accuracy-bars">
+              <div class="bar-col">
+                <div class="bar-header"><span>Building Code RAG</span><b>94%</b></div>
+                <div class="bar-bg"><div class="bar-fill" style="width: 94%;"></div></div>
+              </div>
+              <div class="bar-col">
+                <div class="bar-header"><span>Grasshopper Scripting</span><b>88%</b></div>
+                <div class="bar-bg"><div class="bar-fill" style="width: 88%;"></div></div>
+              </div>
+              <div class="bar-col">
+                <div class="bar-header"><span>Multi-drawing Coordination</span><b style="color:#DC2626;">0%</b></div>
+                <div class="bar-bg"><div class="bar-fill" style="width: 4%; background:#DC2626;"></div></div>
+              </div>
+            </div>
+
+            <div class="dossier-footer">
+              <div class="author-inline">
+                <div class="author-circle">JL</div>
+                <div>
+                  <strong>Jorge Ludeña</strong>
+                  <span>ETSAM Dept. Mecánica Estructural</span>
+                </div>
+              </div>
+              <a href={`/experiments/${featuredExperiment.id}`} class="btn-dossier-cta">
+                Explorar Dossier Técnico Completo &rarr;
+              </a>
+            </div>
+          </div>
+
+          <!-- Glassmorphic Preview Card on Right -->
+          <div class="dossier-right">
+            <div class="mesh-preview-box">
+              <div class="glass-inner-quote">
+                <div class="quote-header">
+                  <span class="qh-lbl">Pregunta Central // Inquirir</span>
+                  <span class="qh-status">&bull; Lab Inquiry</span>
+                </div>
+                <p class="quote-text">
+                  &ldquo;Why does frontier AI struggle with authentic spatial reasoning in AEC, and in which specific computational inflection points does it deliver undeniable structural and workflow value?&rdquo;
+                </p>
+                <div class="quote-toolchain">
+                  <span>Stack:</span>
+                  <span class="chip-sm">GPT-4o</span>
+                  <span class="chip-sm">Claude 3.5</span>
+                  <span class="chip-sm">IFC 4.3</span>
+                  <span class="chip-sm">Speckle</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- EXPERIMENTS & RESEARCH CATALOG SECTION -->
+    <section class="content-section">
+      <div class="sec-label-row">
+        <div>
+          <h2 class="sec-title">Ensayos Técnicos &amp; Métodos</h2>
+          <p class="sec-sub">Protocolos abiertos, análisis de geometría y pruebas de estrés de modelos.</p>
+        </div>
+        <a href="/experiments" class="sec-link">Ver todos los experimentos &rarr;</a>
+      </div>
+
+      <div class="card-grid">
+        {allExperiments.map((item) => (
+          <Card
+            title={item.data.title}
+            description={item.data.description}
+            date={item.data.date}
+            href={`/experiments/${item.id}`}
+            category="experiment"
+            tags={item.data.tags}
+            idCode={item.data.idCode}
+            readingTime={item.data.readingTime}
+            isFeatured={item.id === featuredExperiment?.id}
+          />
+        ))}
+      </div>
+    </section>
+
+    <!-- WORK & PROTOCOLS GRID -->
+    <section class="content-section">
+      <div class="sec-label-row">
+        <div>
+          <h2 class="sec-title">Proyectos &amp; Sistemas</h2>
+          <p class="sec-sub">Investigaciones espaciales, marcos computacionales y aplicaciones prácticas.</p>
+        </div>
+        <a href="/work" class="sec-link">Explorar proyectos &rarr;</a>
+      </div>
+
+      <div class="card-grid">
+        {recentWork.map((item) => (
+          <Card
+            title={item.data.title}
+            description={item.data.description}
+            date={item.data.date}
+            href={`/work/${item.id}`}
+            category="work"
+            tags={item.data.tags}
+          />
+        ))}
+      </div>
+    </section>
+
+    <!-- FIELD NOTES & RESOURCES SPLIT -->
+    <section class="content-section split-section">
+      <div class="split-col">
+        <div class="sec-label-row">
+          <div>
+            <h2 class="sec-title">Field Notes</h2>
+            <p class="sec-sub">Observaciones y notas de laboratorio en desarrollo.</p>
+          </div>
+          <a href="/notes" class="sec-link">Ver todas &rarr;</a>
+        </div>
+        <div class="vertical-cards">
+          {recentNotes.map((item) => (
+            <Card
+              title={item.data.title}
+              description={item.data.description}
+              date={item.data.date}
+              href={`/notes/${item.id}`}
+              category="note"
+              tags={item.data.tags}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div class="split-col">
+        <div class="sec-label-row">
+          <div>
+            <h2 class="sec-title">Recursos &amp; Manifiestos</h2>
+            <p class="sec-sub">Taxonomías, prompts verificados y estándares éticos.</p>
+          </div>
+          <a href="/resources" class="sec-link">Ver todos &rarr;</a>
+        </div>
+        <div class="vertical-cards">
+          {recentResources.map((item) => (
+            <Card
+              title={item.data.title}
+              description={item.data.description}
+              date={item.data.date}
+              href={`/resources/${item.id}`}
+              category="resource"
+              tags={item.data.tags}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .home-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 5rem;
+  }
+
+  /* HERO SECTION WITH AURALIS GLOW */
+  .hero-section {
+    position: relative;
+    padding: 3.5rem 0 3rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    margin-bottom: 3.5rem;
+  }
+  .ambient-mesh-glow {
+    position: absolute;
+    top: -50px;
+    right: 5%;
+    width: 480px;
+    height: 260px;
+    background: linear-gradient(135deg, rgba(232, 121, 249, 0.22), rgba(96, 165, 250, 0.22), rgba(52, 211, 153, 0.18));
+    filter: blur(60px);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero-header-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    position: relative;
+    z-index: 1;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .status-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: #383834;
+    background: rgba(0, 0, 0, 0.04);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+  }
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10B981;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+  }
+  .mono-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: #686862;
+    letter-spacing: 0.06em;
+  }
+
+  .hero-main-title {
+    font-size: clamp(2.4rem, 4.8vw, 3.8rem);
+    font-weight: 900;
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+    color: #0D0D0D;
+    max-width: 980px;
+    margin-bottom: 1.35rem;
+    position: relative;
+    z-index: 1;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  .hero-lead-text {
+    font-size: 1.12rem;
+    line-height: 1.75;
+    color: #383834;
+    max-width: 840px;
+    margin-bottom: 1.75rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .principle-box {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-left: 3px solid #0D0D0D;
+    padding: 0.85rem 1.25rem;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 2.25rem;
+    position: relative;
+    z-index: 1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  }
+  .principle-lbl { font-weight: 700; color: #0D0D0D; }
+  .principle-txt { color: #383834; }
+
+  /* KPI RIBBON */
+  .kpi-ribbon {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    flex-wrap: wrap;
+  }
+  .kpi-item { display: flex; flex-direction: column; }
+  .kpi-val { font-size: 1.4rem; font-weight: 900; color: #0D0D0D; font-family: 'Inter', sans-serif; letter-spacing: -0.03em; }
+  .kpi-lbl { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; color: #686862; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.15rem; }
+  .kpi-sep { color: rgba(0, 0, 0, 0.15); font-family: 'JetBrains Mono', monospace; font-size: 1.2rem; }
+
+  /* FEATURED DOSSIER SECTION */
+  .featured-section {
+    margin-bottom: 4.5rem;
+  }
+  .sec-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .sec-kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #0D0D0D;
+  }
+  .sec-title {
+    font-size: 1.65rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: #0D0D0D;
+    margin-bottom: 0.25rem;
+    font-family: 'Inter', sans-serif;
+  }
+  .sec-sub { font-size: 0.88rem; color: #686862; margin-bottom: 0; }
+  .sec-link {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #0D0D0D;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    padding-bottom: 2px;
+    transition: all 0.15s;
+  }
+  .sec-link:hover { border-color: #0D0D0D; padding-right: 3px; }
+
+  .featured-dossier-card {
+    background: #FFFFFF;
+    border: 1.5px solid #0D0D0D;
+    border-radius: 20px;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    overflow: hidden;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.05);
+  }
+  .dossier-left {
+    padding: 2.75rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .dossier-tag-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.15rem;
+  }
+  .badge-featured {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    background: #0D0D0D;
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+  }
+  .badge-peer {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: #059669;
+    background: rgba(5, 150, 105, 0.1);
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+  }
+  .badge-doi {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: #686862;
+  }
+  .dossier-title {
+    font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+    font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    color: #0D0D0D;
+    margin-bottom: 1rem;
+    font-family: 'Inter', sans-serif;
+  }
+  .dossier-title a { color: inherit; text-decoration: none; }
+  .dossier-desc {
+    font-size: 0.94rem;
+    line-height: 1.68;
+    color: #383834;
+    margin-bottom: 1.75rem;
+  }
+
+  /* MINI ACCURACY BARS IN HERO */
+  .mini-accuracy-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin-bottom: 2rem;
+    background: #F7F7F4;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  .bar-col { display: flex; flex-direction: column; gap: 0.25rem; }
+  .bar-header { display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: #383834; }
+  .bar-header b { font-weight: 800; color: #0D0D0D; }
+  .bar-bg { width: 100%; height: 5px; background: rgba(0, 0, 0, 0.08); border-radius: 9999px; overflow: hidden; }
+  .bar-fill { height: 100%; background: #0D0D0D; border-radius: 9999px; }
+
+  .dossier-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .author-inline { display: flex; align-items: center; gap: 0.65rem; font-size: 0.78rem; }
+  .author-circle {
+    width: 32px;
+    height: 32px;
+    background: #0D0D0D;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.7rem;
+    font-family: 'Inter', sans-serif;
+  }
+  .author-inline strong { display: block; color: #0D0D0D; }
+  .author-inline span { font-size: 0.65rem; color: #686862; font-family: 'JetBrains Mono', monospace; }
+
+  .btn-dossier-cta {
+    background: #0D0D0D;
+    color: #FFFFFF;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.55rem 1.35rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: transform 0.15s, opacity 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .btn-dossier-cta:hover { transform: translateY(-1px); opacity: 0.9; }
+
+  /* RIGHT MESH PREVIEW BOX */
+  .dossier-right {
+    background: linear-gradient(135deg, #E879F9, #C084FC, #818CF8, #60A5FA, #34D399, #F472B6);
+    background-size: 300% 300%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .mesh-preview-box { width: 100%; max-width: 380px; position: relative; z-index: 2; }
+  .glass-inner-quote {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 1.75rem;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+  }
+  .quote-header {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    color: #686862;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.85rem;
+  }
+  .qh-status { color: #059669; font-weight: 700; }
+  .quote-text {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    font-style: italic;
+    color: #0D0D0D;
+    margin-bottom: 1.25rem;
+  }
+  .quote-toolchain {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    color: #686862;
+    padding-top: 0.85rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  .chip-sm {
+    background: rgba(0, 0, 0, 0.04);
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    color: #383834;
+  }
+
+  /* CONTENT SECTIONS & GRIDS */
+  .content-section {
+    margin-bottom: 4.5rem;
+  }
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+  .split-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+  .vertical-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 900px) {
+    .featured-dossier-card { grid-template-columns: 1fr; }
+    .dossier-right { padding: 2rem 1.5rem; }
+    .split-section { grid-template-columns: 1fr; gap: 2.5rem; }
+    .kpi-ribbon { gap: 1rem; }
+    .kpi-sep { display: none; }
+  }
+</style>

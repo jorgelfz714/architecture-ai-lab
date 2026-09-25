@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Card from '../../components/Card.astro';
+import { getCollection } from 'astro:content';
+
+const allResources = await getCollection('resources');
+const sortedResources = allResources.sort((a, b) => b.data.date.localeCompare(a.data.date));
+---
+
+<BaseLayout 
+  title="Recursos (Resources)"
+  description="Prompts comprobados, metodologías, flujos de trabajo y herramientas curadas para arquitectos."
+>
+  <header style="margin-bottom: 3rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-subtle);">
+    <p class="mono" style="color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">
+      Colección / Resources
+    </p>
+    <h1>Recursos</h1>
+    <p style="font-size: 1.15rem; color: var(--text-secondary); max-width: 680px;">
+      Conocimiento reusable: guías de prompts, flujos de automatización y plantillas prácticas para arquitectos e investigadores.
+    </p>
+  </header>
+
+  <div class="grid">
+    {sortedResources.map((item) => (
+      <Card
+        title={item.data.title}
+        description={item.data.description}
+        date={item.data.date}
+        href={`/resources/${item.id}`}
+        category="resource"
+        tags={item.data.tags}
+      />
+    ))}
+  </div>
+</BaseLayout>

@@ -1,0 +1,1191 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('experiments');
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const isAECBenchmark = entry.id.includes('where-ai-actually-works-in-aec');
+---
+
+{isAECBenchmark ? (
+  <BaseLayout 
+    title={entry.data.title} 
+    description={entry.data.description}
+    fullWidth={true}
+    showProgress={true}
+  >
+    <!-- SUB-NAV BREADCRUMB + INTEGRATED PREV/NEXT CONTROLS -->
+    <div class="nav-crumb">
+      <div class="crumb-inner">
+        <a href="/experiments" class="crumb-back">&larr; Back to Experiments Archive</a>
+        <span class="crumb-sep">/</span>
+        <span class="crumb-id">{entry.data.idCode || 'EXP_004'}</span>
+        <span class="crumb-sep">/</span>
+        <span class="crumb-act">AEC_EVALUATION</span>
+
+        <div class="crumb-meta">
+          <span>&bull; PUBLISHED: <b>{entry.data.date}</b></span>
+          {entry.data.peerReviewed && <span>PEER REVIEWED</span>}
+          <span>READING TIME: <b>{entry.data.readingTime || '14 MIN'}</b></span>
+          <span>LATENCY BENCHMARK: <b>ACTIVE</b></span>
+
+          <!-- Step navigation controls -->
+          <div class="nav-step-ctrls">
+            <button id="btnPrevCrumb" class="btn-step" title="Sección Anterior" onclick="navigateStep(-1)">&larr;</button>
+            <span id="stepIndicator" class="step-num">SEC 00 / 05</span>
+            <button id="btnNextCrumb" class="btn-step" title="Siguiente Sección" onclick="navigateStep(1)">&rarr;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPACT HERO HEADER (Auralis Colors & Visuals) -->
+    
+    <!-- FLOATING TOAST NOTIFICATION -->
+    <div id="toast">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      <span id="toast-msg">DOI copiado al portapapeles</span>
+    </div>
+
+    <!-- MOBILE SECTIONS MODAL -->
+    <div id="mobile-toc-modal" onclick="if(event.target===this)closeMobileMenu()">
+      <div class="mobile-toc-card">
+        <div class="mobile-toc-head">
+          <span class="mobile-toc-title">Document Sections</span>
+          <button class="btn-close-modal" onclick="closeMobileMenu()" aria-label="Cerrar">&times;</button>
+        </div>
+        <div class="mobile-toc-list">
+          <div class="mobile-toc-item" onclick="goToSection('s00');closeMobileMenu();">
+            <span>00. Hypothesis &amp; Central Inquiry</span>
+            <span class="mobile-toc-pg">p. 01</span>
+          </div>
+          <div class="mobile-toc-item" onclick="goToSection('s01');closeMobileMenu();">
+            <span>01. Where AI Performs Well</span>
+            <span class="mobile-toc-pg">p. 03</span>
+          </div>
+          <div class="mobile-toc-item" onclick="goToSection('s02');closeMobileMenu();">
+            <span>02. Capability Matrix</span>
+            <span class="mobile-toc-pg">p. 05</span>
+          </div>
+          <div class="mobile-toc-item" onclick="goToSection('s03');closeMobileMenu();">
+            <span>03. Structural Ceiling</span>
+            <span class="mobile-toc-pg">p. 07</span>
+          </div>
+          <div class="mobile-toc-item" onclick="goToSection('s04');closeMobileMenu();">
+            <span>04. Core Learnings</span>
+            <span class="mobile-toc-pg">p. 09</span>
+          </div>
+          <div class="mobile-toc-item" onclick="goToSection('s05');closeMobileMenu();">
+            <span>05. Practical Strategy</span>
+            <span class="mobile-toc-pg">p. 11</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <header class="hero">
+      <div class="hero-glow"></div>
+      <div class="hero-inner">
+        <div class="hero-label">
+          <div class="hero-badge-pill">
+            <span class="status-dot"></span>
+            EMPIRICAL RESEARCH REPORT // BENCHMARK 2026.1
+          </div>
+          <span style="font-weight:700; color:var(--text-1); font-family:var(--font-mono);">ID: {entry.data.idCode || 'EXP-AEC-8840'}</span>
+        </div>
+        <h1 class="hero-title">{entry.data.title}</h1>
+        <p class="hero-abstract">{entry.data.description}</p>
+
+        <div class="hero-meta">
+          <div class="author-block">
+            <div class="author-avatar">JL</div>
+            <div>
+              <div class="author-name">Jorge Ludeña <span class="author-badge">P.I.</span></div>
+              <div class="author-affil">Architecture AI Lab, Madrid &bull; ETSAM Structural Mechanics Dept &bull; DOI: <b>{entry.data.doi || '10.1038/arch.ai.2026.042'}</b></div>
+            </div>
+          </div>
+          <div class="hero-actions">
+            <button class="btn-pill" onclick="window.print()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              PDF Report
+            </button>
+            <button class="btn-out" onclick="copyCitation()" title="Copiar cita BibTeX / DOI">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Cite (.bib)
+            </button>
+          </div>
+        </div>
+
+        {entry.data.tools && (
+          <div class="toolchain-chips">
+            <span class="chip gr">&bull; Peer Reviewed</span>
+            {entry.data.tools.map((tool: string) => (
+              <span class="chip">{tool}</span>
+            ))}
+          </div>
+        )}
+      </div>
+    </header>
+
+    <!-- TWO-COLUMN DENSE LAYOUT (New Structure + Auralis Colors) -->
+    <div class="layout">
+      
+      <!-- STICKY SIDEBAR: EXACT DOCUMENT SECTIONS -->
+      <aside class="sidebar">
+        <div class="sidebar-top">
+          <div class="sidebar-label">Document Sections</div>
+          <ul class="toc" id="toc">
+            <li><a href="#s00" id="t00" class="cur"><span>00. Central Inquiry</span><span class="toc-pg">p. 01</span></a></li>
+            <li><a href="#s01" id="t01"><span>01. AI Excels: Text &amp; Code</span><span class="toc-pg">p. 03</span></a></li>
+            <li><a href="#s02" id="t02"><span>02. AI Struggles: Geometry &amp; BIM</span><span class="toc-pg">p. 06</span></a></li>
+            <li><a href="#s03" id="t03"><span>03. Structural Ceiling Analysis</span><span class="toc-pg">p. 09</span></a></li>
+            <li><a href="#s04" id="t04"><span>04. Core Learnings</span><span class="toc-pg">p. 11</span></a></li>
+            <li><a href="#s05" id="t05"><span>05. Conclusion &amp; Next Steps</span><span class="toc-pg">p. 13</span></a></li>
+          </ul>
+        </div>
+
+        <!-- SIDEBAR NAVIGATION CONTROLS -->
+        <div class="sidebar-nav-box">
+          <div class="sidebar-nav-label">Navegación / Sections</div>
+          <div class="sidebar-nav-btns">
+            <button class="btn-step-pill" onclick="navigateStep(-1)" title="Ir a la sección anterior">&larr; Anterior</button>
+            <button class="btn-step-pill" onclick="navigateStep(1)" title="Ir a la siguiente sección">Siguiente &rarr;</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT COLUMN -->
+      <main class="content">
+
+        <!-- 00. CENTRAL INQUIRY -->
+        <section class="sec" id="s00">
+          <div class="eyebrow">
+            <span>[ Hypothesis &amp; Central Research Question ]</span>
+            <span class="eyebrow-id">Section 00 // Lab Inquiry</span>
+          </div>
+
+          <!-- Canonical Auralis Multi-color Gradient Mesh Card with Frosted Glass Highlight -->
+          <div class="mesh">
+            <div class="glass">
+              <div class="glass-top">
+                <div>
+                  <div class="glass-id">Section 00 &mdash; Central Inquiry</div>
+                  <div class="glass-t">Hypothesis &amp; Research Question</div>
+                </div>
+                <span class="glass-badge">&#9679; Lab Inquiry</span>
+              </div>
+
+              <p class="glass-q">
+                &ldquo;{entry.data.question || 'Why does frontier AI struggle with authentic spatial reasoning in AEC, and in which specific computational inflection points does it deliver undeniable structural and workflow value?'}&rdquo;
+              </p>
+
+              <div class="metrics">
+                <div>
+                  <div class="m-label">Models Tested</div>
+                  <div class="m-val">4 <span>frontier</span></div>
+                </div>
+                <div>
+                  <div class="m-label">Task Categories</div>
+                  <div class="m-val">9 <span>domains</span></div>
+                </div>
+                <div>
+                  <div class="m-label">Benchmark Cycle</div>
+                  <div class="m-val">26.2 <span>active</span></div>
+                </div>
+              </div>
+
+              <p class="glass-body">The architectural engineering industry currently confronts an ontological divide: generative vision models synthesize photographic representations of impossible geometries with high aesthetic coherence, yet fail to reason about the structural physics that would allow those forms to stand.</p>
+
+              <div class="glass-tags">
+                <span class="g-tag">IFC Topology</span>
+                <span class="g-tag">Structural Heuristics</span>
+                <span class="g-tag">Spatial Comprehension</span>
+                <span class="g-tag">Tectonic Intuition</span>
+                <span class="g-tag">Workflow Mapping</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="sec-body-lead">
+            The AEC industry keeps hearing that AI will change everything. But after months of testing tools across real architectural workflows, the picture is more nuanced than the marketing suggests. This is not a review of any single tool. It is a map of where AI currently performs well, where it struggles, and where the ceiling is structurally low &mdash; based on direct experimentation.
+          </p>
+
+          <!-- Section Navigation Row -->
+          <div class="sec-nav-row">
+            <span></span>
+            <button class="btn-nav-next" onclick="goToSection('s01')">Siguiente: 01. AI Excels: Text &amp; Code &rarr;</button>
+          </div>
+        </section>
+
+        <!-- 01. AI EXCELS: TEXT & CODE -->
+        <section class="sec" id="s01">
+          <div class="eyebrow">
+            <span>[ Spatial Cognition &mdash; Strong Performance Domains ]</span>
+            <span class="eyebrow-id">Section 01 // AI Excels</span>
+          </div>
+          <h2 class="sec-h2">Where AI Works Well</h2>
+          <p class="sec-sub">Four domains where frontier models deliver consistent, measurable acceleration in real architectural production pipelines.</p>
+
+          <div class="fg">
+            <div class="fc">
+              <div class="fnum">01 / Text &amp; Narrative</div>
+              <div class="ftit">Text Generation &amp; Summarization</div>
+              <div class="fbody">AI excels at producing first drafts of project descriptions, specification summaries, and competition narratives. The output needs editorial direction, but it eliminates the blank-page problem.</div>
+              <div class="fwf">Brief + program table &rarr; Gemini 2.5 Pro &rarr; structured narrative in &lt;30s</div>
+              <div class="acc">
+                <div class="acc-bg"><div class="acc-fill" style="width:85%"></div></div>
+                <span class="acc-pct">~85%</span>
+              </div>
+              <div class="acc-note">Usable content after light editing</div>
+            </div>
+
+            <div class="fc">
+              <div class="fnum">02 / Parametric Code</div>
+              <div class="ftit">Code Generation for Parametric Tools</div>
+              <div class="fbody">LLMs generate functional Grasshopper C# components, Dynamo Python scripts, and Revit API snippets with high fidelity when prompts provide explicit geometric constraints.</div>
+              <div class="fwf">Fa&ccedil;ade panelization rule &rarr; Claude 3.5 &rarr; working GH C# component</div>
+              <div class="acc">
+                <div class="acc-bg"><div class="acc-fill" style="width:70%"></div></div>
+                <span class="acc-pct">~70%</span>
+              </div>
+              <div class="acc-note">Functional on first attempt &mdash; debugging faster than writing from scratch</div>
+            </div>
+
+            <div class="fc">
+              <div class="fnum">03 / Regulatory Search</div>
+              <div class="ftit">Normative &amp; Code Scanning</div>
+              <div class="fbody">AI quickly scans building codes, zoning ordinances, and accessibility standards. Accelerates the initial compliance check without replacing a registered code consultant.</div>
+              <div class="fwf">CTE DB-SI PDF &rarr; Gemini 2.5 Pro (long context) &rarr; article extraction with citations</div>
+              <div class="acc">
+                <div class="acc-bg"><div class="acc-fill" style="width:92%"></div></div>
+                <span class="acc-pct">~92%</span>
+              </div>
+              <div class="acc-note">Factual retrieval accuracy when source PDF is directly provided</div>
+            </div>
+
+            <div class="fc">
+              <div class="fnum">04 / Conceptual Ideation</div>
+              <div class="ftit">Early-Stage Spatial Prompts &amp; Moodboards</div>
+              <div class="fbody">Multimodal models identify room types, circulation cores, and spatial adjacencies from architectural drawings &mdash; rapid typological comparison at institutional scale.</div>
+              <div class="fwf">Parametric massing sketch &rarr; Midjourney v6.1 / Flux &rarr; atmospheric renders</div>
+              <div class="acc">
+                <div class="acc-bg"><div class="acc-fill" style="width:90%"></div></div>
+                <span class="acc-pct">~90%</span>
+              </div>
+              <div class="acc-note">Aesthetic coherence &mdash; qualitative. ~86% area estimation without explicit scale bars</div>
+            </div>
+          </div>
+
+          <!-- Section Navigation Row -->
+          <div class="sec-nav-row">
+            <button class="btn-nav-prev" onclick="goToSection('s00')">&larr; Anterior: 00. Central Inquiry</button>
+            <button class="btn-nav-next" onclick="goToSection('s02')">Siguiente: 02. AI Struggles: Geometry &amp; BIM &rarr;</button>
+          </div>
+        </section>
+
+        <!-- 02. AI STRUGGLES: GEOMETRY & BIM -->
+        <section class="sec" id="s02">
+          <div class="eyebrow">
+            <span>[ Capability Matrix &mdash; Structural Bottlenecks ]</span>
+            <span class="eyebrow-id">Section 02 // AI Struggles</span>
+          </div>
+          <h2 class="sec-h2">Where AI Struggles</h2>
+          <p class="sec-sub">Structural limitations mapped by task domain, empirical failure mode, ceiling type, and viability horizon.</p>
+
+          <div class="table-wrap">
+            <table class="mtable">
+              <thead>
+                <tr>
+                  <th>Task Domain</th>
+                  <th>AI Performance &amp; Failure Mode</th>
+                  <th>Ceiling Level</th>
+                  <th>Timeframe</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <strong>05. 3D Spatial Geometry Reasoning</strong><br>
+                    <span style="font-size:0.72rem; color:var(--text-4)">Dimensional calc, structural analysis, spatial coordination</span>
+                  </td>
+                  <td>Approximates only. Current models lack spatial reasoning primitives; approximation leads to non-fitting assemblies.</td>
+                  <td><span class="tlimit r">FAIL (0% semantic)</span></td>
+                  <td>Requires paradigm shift beyond sequential transformer architectures.</td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>06. Native BIM / IFC Modification</strong><br>
+                    <span style="font-size:0.72rem; color:var(--text-4)">IFC-compliant geometry, parameters, classification</span>
+                  </td>
+                  <td>Produces loose geometry, not information-rich building models with hierarchical relationships and properties.</td>
+                  <td><span class="tlimit r">FAIL (format corruption)</span></td>
+                  <td>BIM = structured relational data; Generative = probabilistic. Fundamental incompatibility.</td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>07. Construction Documentation</strong><br>
+                    <span style="font-size:0.72rem; color:var(--text-4)">Coordinated plans, sections, details, schedules</span>
+                  </td>
+                  <td>Can draft specification clauses; cannot maintain cross-document coherence across drawing sheets and revisions.</td>
+                  <td><span class="tlimit a">PARTIAL (drift risk)</span></td>
+                  <td>Better context windows and tool-calling may improve reliability in 2&ndash;3 years.</td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>08. Structural Load Calculation &amp; FEA</strong><br>
+                    <span style="font-size:0.72rem; color:var(--text-4)">FEA, load paths, deflection under live loads</span>
+                  </td>
+                  <td>Suggests general typologies but hallucinates load-bearing capacity. Fails deterministic structural mechanics.</td>
+                  <td><span class="tlimit r">FAIL (aesthetic mimicry)</span></td>
+                  <td>Requires integration with deterministic FEA engines (Karamba3D, OpenSees).</td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>09. Cross-discipline Coordination</strong><br>
+                    <span style="font-size:0.72rem; color:var(--text-4)">MEP clash detection, system integration</span>
+                  </td>
+                  <td>Limited to single-domain awareness; cannot maintain global 3D model state across MEP and structural layers.</td>
+                  <td><span class="tlimit a">PARTIAL (false precision)</span></td>
+                  <td>Multi-agent pipelines with spatial querying tools may partially bridge this gap.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Section Navigation Row -->
+          <div class="sec-nav-row">
+            <button class="btn-nav-prev" onclick="goToSection('s01')">&larr; Anterior: 01. AI Excels: Text &amp; Code</button>
+            <button class="btn-nav-next" onclick="goToSection('s03')">Siguiente: 03. Structural Ceiling Analysis &rarr;</button>
+          </div>
+        </section>
+
+        <!-- 03. STRUCTURAL CEILING ANALYSIS -->
+        <section class="sec" id="s03">
+          <div class="eyebrow">
+            <span>[ Architectural Ceilings &mdash; Hard Paradigm Limits ]</span>
+            <span class="eyebrow-id">Section 03 // Low Ceilings</span>
+          </div>
+          <h2 class="sec-h2">Where the Ceiling is Structurally Low</h2>
+          <p class="sec-sub">Domains where foundational mismatches between probabilistic AI and tectonic physics set immutable boundaries.</p>
+
+          <div class="vpair">
+            <div class="vc">
+              <div class="vnum">10 / Visualization</div>
+              <div class="vtit">Rendering &amp; Generative Visualization</div>
+              <div class="vbody">AI image generation produces impressive concept visuals but lacks architectural precision. Fenestration patterns are arbitrary, proportions are approximate, and structural logic is absent. The images look persuasive but are architecturally meaningless.</div>
+              <div class="vverdict">
+                <div class="vvlabel">Verdict</div>
+                STRUCTURAL VERDICT: LOW CEILING &mdash; Useful for early mood boards, unusable for fabrication.
+              </div>
+            </div>
+
+            <div class="vc">
+              <div class="vnum">11 / Site Intelligence</div>
+              <div class="vtit">Site Analysis Automation</div>
+              <div class="vbody">AI processes GIS layers, solar angles, and climate charts rapidly, but the interpretation of site-specific constraints &mdash; sightlines, social memory, cultural context &mdash; remains fundamentally human work that cannot be reduced to statistical pattern matching.</div>
+              <div class="vverdict">
+                <div class="vvlabel">Verdict</div>
+                FORMAT VERDICT: VERY LOW CEILING &mdash; LLMs are probabilistic token predictors, not geometric engines.
+              </div>
+            </div>
+          </div>
+
+          <div class="bench-note">
+            <span class="bi">&#9888;</span>
+            <span><strong style="color:var(--text-1)">Benchmark Note &mdash;</strong> These limitations are not model-size problems. Current transformer architectures lack the spatial reasoning primitives required for reliable geometric computation. Scaling compute does not resolve paradigm mismatches.</span>
+          </div>
+
+          <!-- Section Navigation Row -->
+          <div class="sec-nav-row">
+            <button class="btn-nav-prev" onclick="goToSection('s02')">&larr; Anterior: 02. AI Struggles</button>
+            <button class="btn-nav-next" onclick="goToSection('s04')">Siguiente: 04. Core Learnings &rarr;</button>
+          </div>
+        </section>
+
+        <!-- 04. CORE LEARNINGS -->
+        <section class="sec" id="s04">
+          <div class="eyebrow">
+            <span>[ Physical Tectonics &mdash; Core Empirical Findings ]</span>
+            <span class="eyebrow-id">Section 04 // Core Learnings</span>
+          </div>
+          <h2 class="sec-h2">What I Have Learned</h2>
+          <p class="sec-sub">Four core operational principles derived from direct empirical experimentation across real architectural workflows.</p>
+
+          <div class="llist">
+            <div class="li">
+              <div class="lnum">01</div>
+              <div class="lbody">
+                <strong>Language models understand construction text, not building physics.</strong>
+                <p>This maps directly to how transformer architectures function: sequential pattern matching vs. spatial relationship modeling. The underlying mathematical structure of the model predicts the architecture of its failures.</p>
+              </div>
+            </div>
+
+            <div class="li">
+              <div class="lnum">02</div>
+              <div class="lbody">
+                <strong>AI as syntax generator for deterministic engines is the winning architecture.</strong>
+                <p>Deploying AI to draft, search, and generate initial computational components &mdash; then applying human architectural judgment and deterministic CAD/FEA to constrain &mdash; consistently outperforms pure-AI or pure-manual methods.</p>
+              </div>
+            </div>
+
+            <div class="li">
+              <div class="lnum">03</div>
+              <div class="lbody">
+                <strong>The training data gap in AEC is architectural, not temporal.</strong>
+                <p>A constrained, well-crafted prompt pipeline linked to a specific computational environment (e.g. Grasshopper C#) vastly outperforms any general-purpose &ldquo;AI architect&rdquo; application. Domain specificity provides leverage.</p>
+              </div>
+            </div>
+
+            <div class="li">
+              <div class="lnum">04</div>
+              <div class="lbody">
+                <strong>Multimodal vision is perceptual, not metric.</strong>
+                <p>The vast majority of AI demonstrations in AEC present cherry-picked, non-reproducible outputs. Deterministic reproducibility at contract document quality remains the single hardest barrier in computational practice.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section Navigation Row -->
+          <div class="sec-nav-row">
+            <button class="btn-nav-prev" onclick="goToSection('s03')">&larr; Anterior: 03. Structural Ceiling Analysis</button>
+            <button class="btn-nav-next" onclick="goToSection('s05')">Siguiente: 05. Conclusion &amp; Next Steps &rarr;</button>
+          </div>
+        </section>
+
+        <!-- 05. CONCLUSION & PRACTICAL STRATEGY (AURALIS SIGNATURE DARK CTA BOX) -->
+        <section class="sec" id="s05">
+          <div class="eyebrow">
+            <span>[ Practical Strategy &mdash; Concluding Framework ]</span>
+            <span class="eyebrow-id">Section 05 // Strategy</span>
+          </div>
+
+          <!-- Sleek Dark Auralis CTA Box -->
+          <div class="cta-box">
+            <div>
+              <div class="cta-kick">Strategic Takeaway</div>
+              <h2 class="cta-h2">The future of AEC AI is precision, not magic</h2>
+              <p class="cta-body">AI works in AEC where the task is linguistic, pattern-based, or combinatorial. It fails where the discipline demands spatial precision, multi-drawing coordination, or human tectonic judgment.</p>
+            </div>
+
+            <div>
+              <div class="strat-lbl">Operational Rule of Thumb (20 / 80)</div>
+              <p class="strat-txt">Identify the 20% of your workflow that is text-heavy, repetitive, or search-intensive, and apply AI aggressively there. Leave the remaining 80% to the specialized software and physical judgment that architecture demands. The 80% that remains human is not a limitation &mdash; it is the definition of the discipline.</p>
+              <div class="cta-btns">
+                <button class="btn-wh">&darr; Download Research Report</button>
+                <a href="/experiments" class="btn-gh">Next Experiment &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Signature Block -->
+          <div class="sig-inner">
+            <div class="sig-left">
+              <div class="sig-ava">JL</div>
+              <div>
+                <div class="sig-name">Jorge Ludeña</div>
+                <div class="sig-sub">Architecture AI Lab, Madrid &bull; ETSAM Structural Mechanics Dept &bull; Cycle 2026-2</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:1.25rem; flex-wrap:wrap;">
+              <div class="sig-doi">
+                DOI: <strong>{entry.data.doi || '10.1038/arch.ai.2026.042'}</strong> &bull; {entry.data.idCode || 'EXP-AEC-8840'} &bull; 
+                <span style="font-family:var(--font-mono); font-size:0.6rem; color:#059669; background:rgba(5,150,105,.09); border-radius:var(--pill); padding:0.14rem 0.6rem; font-weight:700;">
+                  &bull; Living Document
+                </span>
+              </div>
+              <a href="/experiments" class="nxt-a">All Experiments &rarr;</a>
+            </div>
+          </div>
+
+          <!-- Section Navigation Row -->
+          <div class="sec-nav-row">
+            <button class="btn-nav-prev" onclick="goToSection('s04')">&larr; Anterior: 04. Core Learnings</button>
+            <span style="font-family:var(--font-mono); font-size:0.65rem; color:var(--text-4)">Final del Dossier // End of Dossier</span>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <!-- Client Script for Step Navigation & Scrollspy -->
+    <script is:inline>
+      const sectionIds = ['s00', 's01', 's02', 's03', 's04', 's05'];
+      let currentSecIndex = 0;
+
+      function goToSection(id) {
+        const el = document.getElementById(id);
+        if (el) {
+          const top = el.offsetTop - 75;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      }
+
+      function navigateStep(direction) {
+        let nextIndex = currentSecIndex + direction;
+        if (nextIndex < 0) nextIndex = 0;
+        if (nextIndex >= sectionIds.length) nextIndex = sectionIds.length - 1;
+        goToSection(sectionIds[nextIndex]);
+      }
+
+      const sections = document.querySelectorAll('.sec');
+      const tocLinks = document.querySelectorAll('.toc li a');
+      const stepIndicator = document.getElementById('stepIndicator');
+
+      window.addEventListener('scroll', () => {
+        let current = 's00';
+        let currentIndex = 0;
+
+        sections.forEach((sec, idx) => {
+          const top = sec.offsetTop - 120;
+          if (window.scrollY >= top) {
+            current = sec.getAttribute('id');
+            currentIndex = idx;
+          }
+        });
+
+        currentSecIndex = currentIndex;
+
+        tocLinks.forEach(link => {
+          link.classList.remove('cur');
+          if (link.getAttribute('href') === '#' + current) {
+            link.classList.add('cur');
+          }
+        });
+
+        if (stepIndicator) {
+          stepIndicator.textContent = `SEC 0${currentIndex} / 05`;
+        }
+      }, { passive: true });
+
+      // Floating Toast Notification
+      function showToast(msg) {
+        const t = document.getElementById('toast');
+        const txt = document.getElementById('toast-msg');
+        if (t && txt) {
+          txt.textContent = msg;
+          t.classList.add('show');
+          clearTimeout(window._toastTimer);
+          window._toastTimer = setTimeout(() => {
+            t.classList.remove('show');
+          }, 2400);
+        }
+      }
+
+      // Copy Citation with BibTeX & DOI
+      function copyCitation() {
+        const bib = `@article{ludena2026where,
+  title={Where AI Actually Works in AEC (and Where It Fails)},
+  author={Ludeña, Jorge},
+  journal={Architecture AI Lab Technical Reports},
+  year={2026},
+  doi={10.1038/arch.ai.2026.042}
+}`;
+        navigator.clipboard.writeText(bib).then(() => {
+          showToast('✓ Cita BibTeX copiada al portapapeles');
+        }).catch(() => {
+          navigator.clipboard.writeText('10.1038/arch.ai.2026.042');
+          showToast('✓ DOI copiado: 10.1038/arch.ai.2026.042');
+        });
+      }
+
+      // Mobile Menu helpers
+      function openMobileMenu() {
+        const m = document.getElementById('mobile-toc-modal');
+        if (m) m.classList.add('open');
+      }
+      function closeMobileMenu() {
+        const m = document.getElementById('mobile-toc-modal');
+        if (m) m.classList.remove('open');
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        if (e.key === 'ArrowRight' || e.key === 'j' || e.key === 'J') {
+          navigateStep(1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'k' || e.key === 'K') {
+          navigateStep(-1);
+        } else if (e.key === 'Escape') {
+          closeMobileMenu();
+        }
+      });
+    </script>
+  </BaseLayout>
+) : (
+  <BaseLayout title={entry.data.title} description={entry.data.description}>
+    <article class="reading-container">
+      <header style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border-subtle);">
+        <div class="card-meta mono" style="margin-bottom: 1.25rem;">
+          <a href="/experiments" style="text-transform: uppercase; color: var(--text-primary); font-weight: 600; text-decoration: underline; text-underline-offset: 3px;">
+            &larr; Volver a Experiments
+          </a>
+          <span>&bull;</span>
+          <time datetime={entry.data.date}>{entry.data.date}</time>
+        </div>
+
+        <h1 style="font-size: clamp(2.2rem, 4vw, 3rem); margin-bottom: 1.25rem; line-height: 1.2;">
+          {entry.data.title}
+        </h1>
+
+        <p style="font-size: 1.18rem; line-height: 1.6; color: var(--text-secondary); margin-bottom: 2rem;">
+          {entry.data.description}
+        </p>
+
+        {(entry.data.question || entry.data.tools) && (
+          <div class="tech-spec-box">
+            {entry.data.question && (
+              <div class="spec-item">
+                <div class="spec-item-title">Pregunta de investigación</div>
+                <p class="spec-item-value" style="margin: 0;">
+                  {entry.data.question}
+                </p>
+              </div>
+            )}
+            {entry.data.tools && (
+              <div class="spec-item">
+                <div class="spec-item-title">Herramientas evaluadas</div>
+                <div class="tag-list" style="margin-top: 0.5rem;">
+                  {entry.data.tools.map((tool: string) => (
+                    <span class="tag">{tool}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {entry.data.tags && entry.data.tags.length > 0 && (
+          <div class="tag-list" style="margin-top: 1rem;">
+            {entry.data.tags.map((tag: string) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+        )}
+      </header>
+
+      <div class="prose">
+        <Content />
+      </div>
+    </article>
+  </BaseLayout>
+)}
+
+<style>
+  :root {
+    --bg: #F7F7F4;
+    --bg-2: #FFFFFF;
+    --bg-3: #F0F0EB;
+    --text-1: #111111;
+    --text-2: #3E3E3A;
+    --text-3: #6B6B65;
+    --text-4: #9A9A92;
+    --border: #E5E5DE;
+    --border-dark: #222222;
+    --pill: 9999px;
+  }
+
+  /* READING PROGRESS */
+  #prog { position: fixed; top: 0; left: 0; z-index: 999; height: 3px; background: var(--text-1); width: 0%; transition: width .08s linear; }
+
+  /* SUB-NAV BREADCRUMB + INTEGRATED PREV/NEXT CONTROLS */
+  .nav-crumb {
+    background: rgba(247, 247, 244, 0.96);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.45rem 2.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    position: sticky;
+    top: 61px;
+    z-index: 100;
+  }
+  .crumb-inner {
+    max-width: 1240px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .crumb-back { color: var(--text-3); transition: color .15s; text-decoration: none; }
+  .crumb-back:hover { color: var(--text-1); }
+  .crumb-sep { color: var(--text-4); }
+  .crumb-id { color: var(--text-2); }
+  .crumb-act { color: var(--text-1); font-weight: 700; }
+  .crumb-meta { margin-left: auto; display: flex; align-items: center; gap: 1.25rem; }
+  .crumb-meta span { color: var(--text-4); }
+  .crumb-meta b { color: var(--text-1); }
+
+  .nav-step-ctrls { display: flex; align-items: center; gap: 0.35rem; margin-left: 0.75rem; padding-left: 0.75rem; border-left: 1px solid var(--border); }
+  .btn-step { font-family: var(--font-mono); font-size: 0.62rem; font-weight: 700; background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--pill); padding: 0.18rem 0.55rem; cursor: pointer; color: var(--text-1); transition: all .15s; }
+  .btn-step:hover { background: var(--text-1); color: #fff; border-color: var(--text-1); }
+  .step-num { font-family: var(--font-mono); font-size: 0.6rem; color: var(--text-3); font-weight: 700; min-width: 3.5rem; text-align: center; }
+
+  /* COMPACT HERO HEADER */
+  .hero {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 2.25rem 2.25rem 1.75rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    background: var(--bg);
+  }
+  .hero-glow {
+    position: absolute;
+    top: -40px;
+    right: 5%;
+    width: 320px;
+    height: 180px;
+    background: linear-gradient(135deg, rgba(232,121,249,0.18), rgba(96,165,250,0.18), rgba(52,211,153,0.14));
+    filter: blur(40px);
+    pointer-events: none;
+    border-radius: 50%;
+  }
+  .hero-inner { position: relative; z-index: 2; }
+  .hero-label { font-family: var(--font-mono); font-size: 0.62rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; }
+  .hero-badge-pill { display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 700; background: rgba(0,0,0,0.04); padding: 0.18rem 0.6rem; border-radius: var(--pill); }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #10B981; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+  
+  .hero-title { font-size: clamp(1.85rem, 3.4vw, 2.75rem); font-weight: 900; line-height: 1.12; letter-spacing: -0.035em; color: var(--text-1); margin-bottom: 0.85rem; max-width: 960px; font-family: var(--font-sans); }
+  .hero-abstract { font-size: 0.98rem; line-height: 1.65; color: var(--text-2); max-width: 820px; margin-bottom: 1.25rem; }
+  .hero-meta { display: flex; align-items: center; justify-content: space-between; padding-top: 1.1rem; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 1rem; }
+  .author-block { display: flex; align-items: center; gap: 0.75rem; }
+  .author-avatar { width: 34px; height: 34px; border-radius: var(--pill); background: var(--text-1); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; flex-shrink: 0; font-family: var(--font-sans); }
+  .author-name { font-size: 0.9rem; font-weight: 700; color: var(--text-1); display: flex; align-items: center; gap: 0.45rem; }
+  .author-badge { font-family: var(--font-mono); font-size: 0.55rem; font-weight: 800; background: var(--text-1); color: #fff; padding: 0.12rem 0.45rem; border-radius: var(--pill); }
+  .author-affil { font-size: 0.7rem; color: var(--text-3); font-family: var(--font-mono); }
+  .hero-actions { display: flex; align-items: center; gap: 0.5rem; }
+  .btn-pill { background: var(--text-1); color: #fff; font-size: 0.72rem; font-weight: 700; padding: 0.38rem 1rem; border-radius: var(--pill); border: none; cursor: pointer; transition: opacity .15s, transform .15s; font-family: var(--font-sans); display: inline-flex; align-items: center; gap: 0.35rem; }
+  .btn-pill:hover { opacity: .88; transform: translateY(-1px); }
+  .btn-out { background: transparent; color: var(--text-1); font-size: 0.72rem; font-weight: 600; padding: 0.35rem 0.95rem; border-radius: var(--pill); border: 1px solid var(--border); cursor: pointer; transition: all .15s; font-family: var(--font-sans); display: inline-flex; align-items: center; gap: 0.35rem; }
+  .btn-out:hover { border-color: var(--text-1); transform: translateY(-1px); }
+  .toolchain-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.85rem; }
+  .chip { font-family: var(--font-mono); font-size: 0.62rem; color: var(--text-2); background: rgba(0,0,0,0.035); border-radius: var(--pill); padding: 0.18rem 0.6rem; border: 1px solid var(--border); }
+  .chip.gr { color: #059669; background: rgba(5,150,105,0.08); border-color: rgba(5,150,105,0.22); font-weight: 600; }
+
+  /* TWO-COLUMN DENSE LAYOUT */
+  .layout {
+    max-width: 1240px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    width: 100%;
+    min-height: calc(100vh - 120px);
+  }
+
+  /* LEFT SIDEBAR */
+  .sidebar {
+    border-right: 1px solid var(--border);
+    padding: 1.75rem 1.5rem 2rem 2.25rem;
+    position: sticky;
+    top: 100px;
+    height: calc(100vh - 100px);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .sidebar-top { display: flex; flex-direction: column; }
+  .sidebar-label { font-family: var(--font-mono); font-size: 0.6rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin-bottom: 1.25rem; }
+  
+  .toc { list-style: none; display: flex; flex-direction: column; padding: 0; margin: 0; }
+  .toc li a { display: flex; justify-content: space-between; align-items: baseline; padding: 0.5rem 0; font-family: var(--font-mono); font-size: 0.66rem; color: var(--text-3); border-bottom: 1px solid var(--border); transition: color .15s, padding-left .15s; gap: 0.4rem; text-decoration: none; }
+  .toc li a:hover { color: var(--text-1); padding-left: 3px; }
+  .toc li a.cur { color: var(--text-1); font-weight: 700; border-bottom: 1.5px solid var(--text-1); padding-left: 3px; }
+  .toc-pg { color: var(--text-4); font-size: 0.58rem; flex-shrink: 0; }
+
+  .sidebar-nav-box { padding-top: 1.25rem; border-top: 1px solid var(--border); margin-top: 1.25rem; }
+  .sidebar-nav-label { font-family: var(--font-mono); font-size: 0.58rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; margin-bottom: 0.65rem; }
+  .sidebar-nav-btns { display: flex; gap: 0.4rem; }
+  .btn-step-pill { flex: 1; font-family: var(--font-mono); font-size: 0.64rem; font-weight: 700; padding: 0.42rem 0.5rem; border-radius: var(--pill); border: 1px solid var(--border); background: var(--bg-2); color: var(--text-1); cursor: pointer; text-align: center; transition: all .15s; display: inline-flex; align-items: center; justify-content: center; gap: 0.3rem; }
+  .btn-step-pill:hover { background: var(--text-1); color: #fff; border-color: var(--text-1); }
+
+  /* RIGHT CONTENT */
+  .content { padding: 1.75rem 2.25rem 5rem 2.5rem; max-width: 960px; }
+  .sec { padding: 2.5rem 0; border-bottom: 1px solid var(--border); scroll-margin-top: 85px; }
+  .sec:first-of-type { padding-top: 0; }
+  .sec:last-child { border-bottom: none; }
+  
+  .eyebrow { font-family: var(--font-mono); font-size: 0.62rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; display: flex; justify-content: space-between; margin-bottom: 1.25rem; }
+  .eyebrow-id { color: var(--text-4); font-weight: 500; }
+  .sec-h2 { font-size: clamp(1.6rem, 2.5vw, 2.1rem); font-weight: 900; letter-spacing: -0.03em; color: var(--text-1); line-height: 1.15; margin-bottom: 0.5rem; font-family: var(--font-sans); }
+  .sec-sub { font-size: 0.92rem; color: var(--text-2); line-height: 1.6; max-width: 680px; margin-bottom: 1.5rem; }
+
+  /* SECTION 00: CANONICAL AURALIS MESH & FROSTED GLASS CARD */
+  .mesh {
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative;
+    padding: 2.75rem 2rem;
+    min-height: 420px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #E879F9, #C084FC, #818CF8, #60A5FA, #34D399, #F472B6, #FB923C, #C084FC);
+    background-size: 400% 400%;
+    animation: auralis-mesh 14s ease-in-out infinite;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.06);
+    margin-bottom: 1.75rem;
+  }
+  @keyframes auralis-mesh {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .mesh::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 55% 45% at 20% 30%, rgba(255,255,255,0.32) 0%, transparent 60%),
+                radial-gradient(ellipse 45% 55% at 78% 68%, rgba(255,255,255,0.22) 0%, transparent 60%);
+    z-index: 0;
+  }
+  .glass {
+    position: relative;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.90);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04);
+    padding: 2.25rem;
+    width: 100%;
+    max-width: 660px;
+  }
+  .glass-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+    gap: 1rem;
+  }
+  .glass-id {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.2rem;
+  }
+  .glass-t { font-size: 1.15rem; font-weight: 800; color: var(--text-1); letter-spacing: -0.02em; font-family: var(--font-sans); }
+  .glass-badge {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 700;
+    background: rgba(52, 211, 153, 0.16);
+    color: #059669;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--pill);
+    border: 1px solid rgba(52, 211, 153, 0.35);
+    white-space: nowrap;
+  }
+  .glass-q {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    line-height: 1.5;
+    color: var(--text-1);
+    margin-bottom: 1.35rem;
+    font-style: italic;
+  }
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: rgba(0, 0, 0, 0.035);
+    border-radius: 12px;
+    margin-bottom: 1.25rem;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+  }
+  .m-label {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.25rem;
+  }
+  .m-val { font-size: 1.35rem; font-weight: 900; color: var(--text-1); letter-spacing: -0.03em; font-family: var(--font-sans); }
+  .m-val span { font-size: 0.7rem; font-weight: 500; color: var(--text-3); font-family: var(--font-mono); }
+  .glass-body { font-size: 0.88rem; line-height: 1.65; color: var(--text-2); margin-bottom: 1.25rem; }
+  .glass-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .g-tag {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--text-2);
+    background: rgba(0, 0, 0, 0.045);
+    padding: 0.2rem 0.65rem;
+    border-radius: var(--pill);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+  }
+  .sec-body-lead {
+    font-size: 0.95rem;
+    line-height: 1.72;
+    color: var(--text-2);
+    margin-top: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* SECTION 01 FINDINGS GRID */
+  .fg { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5px; background: var(--border); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; }
+  .fc { background: var(--bg-2); padding: 1.4rem 1.5rem; transition: background .15s; }
+  .fc:hover { background: #FAF9F6; }
+  .fnum { font-family: var(--font-mono); font-size: 0.56rem; font-weight: 700; color: var(--text-4); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.35rem; }
+  .ftit { font-size: 1rem; font-weight: 800; color: var(--text-1); letter-spacing: -0.02em; margin-bottom: 0.45rem; font-family: var(--font-sans); }
+  .fbody { font-size: 0.84rem; line-height: 1.58; color: var(--text-2); margin-bottom: 0.75rem; }
+  .fwf { font-family: var(--font-mono); font-size: 0.63rem; color: var(--text-2); background: rgba(0,0,0,0.035); border-radius: 6px; padding: 0.45rem 0.65rem; margin-bottom: 0.65rem; line-height: 1.45; border-left: 2.5px solid var(--text-1); }
+  .acc { display: flex; align-items: center; gap: 0.55rem; }
+  .acc-bg { flex: 1; height: 5px; background: rgba(0, 0, 0, 0.08); border-radius: var(--pill); overflow: hidden; }
+  .acc-fill { height: 100%; background: var(--text-1); border-radius: var(--pill); }
+  .acc-pct { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 800; color: var(--text-1); min-width: 2.4rem; text-align: right; }
+  .acc-note { font-family: var(--font-mono); font-size: 0.58rem; color: var(--text-3); margin-top: 0.2rem; }
+
+  /* SECTION 02 TABLE */
+  .table-wrap { width: 100%; overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-2); box-shadow: 0 4px 18px rgba(0,0,0,0.02); margin-bottom: 1.5rem; }
+  .mtable { width: 100%; border-collapse: collapse; }
+  .mtable th { font-family: var(--font-mono); font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); background: rgba(0, 0, 0, 0.025); padding: 0.65rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+  .mtable td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--border); color: var(--text-2); font-size: 0.84rem; line-height: 1.48; vertical-align: top; background: var(--bg-2); }
+  .mtable tr:last-child td { border-bottom: none; }
+  .mtable tr:hover td { background: #FAF9F6; }
+  .tlimit { display: inline-block; font-family: var(--font-mono); font-size: 0.58rem; font-weight: 700; padding: 0.16rem 0.5rem; border-radius: var(--pill); white-space: nowrap; }
+  .tlimit.r { color: #DC2626; background: #FEF2F2; border: 1px solid #FECACA; }
+  .tlimit.a { color: #D97706; background: #FFFBEB; border: 1px solid #FDE68A; }
+
+  /* SECTION 03 CARDS */
+  .vpair { display: grid; grid-template-columns: 1fr 1fr; gap: 1.15rem; margin-bottom: 1.5rem; }
+  .vc { background: var(--bg-2); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border); transition: transform .15s; }
+  .vc:hover { transform: translateY(-2px); }
+  .vnum { font-family: var(--font-mono); font-size: 0.56rem; color: var(--text-4); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; margin-bottom: 0.35rem; }
+  .vtit { font-size: 1rem; font-weight: 800; letter-spacing: -0.02em; color: var(--text-1); margin-bottom: 0.45rem; font-family: var(--font-sans); }
+  .vbody { font-size: 0.84rem; line-height: 1.58; color: var(--text-2); margin-bottom: 0.85rem; }
+  .vverdict { font-family: var(--font-mono); font-size: 0.68rem; font-weight: 500; color: var(--text-2); background: rgba(0, 0, 0, 0.035); border-radius: 6px; padding: 0.55rem 0.75rem; border-left: 2.5px solid var(--text-1); }
+  .vvlabel { font-size: 0.56rem; font-weight: 800; color: var(--text-4); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.2rem; }
+  .bench-note { background: var(--bg-2); border-radius: 10px; border: 1px solid var(--border); padding: 0.95rem 1.25rem; font-size: 0.84rem; line-height: 1.58; color: var(--text-2); display: flex; gap: 0.65rem; align-items: flex-start; }
+  .bi { font-size: 1rem; flex-shrink: 0; color: #D97706; margin-top: 1px; }
+
+  /* SECTION 04 */
+  .llist { display: flex; flex-direction: column; gap: 1.5px; background: var(--border); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 1.5rem; }
+  .li { display: grid; grid-template-columns: 3.25rem 1fr; background: var(--bg-2); transition: background .15s; }
+  .li:hover { background: #FAF9F6; }
+  .lnum { font-family: var(--font-mono); font-size: 0.68rem; font-weight: 800; color: var(--text-4); padding: 1.25rem 0.75rem; border-right: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: center; }
+  .lbody { padding: 1.25rem 1.4rem; }
+  .lbody strong { display: block; font-size: 0.94rem; font-weight: 800; color: var(--text-1); letter-spacing: -0.02em; margin-bottom: 0.3rem; font-family: var(--font-sans); }
+  .lbody p { font-size: 0.84rem; line-height: 1.58; color: var(--text-2); }
+
+  /* SECTION 05 (AURALIS SIGNATURE DARK CTA BOX) */
+  .cta-box {
+    background: var(--text-1); color: #fff; border-radius: 16px; padding: 2.5rem 2.25rem; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 2.25rem; align-items: center; box-shadow: 0 16px 40px rgba(0,0,0,0.1); margin-bottom: 1.75rem;
+  }
+  .cta-kick { font-family: var(--font-mono); font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.5); margin-bottom: 0.55rem; }
+  .cta-h2 { font-size: clamp(1.5rem, 2.3vw, 2rem); font-weight: 900; color: #fff; letter-spacing: -0.035em; line-height: 1.15; margin-bottom: 0.75rem; font-family: var(--font-sans); }
+  .cta-body { font-size: 0.88rem; line-height: 1.65; color: rgba(255,255,255,0.72); }
+  .strat-lbl { font-family: var(--font-mono); font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.5); margin-bottom: 0.45rem; }
+  .strat-txt { font-size: 0.9rem; line-height: 1.65; color: rgba(255,255,255,0.92); margin-bottom: 1.5rem; }
+  .cta-btns { display: flex; gap: 0.55rem; flex-wrap: wrap; }
+  .btn-wh { background: #fff; color: var(--text-1); font-size: 0.78rem; font-weight: 800; padding: 0.5rem 1.25rem; border-radius: var(--pill); border: none; cursor: pointer; transition: opacity .15s, transform .15s; font-family: var(--font-sans); }
+  .btn-wh:hover { opacity: .92; transform: translateY(-1px); }
+  .btn-gh { background: transparent; color: rgba(255,255,255,0.85); font-size: 0.78rem; font-weight: 600; padding: 0.48rem 1.25rem; border-radius: var(--pill); border: 1.5px solid rgba(255,255,255,0.25); cursor: pointer; transition: border-color .15s, transform .15s; font-family: var(--font-sans); text-decoration: none; }
+  .btn-gh:hover { border-color: rgba(255,255,255,0.7); color: #fff; transform: translateY(-1px); }
+
+  /* SIGNATURE BLOCK */
+  .sig-inner { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; background: var(--bg-2); border-radius: 12px; border: 1px solid var(--border); flex-wrap: wrap; gap: 1rem; }
+  .sig-left { display: flex; align-items: center; gap: 0.75rem; }
+  .sig-ava { width: 34px; height: 34px; border-radius: var(--pill); background: var(--text-1); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; font-family: var(--font-sans); }
+  .sig-name { font-size: 0.9rem; font-weight: 800; color: var(--text-1); }
+  .sig-sub { font-family: var(--font-mono); font-size: 0.58rem; color: var(--text-3); margin-top: 0.1rem; }
+  .sig-doi { font-family: var(--font-mono); font-size: 0.64rem; color: var(--text-3); }
+  .sig-doi strong { color: var(--text-1); font-weight: 700; }
+  .nxt-a { display: flex; align-items: center; gap: 0.4rem; font-size: 0.76rem; font-weight: 700; color: var(--text-1); border: 1.5px solid var(--border); border-radius: var(--pill); padding: 0.35rem 0.95rem; transition: all .15s; text-decoration: none; }
+  .nxt-a:hover { background: var(--text-1); color: #fff; border-color: var(--text-1); }
+
+  /* PREV / NEXT NAVIGATION ROW */
+  .sec-nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.75rem;
+    padding-top: 1.15rem;
+    border-top: 1px dashed var(--border);
+  }
+  .btn-nav-prev, .btn-nav-next {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 700;
+    color: var(--text-3);
+    padding: 0.38rem 0.8rem;
+    border-radius: var(--pill);
+    border: 1px solid var(--border);
+    background: var(--bg-2);
+    transition: all .15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    cursor: pointer;
+  }
+  .btn-nav-prev:hover, .btn-nav-next:hover {
+    color: var(--text-1);
+    border-color: var(--text-1);
+    background: var(--bg-3);
+  }
+  .btn-nav-next { margin-left: auto; }
+
+  @media(max-width: 960px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .content { padding: 1.75rem 1.5rem 3.5rem; }
+    .hero { padding: 2rem 1.5rem 1.5rem; }
+    .nav-crumb { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .crumb-meta { display: none; }
+    .cta-box { grid-template-columns: 1fr; padding: 2rem 1.5rem; gap: 1.5rem; }
+    .fg, .vpair { grid-template-columns: 1fr; }
+    .metrics-bar { grid-template-columns: 1fr; }
+  }
+
+  /* TOAST FLOATING NOTIFICATION */
+  #toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1000;
+    background: var(--text-1);
+    color: #FFFFFF;
+    padding: 0.65rem 1.15rem;
+    border-radius: var(--pill);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.22);
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+    pointer-events: none;
+    transition: opacity .25s ease, transform .25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  #toast.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  #toast svg { color: #34D399; flex-shrink: 0; }
+
+  /* MOBILE TOC MODAL */
+  #mobile-toc-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+  #mobile-toc-modal.open { display: flex; }
+  .mobile-toc-card {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 1.75rem;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  }
+  .mobile-toc-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-toc-title { font-family: var(--font-mono); font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-1); }
+  .btn-close-modal { background: none; border: none; font-size: 1.1rem; color: var(--text-3); cursor: pointer; padding: 0.2rem; }
+  .mobile-toc-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; padding: 0; margin: 0; }
+  .mobile-toc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.65rem 0.85rem;
+    border-radius: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-2);
+    background: var(--bg-3);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .mobile-toc-item:hover, .mobile-toc-item.act {
+    background: var(--text-1);
+    color: #fff;
+  }
+  .mobile-toc-pg { font-size: 0.62rem; opacity: 0.7; }
+
+  /* PRINT CSS */
+  @media print {
+    body { background: #FFFFFF !important; color: #000000 !important; font-size: 11pt !important; }
+    #prog, .nav-crumb, .sidebar, .sec-nav-row, .hero-actions, .nav-step-ctrls, #toast, #mobile-toc-modal { display: none !important; }
+    .layout { display: block !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+    .content { padding: 0 !important; max-width: 100% !important; }
+    .hero { padding: 1.5rem 0 1rem !important; border-bottom: 2pt solid #000 !important; background: transparent !important; }
+    .hero-glow { display: none !important; }
+    .hero-title { font-size: 22pt !important; color: #000 !important; }
+    .mesh {
+      background: #F4F4F0 !important;
+      animation: none !important;
+      min-height: auto !important;
+      padding: 1.25rem !important;
+      box-shadow: none !important;
+      border: 1pt solid #CCC !important;
+      page-break-inside: avoid;
+    }
+    .mesh::before { display: none !important; }
+    .glass {
+      background: #FFFFFF !important;
+      backdrop-filter: none !important;
+      box-shadow: none !important;
+      border: 1pt solid #BBB !important;
+      padding: 1.15rem !important;
+    }
+    .sec {
+      padding: 1.5rem 0 !important;
+      border-bottom: 1pt solid #DDD !important;
+      page-break-inside: avoid;
+    }
+    .fg, .vpair {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      page-break-inside: avoid;
+    }
+    .fc, .vc {
+      box-shadow: none !important;
+      border: 1pt solid #CCC !important;
+      background: #FFF !important;
+    }
+    .cta-box {
+      background: #111111 !important;
+      color: #FFFFFF !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      page-break-inside: avoid;
+      padding: 1.75rem !important;
+    }
+  }
+
+</style>

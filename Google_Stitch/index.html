@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Google Stitch — Architecture AI Lab Versions Archive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #F7F7F4;
+      --card-bg: #FFFFFF;
+      --border: #E5E5DE;
+      --text-1: #0D0D0D;
+      --text-2: #383834;
+      --text-3: #686862;
+      --mono: 'JetBrains Mono', monospace;
+      --serif: 'Newsreader', Georgia, serif;
+      --sans: 'Inter', system-ui, sans-serif;
+      --pill: 9999px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--sans); background: var(--bg); color: var(--text-1); min-height: 100vh; padding: 3rem 2rem; }
+    .wrap { max-width: 1180px; margin: 0 auto; }
+    
+    .header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+    .kicker { font-family: var(--mono); font-size: 0.65rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin-bottom: 0.5rem; }
+    h1 { font-family: var(--serif); font-size: clamp(2rem, 3.5vw, 2.75rem); font-weight: 400; letter-spacing: -0.02em; margin-bottom: 0.75rem; color: var(--text-1); }
+    p.sub { font-size: 0.95rem; color: var(--text-2); max-width: 720px; line-height: 1.6; }
+    
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 20px rgba(0,0,0,0.02); transition: transform .15s, box-shadow .15s; }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.06); }
+    .card-rec { border: 2px solid var(--text-1); position: relative; }
+    .card-rec::before { content: "★ VERSIÓN ACTIVA (AURALIS CANÓNICA)"; position: absolute; top: -11px; left: 1.25rem; background: var(--text-1); color: #FFFFFF; font-family: var(--mono); font-size: 0.58rem; font-weight: 800; padding: 0.15rem 0.65rem; border-radius: var(--pill); }
+    
+    .card-num { font-family: var(--mono); font-size: 0.65rem; color: var(--text-3); font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase; }
+    .card-title { font-family: var(--sans); font-size: 1.35rem; font-weight: 800; color: var(--text-1); margin-bottom: 0.65rem; line-height: 1.2; letter-spacing: -0.02em; }
+    .card-desc { font-size: 0.85rem; color: var(--text-2); line-height: 1.6; margin-bottom: 1.25rem; }
+    
+    .swatches { display: flex; gap: 0.4rem; margin-bottom: 1.25rem; }
+    .swatch { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.08); }
+    
+    .card-link { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; background: var(--text-1); color: #fff; font-family: var(--mono); font-size: 0.72rem; font-weight: 700; text-decoration: none; padding: 0.55rem 1.25rem; border-radius: var(--pill); transition: opacity .15s; text-align: center; }
+    .card-link:hover { opacity: 0.88; }
+    .card-link-sec { background: transparent; color: var(--text-1); border: 1px solid var(--border); }
+    .card-link-sec:hover { background: rgba(0,0,0,0.04); border-color: var(--text-1); }
+    
+    .footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 0.65rem; color: var(--text-3); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="kicker">Google Stitch // Multi-Version Archive</div>
+    <h1>Architecture AI Lab &mdash; Dossier Versions</h1>
+    <p class="sub">Archivo consolidado de iteraciones de diagramación y estilos para el experimento <em>EXP_004: Where AI Actually Works in AEC</em>. Compatible para inspección, lienzo de diseño y previsualización local.</p>
+  </div>
+
+  <div class="grid">
+    <!-- Version 2: Auralis Canonical (Active Recommended) -->
+    <div class="card card-rec">
+      <div>
+        <div class="card-num">Versión Canónica &bull; Auralis Original + Estructura Comprimida</div>
+        <h2 class="card-title">Auralis Original (Estructura Comprimida)</h2>
+        <p class="card-desc">Conserva los colores originales de Auralis (piedra cálida, blanco nítido, caja CTA oscura <code>#0D0D0D</code>, gradiente de malla animado y tarjetas con barras de precisión) montados sobre la estructura comprimida de la nueva versión (sidebar DOCUMENT SECTIONS con páginas y botones anterior/siguiente, subnav con control de pasos y hero compacto).</p>
+        <div class="swatches">
+          <div class="swatch" style="background: #F7F7F4;" title="Warm Stone BG"></div>
+          <div class="swatch" style="background: #FFFFFF;" title="Card White"></div>
+          <div class="swatch" style="background: #E879F9;" title="Mesh Magenta"></div>
+          <div class="swatch" style="background: #60A5FA;" title="Mesh Blue"></div>
+          <div class="swatch" style="background: #34D399;" title="Mesh Emerald"></div>
+          <div class="swatch" style="background: #0D0D0D;" title="Auralis Deep Black CTA"></div>
+        </div>
+      </div>
+      <a href="/demo-auralis-style.html" class="card-link">Abrir Versión Canónica (Auralis) &rarr;</a>
+    </div>
+
+    <!-- Version 1: Paper Editorial Classic -->
+    <div class="card">
+      <div>
+        <div class="card-num">Versión 01 &bull; Original</div>
+        <h2 class="card-title" style="font-family:var(--serif); font-weight:500;">Paper Editorial Clásico</h2>
+        <p class="card-desc">Estructura monocromática sobria de publicación científica. Tipografía Newsreader serif pura, tabla de contenido lateral con números de página, y diagramación comprimida.</p>
+        <div class="swatches">
+          <div class="swatch" style="background: #FAFAF7;" title="Parchment BG"></div>
+          <div class="swatch" style="background: #FFFFFF;" title="White Card"></div>
+          <div class="swatch" style="background: #E8E8E2;" title="Border"></div>
+          <div class="swatch" style="background: #1A1A1A;" title="Black Text"></div>
+        </div>
+      </div>
+      <a href="/demo-where-ai-works-aec.html" class="card-link card-link-sec">Abrir Versión 1 &rarr;</a>
+    </div>
+
+    <!-- Version 3: Pastel Auralis Exploration -->
+    <div class="card">
+      <div>
+        <div class="card-num">Versión 03 &bull; Exploración Pastel</div>
+        <h2 class="card-title" style="font-family:var(--serif); font-weight:500;">Paper Editorial + Colores Pastel</h2>
+        <p class="card-desc">Exploración de la diagramación del Paper Editorial enriquecido con tonos pastel salvia, lavanda y durazno, con fondos claros y sin fondos negros.</p>
+        <div class="swatches">
+          <div class="swatch" style="background: #C8D7CE;" title="Pastel Sage"></div>
+          <div class="swatch" style="background: #E8E2F5;" title="Pastel Lavender"></div>
+          <div class="swatch" style="background: #FDE8DE;" title="Pastel Peach"></div>
+          <div class="swatch" style="background: #FBF4DC;" title="Pastel Butter"></div>
+          <div class="swatch" style="background: #F8F9F6;" title="Stone Background"></div>
+        </div>
+      </div>
+      <a href="/demo-paper-auralis-pastel.html" class="card-link card-link-sec">Abrir Versión 3 (Pastel) &rarr;</a>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>Google Stitch Directory: <code>H:\Mi unidad\0000 ANTIGRAVITY\ArchitectureAI_LAB\Google_Stitch</code></div>
+    <div>Architecture AI Lab &bull; Jorge Ludeña</div>
+  </div>
+</div>
+</body>
+</html>

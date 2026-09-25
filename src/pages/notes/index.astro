@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Card from '../../components/Card.astro';
+import { getCollection } from 'astro:content';
+
+const allNotes = await getCollection('notes');
+const sortedNotes = allNotes.sort((a, b) => b.data.date.localeCompare(a.data.date));
+---
+
+<BaseLayout 
+  title="Notas (Notes)"
+  description="Ideas concisas, lecturas críticas y reflexiones emergentes sobre inteligencia artificial y hábitat."
+>
+  <header style="margin-bottom: 3rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-subtle);">
+    <p class="mono" style="color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">
+      Colección / Notes
+    </p>
+    <h1>Notas</h1>
+    <p style="font-size: 1.15rem; color: var(--text-secondary); max-width: 680px;">
+      Textos breves, observaciones directas, comentarios de lecturas y reflexiones que no precisan el formato extenso de un artículo formal.
+    </p>
+  </header>
+
+  <div class="grid">
+    {sortedNotes.map((item) => (
+      <Card
+        title={item.data.title}
+        description={item.data.description}
+        date={item.data.date}
+        href={`/notes/${item.id}`}
+        category="note"
+        tags={item.data.tags}
+      />
+    ))}
+  </div>
+</BaseLayout>
