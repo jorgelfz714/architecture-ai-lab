@@ -120,9 +120,22 @@ architecture-ai-lab/
 
 ---
 
-## 🚀 7. Próximos Pasos & Roadmap de Investigación
+---
+
+## ✅ 7. Tareas & Recordatorios Pendientes (To-Do List)
+
+- [ ] **Navegación Móvil:** Probar la experiencia del sitio oficial en tu móvil o tablet: [https://architecture-ai-lab.netlify.app/](https://architecture-ai-lab.netlify.app/)
+- [ ] **Dominio Personalizado:** Decidir si registrar y conectar un dominio propio en Netlify (ej. `architectureailab.com`).
+- [ ] **Experimento 02:** Definir la hipótesis central del próximo ensayo (Predimensionado estructural con o1 / Gemini 2.5 Flash Thinking).
+- [ ] **Página /about:** Revisar y personalizar el texto de presentación y trayectoria en [src/pages/about.astro](file:///h:/Mi%20unidad/0000%20ANTIGRAVITY/ArchitectureAI_LAB/src/pages/about.astro).
+- [ ] **Activos Gráficos:** Seleccionar 2 diagramas morfológicos o esquemas axiales para el proyecto de Clasificación Espacial (`WORK_001`).
+- [ ] **Suscripciones:** Evaluar la integración de un canal RSS estático en XML para lectores e investigadores.
+
+---
+
+## 🚀 8. Roadmap de Investigación
 
 - [ ] **EXP_005:** Evaluación de modelos de razonamiento (OpenAI o1 / Gemini 2.5 Flash Thinking) en cálculo de cargas axiales y predimensionado estructural.
 - [ ] **WORK_002:** Pipeline de generación de componentes Grasshopper C# asistidos por prompts restrictivos.
-- [ ] **Dominio Personalizado:** Enlace opcional de dominio propio `.com` o `.org` a través del panel DNS de Netlify.
 - [ ] **Newsletter / RSS Feed:** Integración de canal RSS estático en XML para suscripción de lectores a nuevos ensayos.
+
