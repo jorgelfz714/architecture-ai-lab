@@ -1018,6 +1018,45 @@
       }
     }
 
+    /* LANGUAGE SWITCHER */
+    .lang-switcher-wrap { display: inline-flex; align-items: center; }
+    .lang-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+      padding: 0.18rem 0.45rem;
+      border-radius: var(--pill);
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      font-weight: 600;
+    }
+    .lang-btn {
+      background: none;
+      border: none;
+      padding: 0.12rem 0.35rem;
+      color: var(--text-3);
+      font-family: inherit;
+      font-size: inherit;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all .15s ease;
+      line-height: 1;
+    }
+    .lang-btn:hover { color: var(--text-1); }
+    .lang-btn.active {
+      color: var(--text-1);
+      font-weight: 800;
+      background: var(--bg-2);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .lang-divider { color: var(--text-4); font-size: 0.6rem; pointer-events: none; }
+    .goog-te-banner-frame, .goog-te-banner-frame.skiptranslate, iframe.goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame { display: none !important; visibility: hidden !important; }
+    body { top: 0px !important; }
+    .goog-tooltip, .goog-tooltip:hover { display: none !important; }
+    .goog-text-highlight { background-color: transparent !important; border: none !important; box-shadow: none !important; }
+
   </style>
 </head>
 <body>
@@ -1081,9 +1120,19 @@
         <a href="/manifesto" class="nav-lk">Manifesto</a>
         <a href="/about" class="nav-lk">About</a>
       </nav>
-      <div class="nav-status">
-        <span class="status-dot"></span>
-        <span>Live Benchmark Node</span>
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <div class="lang-switcher-wrap notranslate" id="lang-switcher" translate="no">
+          <div class="lang-pill" role="group" aria-label="Selector de idioma / Language Switcher">
+            <button type="button" class="lang-btn" id="btn-lang-es" data-lang="es" onclick="switchLanguage('es')">ES</button>
+            <span class="lang-divider">/</span>
+            <button type="button" class="lang-btn active" id="btn-lang-en" data-lang="en" onclick="switchLanguage('en')">EN</button>
+          </div>
+          <div id="google_translate_element" style="position:fixed;bottom:-200px;left:-200px;opacity:0.001;pointer-events:none;width:1px;height:1px;overflow:hidden;" aria-hidden="true"></div>
+        </div>
+        <div class="nav-status">
+          <span class="status-dot"></span>
+          <span>Live Benchmark Node</span>
+        </div>
       </div>
     </div>
 
@@ -1701,9 +1750,92 @@
       if (m) m.classList.remove('open');
     }
 
+    // 7. Instant Bilingual Translation Engine (ES / EN)
+    const STORAGE_KEY = 'aai_preferred_lang';
+    let currentAppLang = 'en'; // default original in this paper is EN
+
+    function getCookie(name) {
+      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return match ? match[2] : null;
+    }
+
+    function updateLanguageUI(lang) {
+      const btnEs = document.getElementById('btn-lang-es');
+      const btnEn = document.getElementById('btn-lang-en');
+      if (btnEs && btnEn) {
+        btnEs.classList.toggle('active', lang === 'es');
+        btnEn.classList.toggle('active', lang === 'en');
+      }
+      document.documentElement.setAttribute('lang', lang);
+    }
+
+    function switchLanguage(lang) {
+      currentAppLang = lang;
+      localStorage.setItem(STORAGE_KEY, lang);
+      updateLanguageUI(lang);
+      applyTranslation(lang);
+      showToast(lang === 'es' ? '✓ Idioma: Español activado' : '✓ Language: English active');
+    }
+
+    function applyTranslation(lang) {
+      const domain = window.location.hostname || 'localhost';
+      // Original document is in English, translate to ES or reset to EN
+      const targetTrans = lang === 'es' ? '/en/es' : '/en/en';
+      
+      document.cookie = 'googtrans=' + targetTrans + '; path=/; domain=' + domain;
+      document.cookie = 'googtrans=' + targetTrans + '; path=/';
+
+      const select = document.querySelector('.goog-te-combo');
+      if (select) {
+        select.value = lang;
+        select.dispatchEvent(new Event('change'));
+      } else {
+        initGoogleTranslate(lang);
+      }
+    }
+
+    function initGoogleTranslate(targetLang) {
+      if (window.__gtInit) return;
+      window.__gtInit = true;
+
+      window.googleTranslateElementInit = function() {
+        new window.google.translate.TranslateElement({
+          pageLanguage: 'en',
+          includedLanguages: 'en,es',
+          autoDisplay: false
+        }, 'google_translate_element');
+
+        setTimeout(() => {
+          const select = document.querySelector('.goog-te-combo');
+          if (select && targetLang === 'es') {
+            select.value = 'es';
+            select.dispatchEvent(new Event('change'));
+          }
+        }, 350);
+      };
+
+      const script = document.createElement('script');
+      script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+      script.async = true;
+      document.body.appendChild(script);
+    }
+
     // Initialize on load
     window.addEventListener('DOMContentLoaded', () => {
       updateActiveSection();
+
+      const cookieVal = getCookie('googtrans');
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (cookieVal && cookieVal.includes('/es')) {
+        currentAppLang = 'es';
+      } else if (saved === 'es') {
+        currentAppLang = 'es';
+      }
+
+      updateLanguageUI(currentAppLang);
+      if (currentAppLang === 'es') {
+        initGoogleTranslate('es');
+      }
     });
   </script>
 </body>

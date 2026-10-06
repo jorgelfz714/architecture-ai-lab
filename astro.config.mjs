@@ -6,5 +6,13 @@ import mdx from '@astrojs/mdx';
 export default defineConfig({
   output: 'static',
   integrations: [mdx()],
-  site: 'https://architecture-ai-lab.netlify.app'
+  site: 'https://architecture-ai-lab.netlify.app',
+  i18n: {
+    defaultLocale: 'es',
+    locales: ['es', 'en'],
+    routing: {
+      prefixDefaultLocale: false
+    }
+  }
 });
+

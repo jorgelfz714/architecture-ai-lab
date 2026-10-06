@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Where AI Actually Works in AEC — Architecture AI Lab</title>
   <meta name="description" content="An empirical inquiry into foundation models evaluating spatial comprehension, IFC geometry parsing, and structural heuristics against human tectonic intuition." />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -317,21 +318,248 @@
     }
     .btn-nav-next { margin-left: auto; }
 
+    /* DISABLED BUTTON STATES */
+    .btn-step:disabled, .btn-step-pill:disabled, .btn-nav-prev:disabled, .btn-nav-next:disabled {
+      opacity: 0.32;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* SUBNAV STEP CONTROLS & MOBILE MODAL TRIGGER */
+    .btn-step-modal {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      font-weight: 700;
+      background: var(--bg-2);
+      border: 1px solid var(--border-mid);
+      border-radius: var(--pill);
+      padding: 0.18rem 0.55rem;
+      cursor: pointer;
+      color: var(--text-1);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all .15s;
+    }
+    .btn-step-modal:hover {
+      background: var(--pastel-sage);
+      border-color: var(--text-3);
+    }
+    .toc-icon { font-size: 0.65rem; color: var(--text-3); }
+
+    /* RESPONSIVE TABLE WRAPPER */
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border-lo);
+      border-radius: 6px;
+      background: var(--bg-2);
+    }
+    .table-wrap .mt {
+      margin-bottom: 0;
+      border: none;
+      min-width: 620px;
+    }
+
+    /* INTERACTIVE DOI ELEMENT */
+    .doi-link {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.2rem 0.45rem;
+      border-radius: 4px;
+      transition: background .15s, border-color .15s;
+      border: 1px solid transparent;
+    }
+    .doi-link:hover {
+      background: var(--pastel-sage-subtle);
+      border-color: var(--border-mid);
+      color: var(--text-1);
+    }
+    .doi-link .copy-badge {
+      font-size: 0.58rem;
+      color: var(--text-3);
+      background: var(--pastel-sage);
+      padding: 0.08rem 0.35rem;
+      border-radius: var(--pill);
+      margin-left: 0.25rem;
+      font-weight: 700;
+    }
+
+    /* FLOATING TOAST NOTIFICATION */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bg-2);
+      color: var(--text-1);
+      border: 1.5px solid var(--border-dark);
+      padding: 0.65rem 1.15rem;
+      border-radius: var(--pill);
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(22, 36, 28, 0.12);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(14px);
+      pointer-events: none;
+      transition: opacity .22s cubic-bezier(0.16, 1, 0.3, 1), transform .22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .toast-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #2E8540;
+      flex-shrink: 0;
+    }
+
+    /* MOBILE SECTIONS MODAL */
+    .mobile-toc-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(22, 36, 28, 0.45);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+    }
+    .mobile-toc-modal.open {
+      display: flex;
+    }
+    .mobile-toc-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border-mid);
+      border-radius: 12px;
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.16);
+      animation: modalFadeIn .18s ease-out;
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.96) translateY(8px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .mobile-toc-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.65rem;
+      border-bottom: 1px solid var(--border-lo);
+    }
+    .mobile-toc-title {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-1);
+    }
+    .btn-close-modal {
+      background: none;
+      border: none;
+      font-size: 1.35rem;
+      line-height: 1;
+      color: var(--text-3);
+      cursor: pointer;
+      padding: 0.2rem;
+      border-radius: 4px;
+    }
+    .btn-close-modal:hover {
+      color: var(--text-1);
+      background: var(--pastel-sage-subtle);
+    }
+    .mobile-toc-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .mobile-toc-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.65rem 0.85rem;
+      border-radius: 6px;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-2);
+      background: var(--pastel-sage-subtle);
+      border: 1px solid var(--border-lo);
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .mobile-toc-item:hover, .mobile-toc-item.cur {
+      background: var(--pastel-sage);
+      color: var(--text-1);
+      font-weight: 700;
+      border-color: var(--border-mid);
+    }
+    .mobile-toc-pg {
+      font-size: 0.6rem;
+      color: var(--text-3);
+    }
+
     /* FOOTER */
     footer { border-top: 1px solid var(--border-lo); background: var(--bg-2); padding: 1.75rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: auto; }
     footer div { font-family: var(--mono); line-height: 1.6; }
     footer .fl { font-size: .62rem; color: var(--text-3); }
     footer .fr { font-size: .6rem; color: var(--text-4); }
 
+    /* RESPONSIVE MEDIA QUERIES (UPDATED & DEBUGGED) */
     @media(max-width: 820px) {
       .layout { grid-template-columns: 1fr; }
       .sidebar { display: none; }
       .fg { grid-template-columns: 1fr; }
       .vp { grid-template-columns: 1fr; }
-      .hero { padding: 2rem 1.25rem; }
+      .hero { padding: 2rem 1.25rem 2.25rem; }
+      .hero-title { font-size: clamp(1.8rem, 6vw, 2.5rem); }
+      .hero-meta { flex-direction: column; gap: 1.25rem; align-items: stretch; }
+      .doi-block { margin-left: 0; align-items: flex-start; width: 100%; }
+      .btn-row { width: 100%; }
       .content { padding: 1.5rem 1.25rem 3.5rem; }
+      .nav-top { padding: 0.75rem 1.25rem; flex-wrap: wrap; gap: 0.75rem; }
+      .nav-links { gap: 1rem; overflow-x: auto; max-width: 100%; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
+      .nav-status { display: none; }
+      .nav-crumb { padding: 0.45rem 1.25rem; justify-content: space-between; }
       .crumb-meta { display: none; }
+      .crumb-left { display: flex; align-items: center; gap: 0.4rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: calc(100% - 130px); }
+      .crumb-left a, .crumb-left span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .nav-step-ctrls { margin-left: auto; border-left: none; padding-left: 0; }
       .metrics-bar { grid-template-columns: 1fr; }
+      .sig { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+      .nxt { text-align: left; }
+    }
+
+    /* PRINT STYLES */
+    @media print {
+      body { background: #FFFFFF !important; color: #000000 !important; font-size: 11pt !important; }
+      #prog, .nav, .sidebar, .sec-nav-row, .btn-row, .strat-btns, #toast, #mobile-toc-modal, .hero-glow, .hyp-glow { display: none !important; }
+      .layout { display: block !important; max-width: 100% !important; margin: 0 !important; }
+      .content { padding: 0 !important; max-width: 100% !important; }
+      .hero { padding: 1.5rem 0 !important; border-bottom: 2pt solid #000 !important; }
+      .sec { padding: 1.5rem 0 !important; page-break-inside: avoid; border-bottom: 1pt solid #DDD !important; }
+      .fg, .vp { display: grid !important; grid-template-columns: 1fr 1fr !important; page-break-inside: avoid; }
+      .table-wrap { overflow: visible !important; border: none !important; }
+      .mt { min-width: 100% !important; }
+      .strat { background: #F4F6F4 !important; border-left: 3pt solid #000 !important; }
+      footer { margin-top: 2rem !important; border-top: 1pt solid #999 !important; }
     }
   </style>
 </head>
@@ -346,35 +574,48 @@
       <div class="nav-logo-sub">Jorge Ludeña // Studio &amp; Archive</div>
     </div>
     <div class="nav-links">
-      <a href="/index.html" class="nav-link">Home</a>
-      <a href="/work.html" class="nav-link">Work</a>
+      <a href="/" class="nav-link">Home</a>
+      <a href="/work" class="nav-link">Work</a>
       <a href="/demo-paper-auralis-pastel.html" class="nav-link active">Experiments</a>
-      <a href="/notes.html" class="nav-link">Notes</a>
-      <a href="/resources.html" class="nav-link">Resources</a>
-      <a href="/about.html" class="nav-link">About</a>
+      <a href="/notes" class="nav-link">Notes</a>
+      <a href="/resources" class="nav-link">Resources</a>
+      <a href="/about" class="nav-link">About</a>
     </div>
-    <div class="nav-status"><span class="status-dot"></span>LAB STATUS: ONLINE / LATENCY 14ms</div>
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <div class="lang-switcher-wrap notranslate" id="lang-switcher" translate="no" style="display:inline-flex; align-items:center; background:#EFEFEA; padding:0.2rem 0.45rem; border-radius:9999px; border:1px solid #E5E5DE; font-family:var(--mono); font-size:0.7rem;">
+        <button type="button" id="btn-lang-es" onclick="setLang('es')" style="background:transparent; color:#666; border:none; padding:0.2rem 0.45rem; border-radius:9999px; font-weight:600; cursor:pointer; font-family:inherit; font-size:inherit;">ES</button>
+        <span style="color:#888; margin:0 2px;">/</span>
+        <button type="button" id="btn-lang-en" onclick="setLang('en')" style="background:#0D0D0D; color:#fff; border:none; padding:0.2rem 0.45rem; border-radius:9999px; font-weight:800; cursor:pointer; font-family:inherit; font-size:inherit;">EN</button>
+      </div>
+      <div id="google_translate_element" style="position:fixed;bottom:-200px;left:-200px;opacity:0.001;pointer-events:none;width:1px;height:1px;overflow:hidden;" aria-hidden="true"></div>
+      <div class="nav-status"><span class="status-dot"></span>LAB STATUS: ONLINE</div>
+    </div>
   </div>
 
   <div class="nav-crumb">
-    <a href="/experiments">← Back to Experiments Archive</a>
-    <span class="crumb-sep">/</span>
-    <span>EXP_004</span>
-    <span class="crumb-sep">/</span>
-    <span class="crumb-active">AEC_EVALUATION</span>
+    <div class="crumb-left">
+      <a href="/experiments" class="crumb-back">← Back to Experiments Archive</a>
+      <span class="crumb-sep">/</span>
+      <span>EXP_004</span>
+      <span class="crumb-sep">/</span>
+      <span class="crumb-active">AEC_EVALUATION</span>
+    </div>
 
     <div class="crumb-meta">
       <span>● PUBLISHED: <b>23 SEPT 2026</b></span>
       <span>PEER REVIEWED</span>
       <span>READING TIME: <b>14 MIN</b></span>
       <span>LATENCY BENCHMARK: <b>ACTIVE</b></span>
+    </div>
 
-      <!-- Step navigation controls -->
-      <div class="nav-step-ctrls">
-        <button id="btnPrevCrumb" class="btn-step" title="Sección Anterior" onclick="navigateStep(-1)">←</button>
+    <!-- Step navigation controls: functional & visible across desktop and mobile -->
+    <div class="nav-step-ctrls">
+      <button id="btnPrevCrumb" class="btn-step" title="Sección Anterior" onclick="navigateStep(-1)" disabled>←</button>
+      <button id="btnMobileToc" class="btn-step-modal" title="Ver lista de secciones" onclick="toggleMobileToc()">
         <span id="stepIndicator" class="step-num">SEC 00 / 05</span>
-        <button id="btnNextCrumb" class="btn-step" title="Siguiente Sección" onclick="navigateStep(1)">→</button>
-      </div>
+        <span class="toc-icon">☰</span>
+      </button>
+      <button id="btnNextCrumb" class="btn-step" title="Siguiente Sección" onclick="navigateStep(1)">→</button>
     </div>
   </div>
 </nav>
@@ -398,10 +639,13 @@
       </div>
     </div>
     <div class="doi-block">
-      <div class="doi-link"><span>DOI: </span>10.1038/arch.ai.2026.042</div>
+      <div class="doi-link" id="doiBtn" onclick="copyDoi()" title="Clic para copiar DOI">
+        <span>DOI: </span><b id="doiText">10.1038/arch.ai.2026.042</b>
+        <span class="copy-badge">📋 Copiar</span>
+      </div>
       <div class="btn-row">
-        <button class="btn-dl">⬇ Download PDF</button>
-        <button class="btn-raw">⊞ Raw Data</button>
+        <button class="btn-dl" onclick="window.print()" title="Imprimir o guardar como PDF">⬇ Download PDF</button>
+        <button class="btn-raw" onclick="copyRawData()" title="Copiar datos JSON de benchmark">⊞ Raw Data</button>
       </div>
     </div>
   </div>
@@ -440,8 +684,8 @@
     <div class="sidebar-nav-box">
       <div class="sidebar-nav-label">Navegación / Sections</div>
       <div class="sidebar-nav-btns">
-        <button class="btn-step-pill" onclick="navigateStep(-1)" title="Ir a la sección anterior">← Anterior</button>
-        <button class="btn-step-pill" onclick="navigateStep(1)" title="Ir a la siguiente sección">Siguiente →</button>
+        <button id="sidebarPrevBtn" class="btn-step-pill" onclick="navigateStep(-1)" title="Ir a la sección anterior" disabled>← Anterior</button>
+        <button id="sidebarNextBtn" class="btn-step-pill" onclick="navigateStep(1)" title="Ir a la siguiente sección">Siguiente →</button>
       </div>
     </div>
   </aside>
@@ -564,43 +808,45 @@
       </div>
       <h2 class="sec-h2">Where AI Struggles</h2>
 
-      <table class="mt">
-        <thead>
-          <tr><th>Task Domain</th><th>AI Performance</th><th>Ceiling Level</th><th>Timeframe to Viability</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Precise Geometric Reasoning</strong><br><span style="font-size:.76rem;color:var(--text-3)">Dimensional calculations, structural analysis, spatial coordination</span></td>
-            <td>Approximates only. Cannot guarantee dimensionally consistent output.</td>
-            <td><span class="ch">STRUCTURAL LIMIT</span></td>
-            <td>Architecture-level spatial reasoning requires paradigm shift beyond transformers.</td>
-          </tr>
-          <tr>
-            <td><strong>BIM Model Generation</strong><br><span style="font-size:.76rem;color:var(--text-3)">IFC-compliant geometry, parameter relationships, classification</span></td>
-            <td>Produces geometry, not information-rich models with proper parameters.</td>
-            <td><span class="ch">PARADIGM CONFLICT</span></td>
-            <td>BIM = structured data; Generative = probabilistic. Core incompatibility.</td>
-          </tr>
-          <tr>
-            <td><strong>Construction Documentation</strong><br><span style="font-size:.76rem;color:var(--text-3)">Coordinated plans, sections, details, schedules</span></td>
-            <td>Can draft individual spec sections. Cannot maintain cross-document consistency.</td>
-            <td><span class="cm">MEDIUM-TERM</span></td>
-            <td>Better context windows may improve in 2&ndash;3 years. Not reliable today.</td>
-          </tr>
-          <tr>
-            <td><strong>Structural Load Calculation</strong><br><span style="font-size:.76rem;color:var(--text-3)">FEA, load paths, deflection under live loads</span></td>
-            <td>Can suggest structural typologies but cannot compute load bearing reliably.</td>
-            <td><span class="ch">STRUCTURAL LIMIT</span></td>
-            <td>Requires integration with deterministic FEA engines &mdash; AI assists, not replaces.</td>
-          </tr>
-          <tr>
-            <td><strong>Cross-discipline Coordination</strong><br><span style="font-size:.76rem;color:var(--text-3)">MEP clash detection, system integration</span></td>
-            <td>Limited to single-domain awareness. Cannot maintain global model state.</td>
-            <td><span class="cm">MEDIUM-TERM</span></td>
-            <td>Multi-agent pipelines with tool access may partially bridge this gap.</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-wrap">
+        <table class="mt">
+          <thead>
+            <tr><th>Task Domain</th><th>AI Performance</th><th>Ceiling Level</th><th>Timeframe to Viability</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Precise Geometric Reasoning</strong><br><span style="font-size:.76rem;color:var(--text-3)">Dimensional calculations, structural analysis, spatial coordination</span></td>
+              <td>Approximates only. Cannot guarantee dimensionally consistent output.</td>
+              <td><span class="ch">STRUCTURAL LIMIT</span></td>
+              <td>Architecture-level spatial reasoning requires paradigm shift beyond transformers.</td>
+            </tr>
+            <tr>
+              <td><strong>BIM Model Generation</strong><br><span style="font-size:.76rem;color:var(--text-3)">IFC-compliant geometry, parameter relationships, classification</span></td>
+              <td>Produces geometry, not information-rich models with proper parameters.</td>
+              <td><span class="ch">PARADIGM CONFLICT</span></td>
+              <td>BIM = structured data; Generative = probabilistic. Core incompatibility.</td>
+            </tr>
+            <tr>
+              <td><strong>Construction Documentation</strong><br><span style="font-size:.76rem;color:var(--text-3)">Coordinated plans, sections, details, schedules</span></td>
+              <td>Can draft individual spec sections. Cannot maintain cross-document consistency.</td>
+              <td><span class="cm">MEDIUM-TERM</span></td>
+              <td>Better context windows may improve in 2&ndash;3 years. Not reliable today.</td>
+            </tr>
+            <tr>
+              <td><strong>Structural Load Calculation</strong><br><span style="font-size:.76rem;color:var(--text-3)">FEA, load paths, deflection under live loads</span></td>
+              <td>Can suggest structural typologies but cannot compute load bearing reliably.</td>
+              <td><span class="ch">STRUCTURAL LIMIT</span></td>
+              <td>Requires integration with deterministic FEA engines &mdash; AI assists, not replaces.</td>
+            </tr>
+            <tr>
+              <td><strong>Cross-discipline Coordination</strong><br><span style="font-size:.76rem;color:var(--text-3)">MEP clash detection, system integration</span></td>
+              <td>Limited to single-domain awareness. Cannot maintain global model state.</td>
+              <td><span class="cm">MEDIUM-TERM</span></td>
+              <td>Multi-agent pipelines with tool access may partially bridge this gap.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <!-- Section Navigation Row -->
       <div class="sec-nav-row">
@@ -703,7 +949,7 @@
         <div class="strat-l">Practical Strategy (20 / 80 Rule)</div>
         <p class="strat-t">Identify the 20% of your workflow that is text-heavy, repetitive, or search-intensive, and apply AI there. Leave the rest to the tools and judgment that architecture demands. The 80% that remains human is not a limitation &mdash; it is the definition of the discipline.</p>
         <div class="strat-btns">
-          <button class="btn-strat-p">⬇ Download Research Report</button>
+          <button class="btn-strat-p" onclick="window.print()" title="Imprimir o guardar como PDF">⬇ Download Research Report</button>
           <a href="/experiments" class="btn-strat-s">Next Experiment &rarr;</a>
         </div>
       </div>
@@ -741,23 +987,94 @@
   <div class="fr">ARCH-AI-01 // CC-BY 4.0 Open Research</div>
 </footer>
 
+<!-- FLOATING TOAST NOTIFICATION -->
+<div id="toast" class="toast" role="status" aria-live="polite">
+  <span class="toast-dot"></span>
+  <span id="toastMsg">Copiado al portapapeles</span>
+</div>
+
+<!-- MOBILE SECTIONS MODAL -->
+<div id="mobile-toc-modal" class="mobile-toc-modal" onclick="if(event.target===this)closeMobileToc()">
+  <div class="mobile-toc-card">
+    <div class="mobile-toc-head">
+      <span class="mobile-toc-title">Document Sections</span>
+      <button class="btn-close-modal" onclick="closeMobileToc()" aria-label="Cerrar">&times;</button>
+    </div>
+    <ul class="mobile-toc-list">
+      <li class="mobile-toc-item cur" onclick="goToSection('s00');closeMobileToc();">
+        <span>00. Central Inquiry</span>
+        <span class="mobile-toc-pg">p. 01</span>
+      </li>
+      <li class="mobile-toc-item" onclick="goToSection('s01');closeMobileToc();">
+        <span>01. AI Excels: Text &amp; Code</span>
+        <span class="mobile-toc-pg">p. 03</span>
+      </li>
+      <li class="mobile-toc-item" onclick="goToSection('s02');closeMobileToc();">
+        <span>02. AI Struggles: Geometry &amp; BIM</span>
+        <span class="mobile-toc-pg">p. 06</span>
+      </li>
+      <li class="mobile-toc-item" onclick="goToSection('s03');closeMobileToc();">
+        <span>03. Structural Ceiling Analysis</span>
+        <span class="mobile-toc-pg">p. 09</span>
+      </li>
+      <li class="mobile-toc-item" onclick="goToSection('s04');closeMobileToc();">
+        <span>04. Core Learnings</span>
+        <span class="mobile-toc-pg">p. 11</span>
+      </li>
+      <li class="mobile-toc-item" onclick="goToSection('s05');closeMobileToc();">
+        <span>05. Conclusion &amp; Next Steps</span>
+        <span class="mobile-toc-pg">p. 13</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
 <script>
   // Reading Progress Bar
   const bar = document.getElementById('prog');
   window.addEventListener('scroll', () => {
-    const m = document.body.scrollHeight - window.innerHeight;
-    if (m > 0) bar.style.width = (window.scrollY / m * 100) + '%';
+    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+    if (totalHeight > 0) {
+      const pct = Math.min(100, Math.max(0, (window.scrollY / totalHeight) * 100));
+      bar.style.width = pct + '%';
+    }
   }, { passive: true });
 
   // Section Step Navigation
   const sectionIds = ['s00', 's01', 's02', 's03', 's04', 's05'];
   let currentSecIndex = 0;
 
+  function updateStepUI(index) {
+    currentSecIndex = index;
+    const text = `SEC 0${index} / 05`;
+    const indicator = document.getElementById('stepIndicator');
+    if (indicator) indicator.textContent = text;
+
+    const prevBtn = document.getElementById('btnPrevCrumb');
+    const nextBtn = document.getElementById('btnNextCrumb');
+    const sidePrev = document.getElementById('sidebarPrevBtn');
+    const sideNext = document.getElementById('sidebarNextBtn');
+
+    const isFirst = index === 0;
+    const isLast = index === sectionIds.length - 1;
+
+    if (prevBtn) prevBtn.disabled = isFirst;
+    if (nextBtn) nextBtn.disabled = isLast;
+    if (sidePrev) sidePrev.disabled = isFirst;
+    if (sideNext) sideNext.disabled = isLast;
+
+    // Mobile TOC items highlight
+    document.querySelectorAll('.mobile-toc-item').forEach((item, idx) => {
+      item.classList.toggle('cur', idx === index);
+    });
+  }
+
   function goToSection(id) {
     const el = document.getElementById(id);
     if (el) {
-      const top = el.offsetTop - 75;
-      window.scrollTo({ top, behavior: 'smooth' });
+      const navOffset = 88; // Accounts for sticky two-tier navbar
+      const y = el.getBoundingClientRect().top + window.scrollY - navOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
     }
   }
 
@@ -771,43 +1088,181 @@
   // Scrollspy & Active TOC Indicator
   const sections = document.querySelectorAll('.sec');
   const tocLinks = document.querySelectorAll('.toc li a');
-  const stepIndicator = document.getElementById('stepIndicator');
 
-  window.addEventListener('scroll', () => {
-    let current = 's00';
-    let currentIndex = 0;
-
-    sections.forEach((sec, idx) => {
-      const top = sec.offsetTop - 120;
-      if (window.scrollY >= top) {
-        current = sec.getAttribute('id');
-        currentIndex = idx;
+  // Intercept TOC link clicks for smooth offset scrolling
+  tocLinks.forEach((link) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const href = link.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        goToSection(href.substring(1));
       }
     });
+  });
 
-    currentSecIndex = currentIndex;
+  window.addEventListener('scroll', () => {
+    let currentIndex = 0;
+    const scrollPos = window.scrollY;
+    const windowH = window.innerHeight;
+    const docH = document.documentElement.scrollHeight;
 
-    tocLinks.forEach(link => {
+    // Bottom of page detection for final section
+    if (scrollPos + windowH >= docH - 60) {
+      currentIndex = sections.length - 1;
+    } else {
+      sections.forEach((sec, idx) => {
+        const top = sec.getBoundingClientRect().top + window.scrollY - 110;
+        if (scrollPos >= top) {
+          currentIndex = idx;
+        }
+      });
+    }
+
+    const currentId = sectionIds[currentIndex];
+
+    tocLinks.forEach((link) => {
       link.classList.remove('cur');
-      if (link.getAttribute('href') === '#' + current) {
+      if (link.getAttribute('href') === '#' + currentId) {
         link.classList.add('cur');
       }
     });
 
-    if (stepIndicator) {
-      stepIndicator.textContent = `SEC 0${currentIndex} / 05`;
-    }
+    updateStepUI(currentIndex);
   }, { passive: true });
 
-  // Keyboard Navigation: Left / Right Arrows
+  // Floating Toast Notification Helper
+  function showToast(message) {
+    const toast = document.getElementById('toast');
+    const msg = document.getElementById('toastMsg');
+    if (!toast || !msg) return;
+    msg.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(window._toastTimeout);
+    window._toastTimeout = setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2800);
+  }
+
+  // Copy DOI to clipboard
+  function copyDoi() {
+    const doi = '10.1038/arch.ai.2026.042';
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(doi).then(() => {
+        showToast('DOI copiado: ' + doi);
+      }).catch(() => {
+        showToast('DOI: ' + doi);
+      });
+    } else {
+      showToast('DOI: ' + doi);
+    }
+  }
+
+  // Copy Benchmark Raw Data JSON to clipboard
+  function copyRawData() {
+    const rawData = {
+      benchmark: "EXP-AEC-8840",
+      cycle: "2026.1",
+      models_tested: ["Gemini 2.5 Pro", "Claude 3.5 Sonnet", "GPT-4o", "RhinoCompute FEA"],
+      domains: {
+        text_summarization: 0.85,
+        code_generation_parametric: 0.70,
+        regulatory_compliance_rag: 0.92,
+        spatial_adjacency_vision: 0.90,
+        precise_geometric_reasoning: 0.00,
+        bim_ifc_generation: 0.15,
+        structural_load_calculation: 0.22
+      },
+      pi: "Jorge Ludeña",
+      institution: "Architecture AI Lab / ETSAM Structural Mechanics Dept"
+    };
+    const jsonStr = JSON.stringify(rawData, null, 2);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(jsonStr).then(() => {
+        showToast('Benchmark JSON copiado al portapapeles');
+      }).catch(() => {
+        showToast('Error al copiar al portapapeles');
+      });
+    } else {
+      showToast('Datos copiados');
+    }
+  }
+
+  // Mobile TOC Modal Toggles
+  function toggleMobileToc() {
+    const modal = document.getElementById('mobile-toc-modal');
+    if (modal) modal.classList.toggle('open');
+  }
+
+  function closeMobileToc() {
+    const modal = document.getElementById('mobile-toc-modal');
+    if (modal) modal.classList.remove('open');
+  }
+
+  // Keyboard Shortcuts: Left / Right Arrows, J / K, Escape
   window.addEventListener('keydown', (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-    if (e.key === 'ArrowRight' || e.key === 'j') {
+    if (e.key === 'Escape') {
+      closeMobileToc();
+    } else if (e.key === 'ArrowRight' || e.key === 'j') {
       navigateStep(1);
     } else if (e.key === 'ArrowLeft' || e.key === 'k') {
       navigateStep(-1);
     }
   });
+
+  // Initialize UI state
+  updateStepUI(0);
+
+  // LANGUAGE TRANSLATION ENGINE
+  function getCookie(n){const v=document.cookie.match('(^|;) ?'+n+'=([^;]*)(;|$)');return v?v[2]:null;}
+  function setCookie(n,val){const d=new Date();d.setTime(d.getTime()+30*86400000);document.cookie=n+"="+val+";path=/;expires="+d.toUTCString();}
+  function clearCookie(n){document.cookie=n+'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';}
+
+  function setLang(lang){
+    const btnEs=document.getElementById('btn-lang-es');
+    const btnEn=document.getElementById('btn-lang-en');
+    if(lang==='es'){
+      setCookie('googtrans','/en/es');
+      localStorage.setItem('aai_site_lang','es');
+      if(btnEs){btnEs.style.background='#0D0D0D';btnEs.style.color='#fff';btnEs.style.fontWeight='800';}
+      if(btnEn){btnEn.style.background='transparent';btnEn.style.color='#666';btnEn.style.fontWeight='600';}
+      loadGT('es');
+    } else {
+      localStorage.setItem('aai_site_lang','en');
+      clearCookie('googtrans');
+      if(btnEs){btnEs.style.background='transparent';btnEs.style.color='#666';btnEs.style.fontWeight='600';}
+      if(btnEn){btnEn.style.background='#0D0D0D';btnEn.style.color='#fff';btnEn.style.fontWeight='800';}
+      const select=document.querySelector('.goog-te-combo');
+      if(select){select.value='en';select.dispatchEvent(new Event('change'));}
+      setTimeout(()=>{if(getCookie('googtrans')&&getCookie('googtrans')!=='/en/en'){clearCookie('googtrans');window.location.reload();}},200);
+    }
+  }
+
+  function loadGT(target){
+    if(!window.__gt){
+      window.__gt=true;
+      window.googleTranslateElementInit=function(){
+        new window.google.translate.TranslateElement({pageLanguage:'en',includedLanguages:'es,en',autoDisplay:false},'google_translate_element');
+        setTimeout(()=>{
+          const select=document.querySelector('.goog-te-combo');
+          if(select&&target){select.value=target;select.dispatchEvent(new Event('change'));}
+        },300);
+      };
+      const s=document.createElement('script');
+      s.src='https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+      s.async=true;
+      document.body.appendChild(s);
+    } else {
+      const select=document.querySelector('.goog-te-combo');
+      if(select&&target){select.value=target;select.dispatchEvent(new Event('change'));}
+    }
+  }
+
+  const saved=localStorage.getItem('aai_site_lang');
+  const cookie=getCookie('googtrans');
+  if(saved==='es'||(cookie&&cookie.includes('/es'))){
+    setLang('es');
+  }
 </script>
 </body>
 </html>

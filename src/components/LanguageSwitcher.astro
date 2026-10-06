@@ -1,0 +1,256 @@
+---
+// Architecture AI Lab - Language Switcher Component (ES / EN)
+// Full-site instant dynamic translation without external costs or framework dependencies
+interface Props {
+  className?: string;
+}
+const { className = '' } = Astro.props;
+---
+
+<div class={`lang-switcher-wrap notranslate ${className}`} id="lang-switcher" translate="no">
+  <div class="lang-pill" role="group" aria-label="Selector de idioma / Language Switcher">
+    <button 
+      type="button" 
+      class="lang-btn active" 
+      id="btn-lang-es" 
+      data-lang="es" 
+      aria-label="Versión en Español"
+      title="Versión original en Español"
+    >
+      ES
+    </button>
+    <span class="lang-divider">/</span>
+    <button 
+      type="button" 
+      class="lang-btn" 
+      id="btn-lang-en" 
+      data-lang="en" 
+      aria-label="English Version"
+      title="Switch entire site to English"
+    >
+      EN
+    </button>
+  </div>
+  
+  <!-- Off-screen Mount Point for Google Translate Engine -->
+  <div id="google_translate_element" style="position:fixed;bottom:-200px;left:-200px;opacity:0.001;pointer-events:none;width:1px;height:1px;overflow:hidden;" aria-hidden="true"></div>
+</div>
+
+<style>
+  .lang-switcher-wrap {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    user-select: none;
+    z-index: 50;
+  }
+
+  .lang-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0.2rem 0.45rem;
+    border-radius: 9999px;
+    background: #EFEFEA;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    transition: all 0.15s ease;
+  }
+
+  .lang-pill:hover {
+    border-color: rgba(0, 0, 0, 0.25);
+    background: #E8E8E2;
+  }
+
+  .lang-btn {
+    background: transparent;
+    border: none;
+    padding: 0.2rem 0.4rem;
+    color: #686862;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 9999px;
+    transition: all 0.15s ease;
+    outline: none;
+    line-height: 1;
+  }
+
+  .lang-btn:hover {
+    color: #0D0D0D;
+  }
+
+  .lang-btn.active {
+    color: #FFFFFF;
+    font-weight: 800;
+    background: #0D0D0D;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  }
+
+  .lang-divider {
+    color: #A0A098;
+    font-size: 0.65rem;
+    pointer-events: none;
+    user-select: none;
+    padding: 0 1px;
+  }
+
+  /* Completely suppress Google Translate banners, tooltips and frame artifacts */
+  :global(.goog-te-banner-frame),
+  :global(.goog-te-banner-frame.skiptranslate),
+  :global(iframe.goog-te-banner-frame),
+  :global(#goog-gt-tt),
+  :global(.goog-te-balloon-frame) {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  :global(body) {
+    top: 0px !important;
+    position: static !important;
+  }
+  :global(.goog-tooltip),
+  :global(.goog-tooltip:hover) {
+    display: none !important;
+  }
+  :global(.goog-text-highlight) {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+</style>
+
+<script is:inline>
+  (function() {
+    const STORAGE_KEY = 'aai_site_lang';
+    
+    function getCookie(name) {
+      const v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+      return v ? v[2] : null;
+    }
+
+    function setCookie(name, value, days) {
+      const d = new Date();
+      d.setTime(d.getTime() + 24*60*60*1000*(days || 30));
+      const domain = window.location.hostname;
+      document.cookie = name + "=" + value + ";path=/;expires=" + d.toUTCString();
+      if (domain && domain !== 'localhost') {
+        document.cookie = name + "=" + value + ";path=/;domain=" + domain + ";expires=" + d.toUTCString();
+      }
+    }
+
+    function clearCookie(name) {
+      const domain = window.location.hostname;
+      document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      if (domain && domain !== 'localhost') {
+        document.cookie = name + '=; Path=/; Domain=' + domain + '; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      }
+    }
+
+    let savedLang = localStorage.getItem(STORAGE_KEY);
+    const gtCookie = getCookie('googtrans');
+    if (gtCookie && gtCookie.includes('/en')) {
+      savedLang = 'en';
+    }
+
+    function updateSwitcherUI(lang) {
+      const btnEs = document.getElementById('btn-lang-es');
+      const btnEn = document.getElementById('btn-lang-en');
+      if (btnEs && btnEn) {
+        btnEs.classList.toggle('active', lang === 'es');
+        btnEn.classList.toggle('active', lang === 'en');
+      }
+    }
+
+    function applyTranslation(lang) {
+      if (lang === 'en') {
+        setCookie('googtrans', '/es/en', 30);
+        localStorage.setItem(STORAGE_KEY, 'en');
+        updateSwitcherUI('en');
+
+        const select = document.querySelector('.goog-te-combo');
+        if (select) {
+          select.value = 'en';
+          select.dispatchEvent(new Event('change'));
+        } else {
+          loadGoogleTranslate(() => {
+            setTimeout(() => {
+              const combo = document.querySelector('.goog-te-combo');
+              if (combo) {
+                combo.value = 'en';
+                combo.dispatchEvent(new Event('change'));
+              }
+            }, 300);
+          });
+        }
+      } else {
+        localStorage.setItem(STORAGE_KEY, 'es');
+        clearCookie('googtrans');
+        updateSwitcherUI('es');
+        const select = document.querySelector('.goog-te-combo');
+        if (select) {
+          select.value = 'es';
+          select.dispatchEvent(new Event('change'));
+          setTimeout(() => {
+            if (getCookie('googtrans') && getCookie('googtrans') !== '/es/es') {
+              clearCookie('googtrans');
+              window.location.reload();
+            }
+          }, 200);
+        } else if (gtCookie && gtCookie.includes('/en')) {
+          window.location.reload();
+        }
+      }
+    }
+
+    function loadGoogleTranslate(onReady) {
+      if (window.__gtScriptLoaded) {
+        if (onReady) onReady();
+        return;
+      }
+      window.__gtScriptLoaded = true;
+
+      window.googleTranslateElementInit = function() {
+        new window.google.translate.TranslateElement({
+          pageLanguage: 'es',
+          includedLanguages: 'es,en',
+          autoDisplay: false,
+          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
+        }, 'google_translate_element');
+
+        if (onReady) setTimeout(onReady, 250);
+      };
+
+      const s = document.createElement('script');
+      s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+      s.async = true;
+      document.body.appendChild(s);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const btnEs = document.getElementById('btn-lang-es');
+      const btnEn = document.getElementById('btn-lang-en');
+
+      if (btnEs) btnEs.addEventListener('click', () => applyTranslation('es'));
+      if (btnEn) btnEn.addEventListener('click', () => applyTranslation('en'));
+
+      if (savedLang === 'en') {
+        updateSwitcherUI('en');
+        loadGoogleTranslate(() => {
+          setTimeout(() => {
+            const select = document.querySelector('.goog-te-combo');
+            if (select) {
+              select.value = 'en';
+              select.dispatchEvent(new Event('change'));
+            }
+          }, 350);
+        });
+      } else {
+        updateSwitcherUI('es');
+      }
+    });
+  })();
+</script>
