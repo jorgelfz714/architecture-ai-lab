@@ -117,6 +117,7 @@ architecture-ai-lab/
 - **2026-09-25:** Depuración integral del código, auditoría de esquemas Zod en todas las colecciones y eliminación de archivos residuales.
 - **2026-09-25:** Inicialización de Git, creación del repositorio remoto en GitHub (`jorgelfz714/architecture-ai-lab`) y push inicial.
 - **2026-09-25:** Conexión con Netlify, ajuste de entorno a Node 22 y resolución de compilación para puesta en producción en vivo.
+- **2026-10-26:** Implementación de la nueva estructura editorial canónica según la especificación `AI_Architecture_Lab_Web_Structure_Antigravity`: titular *"Architecture is changing. Make something new."*, sección de exploración de 3 tarjetas (*TOOLS*, *WORKFLOWS*, *EXPERIMENTS*), proyectos destacados reales (*What's taking shape*), cierre (*Beyond the ordinary*) y verificación responsive en escritorio y móvil.
 
 ---
 

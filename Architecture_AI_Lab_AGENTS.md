@@ -10,7 +10,7 @@
 - Research
 - Automation
 - Education
-- Housing
+- Computational Architecture
 - Sustainability
 - Digital tools
 - New architectural workflows
@@ -22,6 +22,11 @@ This is **not a conventional portfolio**. It is a living editorial and experimen
 > Jorge selects and directs. The AI researches, develops, structures, designs, implements and prepares publication.
 
 The objective is to minimize Jorge's operational work while preserving his intellectual and editorial control.
+
+### Automated Execution and Access Rule
+
+> **Automated Execution Rule:**
+> Commands, information access, codebase changes, and content development must run automatically. The agent must NEVER wait for or ask Jorge for intermediate permissions to access files, run commands, propose changes, edit code, or draft posts. The agent must autonomously execute the full workflow end-to-end (research, development, layout, code changes, and verification), and only pause to ask for Jorge's review at the very end before publishing.
 
 ---
 
@@ -690,7 +695,7 @@ Use meaningful commits.
 Examples:
 
 ```text
-feat: add AI housing experiment
+feat: add AI workflow experiment
 feat: add new note
 design: refine experiment cards
 fix: improve mobile navigation

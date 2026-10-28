@@ -11,7 +11,7 @@ interface Props {
 
 const {
   title = "Architecture AI Lab",
-  description = "Digital laboratory exploring the intersection of architecture, artificial intelligence, housing, and computational workflows.",
+  description = "Digital laboratory exploring the intersection of architecture, artificial intelligence, and computational workflows.",
   fullWidth = false,
   showProgress = false,
 } = Astro.props;
@@ -19,12 +19,11 @@ const {
 const currentPath = Astro.url.pathname;
 
 const navItems = [
-  { href: "/", label: "home" },
-  { href: "/work", label: "work" },
-  { href: "/experiments", label: "experiments" },
-  { href: "/notes", label: "notes" },
-  { href: "/resources", label: "resources" },
-  { href: "/about", label: "about" }
+  { href: "/", label: "Home" },
+  { href: "/work", label: "Tools" },
+  { href: "/resources", label: "Workflows" },
+  { href: "/experiments", label: "Experiments" },
+  { href: "/about", label: "About" }
 ];
 ---
 
@@ -63,10 +62,10 @@ const navItems = [
     <header class="site-header">
       <div class="container nav-wrapper">
         <a href="/" class="site-title">
-          Architecture AI Lab
-          <span>v1.0</span>
+          AI Architecture Lab
+          <span style="background:var(--text-primary);color:#fff;font-family:var(--font-mono);font-size:0.58rem;padding:0.12rem 0.45rem;border-radius:9999px;margin-left:0.35rem;">LAB</span>
         </a>
-        <div style="display: flex; align-items: center; gap: 1.5rem;">
+        <div style="display: flex; align-items: center; gap: 1.25rem;">
           <nav class="site-nav" aria-label="Navegación principal">
             {navItems.map((item) => {
               const isActive = item.href === "/" 
@@ -82,6 +81,9 @@ const navItems = [
               );
             })}
           </nav>
+          <a href="/work" class="btn-primary" style="font-family:var(--font-mono);font-size:0.7rem;font-weight:700;padding:0.4rem 0.9rem;border-radius:9999px;white-space:nowrap;background:var(--text-primary);color:#fff;">
+            Explore AI Tools &rarr;
+          </a>
           <LanguageSwitcher />
         </div>
       </div>

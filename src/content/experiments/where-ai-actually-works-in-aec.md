@@ -59,7 +59,7 @@ AI can quickly scan and cross-reference building codes, zoning regulations, and 
 
 Multimodal models can identify room types, circulation patterns, and spatial adjacencies from floor plan images — useful for rapid typological analysis.
 
-**Tested workflow:** Feed 10 social housing floor plans to Gemini Vision → extract room counts, adjacency relationships, and ventilation patterns.
+**Tested workflow:** Feed 10 architectural floor plans to Gemini Vision → extract room counts, adjacency relationships, and ventilation patterns.
 
 **Accuracy:** ~90% for qualitative analysis. ~86% for area estimation (without explicit scale bars).
 

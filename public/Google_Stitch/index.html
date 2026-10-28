@@ -52,15 +52,45 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="header">
-    <div class="kicker">Google Stitch // Multi-Version Archive</div>
-    <h1>Architecture AI Lab &mdash; Dossier Versions</h1>
-    <p class="sub">Archivo consolidado de iteraciones de diagramación y estilos para el experimento <em>EXP_004: Where AI Actually Works in AEC</em>. Compatible para inspección, lienzo de diseño y previsualización local.</p>
+  <div class="header" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1.5rem; flex-wrap: wrap;">
+    <div>
+      <div class="kicker">Google Stitch // Multi-Version Archive</div>
+      <h1>Architecture AI Lab &mdash; Dossier Versions</h1>
+      <p class="sub">Archivo consolidado de iteraciones de diagramación y estilos para el experimento <em>EXP_004: Where AI Actually Works in AEC</em>. Compatible para inspección, lienzo de diseño y previsualización local.</p>
+    </div>
+    
+    <!-- LANGUAGE SWITCHER -->
+    <div class="lang-switcher-wrap notranslate" id="lang-switcher" translate="no" style="display:inline-flex; align-items:center; background:#EFEFEA; padding:0.2rem 0.45rem; border-radius:9999px; border:1px solid #E5E5DE; font-family:var(--mono); font-size:0.7rem;">
+      <button type="button" id="btn-lang-es" onclick="setLang('es')" style="background:#0D0D0D; color:#fff; border:none; padding:0.2rem 0.45rem; border-radius:9999px; font-weight:800; cursor:pointer; font-family:inherit; font-size:inherit;">ES</button>
+      <span style="color:#888; margin:0 2px;">/</span>
+      <button type="button" id="btn-lang-en" onclick="setLang('en')" style="background:transparent; color:#666; border:none; padding:0.2rem 0.45rem; border-radius:9999px; font-weight:600; cursor:pointer; font-family:inherit; font-size:inherit;">EN</button>
+    </div>
+    <div id="google_translate_element" style="position:fixed;bottom:-200px;left:-200px;opacity:0.001;pointer-events:none;width:1px;height:1px;overflow:hidden;" aria-hidden="true"></div>
   </div>
 
   <div class="grid">
-    <!-- Version 2: Auralis Canonical (Active Recommended) -->
-    <div class="card card-rec">
+    <!-- Upgraded Canonical Home Demo -->
+    <div class="card card-rec" style="grid-column: 1 / -1; border-color: #0D0D0D; background: linear-gradient(135deg, #FFFFFF 0%, #FAF8F5 100%);">
+      <div>
+        <div class="card-num">★ PORTADA &amp; ESTRUCTURA CANÓNICA // AI_ARCHITECTURE_LAB_WEB_STRUCTURE</div>
+        <h2 class="card-title">Portada &amp; Navegación Canónica (Auralis 2026.2)</h2>
+        <p class="card-desc">Estructura editorial completa con el titular <em>“Architecture is changing. Make something new.”</em>, navegación por tres categorías (<code>Tools</code>, <code>Workflows</code>, <code>Experiments</code>), bloque de exploración de 3 tarjetas visuales consistentes, proyectos destacados (<em>What's taking shape</em>) y cierre <em>Beyond the ordinary</em>.</p>
+        <div class="swatches">
+          <div class="swatch" style="background: #F7F7F4;" title="Warm Stone BG"></div>
+          <div class="swatch" style="background: #FFFFFF;" title="Card White"></div>
+          <div class="swatch" style="background: #0D0D0D;" title="Auralis Deep Black"></div>
+          <div class="swatch" style="background: #E879F9;" title="Mesh Magenta"></div>
+          <div class="swatch" style="background: #60A5FA;" title="Mesh Blue"></div>
+          <div class="swatch" style="background: #10B981;" title="Emerald Status"></div>
+        </div>
+      </div>
+      <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:0.5rem;">
+        <a href="/demo-home-auralis.html" class="card-link" style="font-size:0.78rem;">Abrir Portada Canónica Mejorada &rarr;</a>
+        <a href="/demo-auralis-style.html" class="card-link card-link-sec" style="font-size:0.78rem;">Ver Dossier Técnico EXP_004 &rarr;</a>
+      </div>
+    </div>
+    <!-- Version 2: Auralis Canonical EXP_004 -->
+    <div class="card">
       <div>
         <div class="card-num">Versión Canónica &bull; Auralis Original + Estructura Comprimida</div>
         <h2 class="card-title">Auralis Original (Estructura Comprimida)</h2>
@@ -116,5 +146,59 @@
     <div>Architecture AI Lab &bull; Jorge Ludeña</div>
   </div>
 </div>
+
+<script>
+  function getCookie(n){const v=document.cookie.match('(^|;) ?'+n+'=([^;]*)(;|$)');return v?v[2]:null;}
+  function setCookie(n,val){const d=new Date();d.setTime(d.getTime()+30*86400000);document.cookie=n+"="+val+";path=/;expires="+d.toUTCString();}
+  function clearCookie(n){document.cookie=n+'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';}
+
+  function setLang(lang){
+    const btnEs=document.getElementById('btn-lang-es');
+    const btnEn=document.getElementById('btn-lang-en');
+    if(lang==='en'){
+      setCookie('googtrans','/es/en');
+      localStorage.setItem('aai_site_lang','en');
+      if(btnEs){btnEs.style.background='transparent';btnEs.style.color='#666';btnEs.style.fontWeight='600';}
+      if(btnEn){btnEn.style.background='#0D0D0D';btnEn.style.color='#fff';btnEn.style.fontWeight='800';}
+      loadGT();
+    } else {
+      localStorage.setItem('aai_site_lang','es');
+      clearCookie('googtrans');
+      if(btnEs){btnEs.style.background='#0D0D0D';btnEs.style.color='#fff';btnEs.style.fontWeight='800';}
+      if(btnEn){btnEn.style.background='transparent';btnEn.style.color='#666';btnEn.style.fontWeight='600';}
+      const select=document.querySelector('.goog-te-combo');
+      if(select){select.value='es';select.dispatchEvent(new Event('change'));}
+      setTimeout(()=>{if(getCookie('googtrans')&&getCookie('googtrans')!=='/es/es'){clearCookie('googtrans');window.location.reload();}},200);
+    }
+  }
+
+  function loadGT(){
+    if(!window.__gt){
+      window.__gt=true;
+      window.googleTranslateElementInit=function(){
+        new window.google.translate.TranslateElement({pageLanguage:'es',includedLanguages:'es,en',autoDisplay:false},'google_translate_element');
+        setTimeout(()=>{
+          const select=document.querySelector('.goog-te-combo');
+          if(select){select.value='en';select.dispatchEvent(new Event('change'));}
+        },300);
+      };
+      const s=document.createElement('script');
+      s.src='https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+      s.async=true;
+      document.body.appendChild(s);
+    } else {
+      const select=document.querySelector('.goog-te-combo');
+      if(select){select.value='en';select.dispatchEvent(new Event('change'));}
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded',()=>{
+    const saved=localStorage.getItem('aai_site_lang');
+    const cookie=getCookie('googtrans');
+    if(saved==='en'||(cookie&&cookie.includes('/en'))){
+      setLang('en');
+    }
+  });
+</script>
 </body>
 </html>

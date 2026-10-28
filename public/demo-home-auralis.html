@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Architecture AI Lab — Jorge Ludeña</title>
-  <meta name="description" content="Digital laboratory exploring the intersection of architecture, artificial intelligence, housing, and computational workflows." />
+  <title>AI Architecture Lab — Architecture is changing. Make something new.</title>
+  <meta name="description" content="A space to explore, build, and discover what's next in architecture at the intersection of AI, computational workflows, and empirical spatial research." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
@@ -13,6 +13,7 @@
       --bg: #F7F7F4;
       --bg-2: #FFFFFF;
       --bg-3: #EFEFEA;
+      --bg-dark: #0D0D0D;
       --text-1: #0D0D0D;
       --text-2: #383834;
       --text-3: #686862;
@@ -23,8 +24,16 @@
       --mono: 'JetBrains Mono', monospace;
       --serif: 'Newsreader', Georgia, serif;
       --pill: 9999px;
+      --radius-card: 16px;
+      --radius-sm: 8px;
     }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     html {
       font-family: var(--sans);
       background: var(--bg);
@@ -33,10 +42,20 @@
       scroll-behavior: smooth;
       font-size: 15px;
     }
-    body { min-height: 100vh; display: flex; flex-direction: column; }
-    a { color: inherit; text-decoration: none; }
 
-    /* HEADER */
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* HEADER & NAVIGATION */
     .nav {
       position: sticky;
       top: 0;
@@ -46,25 +65,172 @@
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
     }
-    .nav-top {
+
+    .nav-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.85rem 2.5rem;
+      padding: 0.85rem 2rem;
       max-width: 1240px;
       margin: 0 auto;
+      gap: 1.5rem;
     }
-    .nav-brand { display: flex; flex-direction: column; }
-    .nav-brand-name { font-family: var(--serif); font-size: 1.2rem; font-weight: 500; color: var(--text-1); letter-spacing: -0.01em; }
-    .nav-brand-sub { font-family: var(--mono); font-size: 0.58rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; }
-    
-    .nav-links { display: flex; gap: 1.75rem; align-items: center; }
-    .nav-lk { font-family: var(--mono); font-size: 0.7rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500; transition: color .15s; }
-    .nav-lk:hover, .nav-lk.act { color: var(--text-1); }
-    .nav-lk.act { font-weight: 700; border-bottom: 2px solid var(--text-1); padding-bottom: 2px; }
-    
-    .nav-status { font-family: var(--mono); font-size: 0.62rem; color: var(--text-3); display: flex; align-items: center; gap: 0.45rem; }
-    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #10B981; box-shadow: 0 0 8px rgba(16, 185, 129, 0.6); }
+
+    .nav-brand {
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .nav-brand-name {
+      font-family: var(--sans);
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-1);
+      letter-spacing: -0.025em;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .nav-brand-badge {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      font-weight: 700;
+      background: var(--text-1);
+      color: #fff;
+      padding: 0.12rem 0.45rem;
+      border-radius: var(--pill);
+      letter-spacing: 0.04em;
+    }
+
+    .nav-brand-sub {
+      font-family: var(--mono);
+      font-size: 0.56rem;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-top: 1px;
+    }
+
+    .nav-center {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+
+    .nav-lk {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+      transition: color 0.15s ease;
+      position: relative;
+    }
+
+    .nav-lk:hover, .nav-lk.act {
+      color: var(--text-1);
+    }
+
+    .nav-lk.act::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--text-1);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-shrink: 0;
+    }
+
+    .btn-nav-cta {
+      background: var(--text-1);
+      color: #FFFFFF !important;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.5rem 1.15rem;
+      border-radius: var(--pill);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+
+    .btn-nav-cta:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+    }
+
+    /* LANGUAGE SWITCHER */
+    .lang-switcher-wrap {
+      display: inline-flex;
+      align-items: center;
+      background: #EFEFEA;
+      padding: 0.18rem 0.4rem;
+      border-radius: var(--pill);
+      border: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+    }
+
+    .lang-btn {
+      background: transparent;
+      color: var(--text-3);
+      border: none;
+      padding: 0.18rem 0.45rem;
+      border-radius: var(--pill);
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: inherit;
+      transition: all 0.15s;
+    }
+
+    .lang-btn.active {
+      background: var(--text-1);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .lang-divider {
+      color: #999;
+      margin: 0 1px;
+      font-size: 0.65rem;
+    }
+
+    /* MOBILE TOGGLE */
+    .nav-toggle-btn {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 0.45rem 0.65rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      color: var(--text-1);
+    }
+
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1.25rem 2rem 1.5rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mobile-menu.open {
+      display: flex;
+    }
 
     /* LAYOUT WRAPPER */
     .home-wrap {
@@ -74,35 +240,40 @@
       width: 100%;
     }
 
-    /* HERO SECTION WITH AURALIS GLOW */
+    /* ========================================================
+       SECTION B: HERO / PORTADA PRINCIPAL
+       ======================================================== */
     .hero-section {
       position: relative;
-      padding: 3.5rem 0 3rem;
+      padding: 4rem 0 3.5rem;
       border-bottom: 1px solid var(--border);
-      margin-bottom: 3.5rem;
+      margin-bottom: 4rem;
     }
+
     .ambient-mesh-glow {
       position: absolute;
-      top: -40px;
-      right: 5%;
-      width: 500px;
-      height: 280px;
-      background: linear-gradient(135deg, rgba(232, 121, 249, 0.22), rgba(96, 165, 250, 0.22), rgba(52, 211, 153, 0.18));
-      filter: blur(64px);
+      top: -30px;
+      right: 2%;
+      width: 580px;
+      height: 360px;
+      background: linear-gradient(135deg, rgba(232, 121, 249, 0.24), rgba(96, 165, 250, 0.22), rgba(52, 211, 153, 0.18));
+      filter: blur(72px);
       border-radius: 50%;
       pointer-events: none;
       z-index: 0;
     }
+
     .hero-header-meta {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.75rem;
       position: relative;
       z-index: 1;
       flex-wrap: wrap;
       gap: 0.75rem;
     }
+
     .status-pill {
       font-family: var(--mono);
       font-size: 0.62rem;
@@ -116,6 +287,15 @@
       gap: 0.45rem;
       border: 1px solid rgba(0, 0, 0, 0.06);
     }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+    }
+
     .mono-meta {
       font-family: var(--mono);
       font-size: 0.62rem;
@@ -124,32 +304,119 @@
     }
 
     .hero-main-title {
-      font-size: clamp(2.4rem, 4.8vw, 3.8rem);
+      font-size: clamp(2.6rem, 5.2vw, 4.4rem);
       font-weight: 900;
-      line-height: 1.08;
-      letter-spacing: -0.035em;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
       color: var(--text-1);
       max-width: 980px;
-      margin-bottom: 1.35rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-title-accent {
+      background: linear-gradient(135deg, #0D0D0D 60%, #4B5563 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+
+    .hero-question {
+      font-family: var(--serif);
+      font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+      line-height: 1.45;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--text-1);
+      max-width: 860px;
+      margin-bottom: 1.25rem;
       position: relative;
       z-index: 1;
     }
 
     .hero-lead-text {
-      font-size: 1.12rem;
+      font-size: 1.15rem;
       line-height: 1.75;
       color: var(--text-2);
-      max-width: 840px;
-      margin-bottom: 1.75rem;
+      max-width: 820px;
+      margin-bottom: 1.6rem;
       position: relative;
       z-index: 1;
+    }
+
+    .hero-punchline-box {
+      display: inline-block;
+      margin-bottom: 2.25rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-punchline {
+      font-family: var(--sans);
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-1);
+      letter-spacing: -0.015em;
+      padding: 0.5rem 1rem;
+      background: rgba(0, 0, 0, 0.035);
+      border-left: 3px solid var(--text-1);
+      border-radius: 0 6px 6px 0;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+      position: relative;
+      z-index: 1;
+      flex-wrap: wrap;
+    }
+
+    .btn-hero-primary {
+      background: var(--text-1);
+      color: #FFFFFF;
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 0.75rem 1.85rem;
+      border-radius: var(--pill);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      transition: transform 0.15s, opacity 0.15s, box-shadow 0.15s;
+    }
+
+    .btn-hero-primary:hover {
+      transform: translateY(-2px);
+      opacity: 0.92;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-hero-secondary {
+      background: transparent;
+      color: var(--text-1);
+      border: 1px solid var(--border-mid);
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--pill);
+      transition: all 0.15s;
+    }
+
+    .btn-hero-secondary:hover {
+      background: rgba(0, 0, 0, 0.04);
+      border-color: var(--text-1);
     }
 
     .principle-box {
       background: var(--bg-2);
       border: 1px solid var(--border);
       border-left: 3px solid var(--text-1);
-      padding: 0.85rem 1.25rem;
+      padding: 0.75rem 1.15rem;
       border-radius: 6px;
       display: inline-flex;
       align-items: center;
@@ -158,38 +425,46 @@
       position: relative;
       z-index: 1;
       font-family: var(--mono);
-      font-size: 0.72rem;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+      font-size: 0.68rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+      max-width: 100%;
+      flex-wrap: wrap;
     }
-    .principle-lbl { font-weight: 700; color: var(--text-1); }
+
+    .principle-lbl { font-weight: 800; color: var(--text-1); }
     .principle-txt { color: var(--text-2); }
 
-    /* KPI RIBBON */
     .kpi-ribbon {
       display: flex;
       align-items: center;
-      gap: 1.75rem;
+      gap: 2rem;
       padding-top: 1.75rem;
       border-top: 1px solid var(--border);
       flex-wrap: wrap;
     }
+
     .kpi-item { display: flex; flex-direction: column; }
-    .kpi-val { font-size: 1.45rem; font-weight: 900; color: var(--text-1); letter-spacing: -0.03em; }
+    .kpi-val { font-size: 1.5rem; font-weight: 900; color: var(--text-1); letter-spacing: -0.03em; }
     .kpi-lbl { font-family: var(--mono); font-size: 0.58rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.15rem; }
     .kpi-sep { color: rgba(0, 0, 0, 0.15); font-family: var(--mono); font-size: 1.2rem; }
 
-    /* FEATURED DOSSIER SECTION */
-    .featured-section {
-      margin-bottom: 4.5rem;
+    /* ========================================================
+       SECTION C: EXPLORE WHAT'S POSSIBLE (THREE CARDS)
+       ======================================================== */
+    .explore-section {
+      margin-bottom: 5rem;
+      padding-top: 1rem;
     }
+
     .sec-label-row {
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.75rem;
       flex-wrap: wrap;
       gap: 0.75rem;
     }
+
     .sec-kicker {
       font-family: var(--mono);
       font-size: 0.65rem;
@@ -198,52 +473,198 @@
       letter-spacing: 0.1em;
       color: var(--text-1);
     }
+
     .sec-title {
-      font-size: 1.65rem;
+      font-size: clamp(1.75rem, 2.8vw, 2.3rem);
       font-weight: 800;
-      letter-spacing: -0.025em;
+      letter-spacing: -0.03em;
       color: var(--text-1);
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.35rem;
     }
-    .sec-sub { font-size: 0.88rem; color: var(--text-3); margin-bottom: 0; }
-    .sec-link {
+
+    .sec-sub {
+      font-size: 0.95rem;
+      color: var(--text-3);
+      max-width: 680px;
+      line-height: 1.55;
+    }
+
+    .explore-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .explore-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 2.25rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .explore-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: transparent;
+      transition: background 0.2s;
+    }
+
+    .explore-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
+      border-color: rgba(0, 0, 0, 0.18);
+    }
+
+    .explore-card:hover::before {
+      background: var(--text-1);
+    }
+
+    .explore-card-top {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .explore-cat-badge {
       font-family: var(--mono);
-      font-size: 0.68rem;
+      font-size: 0.62rem;
+      font-weight: 800;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .explore-title {
+      font-size: 1.75rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: var(--text-1);
+      margin-bottom: 0.65rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .explore-headline {
+      font-size: 1.02rem;
+      font-weight: 600;
+      color: var(--text-1);
+      line-height: 1.45;
+      margin-bottom: 0.85rem;
+    }
+
+    .explore-desc {
+      font-size: 0.88rem;
+      color: var(--text-2);
+      line-height: 1.65;
+      margin-bottom: 1.75rem;
+    }
+
+    /* MINI DIAGRAMS FOR EXPLORE CARDS */
+    .explore-diagram {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem 1rem;
+      margin-bottom: 1.5rem;
+      font-family: var(--mono);
+      font-size: 0.65rem;
+    }
+
+    .diagram-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.25rem 0;
+      color: var(--text-2);
+    }
+
+    .diagram-tag {
+      background: rgba(0, 0, 0, 0.05);
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.58rem;
+      font-weight: 600;
+    }
+
+    .explore-card-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .explore-btn-link {
+      font-family: var(--mono);
+      font-size: 0.72rem;
       font-weight: 700;
       color: var(--text-1);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-      padding-bottom: 2px;
-      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: gap 0.15s;
     }
-    .sec-link:hover { border-color: var(--text-1); padding-right: 3px; }
+
+    .explore-card:hover .explore-btn-link {
+      gap: 0.65rem;
+    }
+
+    /* ========================================================
+       SECTION D: FEATURED CONTENT (WHAT'S TAKING SHAPE)
+       ======================================================== */
+    .featured-section {
+      margin-bottom: 5rem;
+      scroll-margin-top: 5rem;
+    }
 
     .featured-dossier-card {
       background: var(--bg-2);
       border: 1.5px solid var(--text-1);
       border-radius: 20px;
       display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
+      grid-template-columns: 1.25fr 0.75fr;
       overflow: hidden;
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.05);
-      transition: box-shadow .2s;
+      transition: box-shadow 0.2s;
+      margin-bottom: 2.5rem;
     }
+
     .featured-dossier-card:hover {
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.09);
     }
+
     .dossier-left {
       padding: 2.75rem 2.5rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
+
     .dossier-tag-row {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.6rem;
       flex-wrap: wrap;
       margin-bottom: 1.15rem;
     }
-    .badge-featured {
+
+    .badge-category {
       font-family: var(--mono);
       font-size: 0.62rem;
       font-weight: 800;
@@ -251,8 +672,10 @@
       background: var(--text-1);
       padding: 0.2rem 0.6rem;
       border-radius: var(--pill);
+      letter-spacing: 0.04em;
     }
-    .badge-peer {
+
+    .badge-status-available {
       font-family: var(--mono);
       font-size: 0.62rem;
       font-weight: 700;
@@ -261,11 +684,33 @@
       padding: 0.2rem 0.6rem;
       border-radius: var(--pill);
     }
+
+    .badge-status-progress {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: #D97706;
+      background: rgba(217, 119, 6, 0.1);
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--pill);
+    }
+
+    .badge-status-proto {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: #6366F1;
+      background: rgba(99, 102, 241, 0.1);
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--pill);
+    }
+
     .badge-doi {
       font-family: var(--mono);
       font-size: 0.6rem;
       color: var(--text-3);
     }
+
     .dossier-title {
       font-size: clamp(1.6rem, 2.5vw, 2.2rem);
       font-weight: 900;
@@ -274,30 +719,60 @@
       color: var(--text-1);
       margin-bottom: 1rem;
     }
+
     .dossier-title a { color: inherit; }
+
     .dossier-desc {
-      font-size: 0.94rem;
-      line-height: 1.68;
+      font-size: 0.96rem;
+      line-height: 1.7;
       color: var(--text-2);
       margin-bottom: 1.75rem;
     }
 
-    /* MINI ACCURACY BARS IN HERO */
+    /* MINI ACCURACY BARS */
     .mini-accuracy-bars {
       display: flex;
       flex-direction: column;
       gap: 0.65rem;
       margin-bottom: 2rem;
       background: var(--bg);
-      padding: 1rem 1.25rem;
+      padding: 1.15rem 1.35rem;
       border-radius: 12px;
       border: 1px solid var(--border);
     }
-    .bar-col { display: flex; flex-direction: column; gap: 0.25rem; }
-    .bar-header { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.62rem; color: var(--text-2); }
-    .bar-header b { font-weight: 800; color: var(--text-1); }
-    .bar-bg { width: 100%; height: 5px; background: rgba(0, 0, 0, 0.08); border-radius: var(--pill); overflow: hidden; }
-    .bar-fill { height: 100%; background: var(--text-1); border-radius: var(--pill); }
+
+    .bar-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .bar-header {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-2);
+    }
+
+    .bar-header b {
+      font-weight: 800;
+      color: var(--text-1);
+    }
+
+    .bar-bg {
+      width: 100%;
+      height: 6px;
+      background: rgba(0, 0, 0, 0.08);
+      border-radius: var(--pill);
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: var(--text-1);
+      border-radius: var(--pill);
+    }
 
     .dossier-footer {
       display: flex;
@@ -308,7 +783,14 @@
       flex-wrap: wrap;
       gap: 1rem;
     }
-    .author-inline { display: flex; align-items: center; gap: 0.65rem; font-size: 0.78rem; }
+
+    .author-inline {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 0.78rem;
+    }
+
     .author-circle {
       width: 32px;
       height: 32px;
@@ -321,23 +803,36 @@
       font-weight: 800;
       font-size: 0.7rem;
     }
-    .author-inline strong { display: block; color: var(--text-1); }
-    .author-inline span { font-size: 0.65rem; color: var(--text-3); font-family: var(--mono); }
+
+    .author-inline strong {
+      display: block;
+      color: var(--text-1);
+    }
+
+    .author-inline span {
+      font-size: 0.65rem;
+      color: var(--text-3);
+      font-family: var(--mono);
+    }
 
     .btn-dossier-cta {
       background: var(--text-1);
-      color: #FFFFFF;
+      color: #FFFFFF !important;
       font-family: var(--mono);
-      font-size: 0.72rem;
+      font-size: 0.74rem;
       font-weight: 700;
-      padding: 0.55rem 1.35rem;
+      padding: 0.6rem 1.45rem;
       border-radius: var(--pill);
       transition: transform 0.15s, opacity 0.15s;
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
     }
-    .btn-dossier-cta:hover { transform: translateY(-1px); opacity: 0.9; }
+
+    .btn-dossier-cta:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
 
     /* RIGHT MESH PREVIEW BOX */
     .dossier-right {
@@ -350,35 +845,49 @@
       position: relative;
       overflow: hidden;
     }
-    .mesh-preview-box { width: 100%; max-width: 380px; position: relative; z-index: 2; }
+
+    .mesh-preview-box {
+      width: 100%;
+      max-width: 380px;
+      position: relative;
+      z-index: 2;
+    }
+
     .glass-inner-quote {
       background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-radius: 16px;
-      padding: 1.75rem;
+      padding: 1.85rem;
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
       border: 1px solid rgba(255, 255, 255, 0.9);
     }
+
     .quote-header {
       display: flex;
       justify-content: space-between;
       font-family: var(--mono);
-      font-size: 0.58rem;
+      font-size: 0.6rem;
       color: var(--text-3);
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      margin-bottom: 0.85rem;
+      margin-bottom: 0.95rem;
     }
-    .qh-status { color: #059669; font-weight: 700; }
+
+    .qh-status {
+      color: #059669;
+      font-weight: 700;
+    }
+
     .quote-text {
       font-family: var(--serif);
-      font-size: 1.05rem;
+      font-size: 1.08rem;
       line-height: 1.5;
       font-style: italic;
       color: var(--text-1);
       margin-bottom: 1.25rem;
     }
+
     .quote-toolchain {
       display: flex;
       align-items: center;
@@ -390,6 +899,7 @@
       padding-top: 0.85rem;
       border-top: 1px solid var(--border);
     }
+
     .chip-sm {
       background: rgba(0, 0, 0, 0.04);
       padding: 0.15rem 0.45rem;
@@ -397,58 +907,59 @@
       color: var(--text-2);
     }
 
-    /* CARD GRID */
-    .card-grid {
+    /* PROJECTS SUB-GRID */
+    .projects-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 1.5rem;
     }
-    .content-section { margin-bottom: 4.5rem; }
 
-    .auralis-card {
+    .project-card {
       background: var(--bg-2);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.75rem;
+      border-radius: var(--radius-card);
+      padding: 1.85rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       box-shadow: 0 4px 18px rgba(0, 0, 0, 0.02);
       transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
-    .auralis-card:hover {
-      transform: translateY(-2px);
+
+    .project-card:hover {
+      transform: translateY(-3px);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
     }
-    .auralis-card.featured { border: 1.5px solid var(--text-1); }
-    .card-top { margin-bottom: 1.25rem; }
-    .card-meta {
+
+    .project-card-top {
+      margin-bottom: 1.25rem;
+    }
+
+    .project-card-meta {
       display: flex;
       align-items: center;
-      gap: 0.45rem;
-      font-size: 0.62rem;
-      color: var(--text-3);
-      margin-bottom: 0.65rem;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
       font-family: var(--mono);
+      font-size: 0.62rem;
     }
-    .category-badge {
-      text-transform: uppercase;
-      color: var(--text-1);
-      font-weight: 700;
-      background: rgba(0, 0, 0, 0.045);
-      padding: 0.15rem 0.5rem;
-      border-radius: var(--pill);
-    }
-    .card-title {
-      font-size: 1.15rem;
+
+    .project-card-title {
+      font-size: 1.25rem;
       font-weight: 800;
       line-height: 1.3;
       letter-spacing: -0.02em;
       color: var(--text-1);
       margin-bottom: 0.55rem;
     }
-    .card-desc { font-size: 0.86rem; line-height: 1.62; color: var(--text-2); }
-    .card-bottom {
+
+    .project-card-desc {
+      font-size: 0.88rem;
+      line-height: 1.62;
+      color: var(--text-2);
+    }
+
+    .project-card-bottom {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -456,7 +967,13 @@
       border-top: 1px solid rgba(0, 0, 0, 0.06);
       gap: 0.75rem;
     }
-    .tag-list { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
     .tag {
       font-family: var(--mono);
       font-size: 0.58rem;
@@ -465,70 +982,307 @@
       padding: 0.15rem 0.5rem;
       border-radius: var(--pill);
     }
-    .card-arrow {
+
+    .project-action-link {
       font-family: var(--mono);
-      font-size: 0.68rem;
+      font-size: 0.7rem;
       font-weight: 700;
       color: var(--text-1);
       display: inline-flex;
       align-items: center;
       gap: 0.25rem;
+      white-space: nowrap;
     }
 
-    .split-section { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
-    .vertical-cards { display: flex; flex-direction: column; gap: 1.25rem; }
+    /* ========================================================
+       SECTION E: CLOSING (BEYOND THE ORDINARY)
+       ======================================================== */
+    .closing-section {
+      margin-bottom: 4rem;
+    }
 
-    /* FOOTER */
+    .closing-box {
+      background: var(--bg-dark);
+      color: #FFFFFF;
+      border-radius: 20px;
+      padding: 4.5rem 3.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+    }
+
+    .closing-mesh-glow {
+      position: absolute;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(232, 121, 249, 0.25) 0%, rgba(96, 165, 250, 0.2) 50%, transparent 80%);
+      filter: blur(50px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .closing-content {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .closing-kicker {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 1rem;
+    }
+
+    .closing-title {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 4vw, 3.4rem);
+      font-weight: 400;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+      color: #FFFFFF;
+    }
+
+    .closing-text {
+      font-size: 1.15rem;
+      line-height: 1.65;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 2.25rem;
+    }
+
+    .btn-beyond-cta {
+      background: #FFFFFF;
+      color: var(--text-1) !important;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      font-weight: 800;
+      padding: 0.8rem 2.2rem;
+      border-radius: var(--pill);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: transform 0.15s, opacity 0.15s;
+    }
+
+    .btn-beyond-cta:hover {
+      transform: translateY(-2px);
+      opacity: 0.95;
+    }
+
+    /* ========================================================
+       SECTION F: FOOTER
+       ======================================================== */
     footer {
       border-top: 1px solid var(--border);
       background: var(--bg-2);
-      padding: 1.75rem 2.5rem;
+      padding: 3rem 2rem 2.5rem;
+      margin-top: auto;
+    }
+
+    .footer-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .footer-brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-1);
+    }
+
+    .footer-brand-desc {
+      font-size: 0.82rem;
+      color: var(--text-3);
+      max-width: 380px;
+      line-height: 1.5;
+    }
+
+    .footer-nav {
+      display: flex;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .footer-col-title {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-1);
+      margin-bottom: 0.25rem;
+    }
+
+    .footer-lk {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-3);
+      transition: color 0.15s;
+    }
+
+    .footer-lk:hover {
+      color: var(--text-1);
+    }
+
+    .footer-bottom {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding-top: 1.75rem;
+      border-top: 1px solid var(--border);
       flex-wrap: wrap;
       gap: 1rem;
-      margin-top: auto;
+      font-family: var(--mono);
+      font-size: 0.64rem;
+      color: var(--text-3);
     }
-    footer div { font-family: var(--mono); line-height: 1.5; }
-    footer .fl { font-size: 0.64rem; color: var(--text-3); }
-    footer .fr { font-size: 0.62rem; color: var(--text-4); }
 
-    @media (max-width: 900px) {
-      .featured-dossier-card { grid-template-columns: 1fr; }
-      .dossier-right { padding: 2rem 1.5rem; }
-      .split-section { grid-template-columns: 1fr; gap: 2.5rem; }
-      .kpi-ribbon { gap: 1rem; }
-      .kpi-sep { display: none; }
-      .nav-top { padding: 0.75rem 1.25rem; }
+    /* RESPONSIVE BREAKPOINTS */
+    @media (max-width: 1024px) {
+      .explore-grid {
+        grid-template-columns: 1fr;
+      }
+      .featured-dossier-card {
+        grid-template-columns: 1fr;
+      }
+      .dossier-right {
+        padding: 2.5rem 1.75rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-center {
+        display: none;
+      }
+      .nav-toggle-btn {
+        display: block;
+      }
+      .hero-section {
+        padding: 2.5rem 0 2rem;
+      }
+      .hero-main-title {
+        font-size: 2.3rem;
+      }
+      .hero-question {
+        font-size: 1.18rem;
+      }
+      .hero-lead-text {
+        font-size: 1rem;
+      }
+      .kpi-ribbon {
+        gap: 1.25rem;
+      }
+      .kpi-sep {
+        display: none;
+      }
+      .closing-box {
+        padding: 3rem 1.5rem;
+      }
+      .dossier-left {
+        padding: 1.75rem 1.5rem;
+      }
+      .footer-top {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      .footer-nav {
+        gap: 1.75rem;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- HEADER -->
+  <!-- SECTION A: HEADER / NAVEGACIÓN -->
   <header class="nav">
-    <div class="nav-top">
+    <div class="nav-inner">
       <a href="/demo-home-auralis.html" class="nav-brand">
-        <span class="nav-brand-name">Architecture AI Lab</span>
-        <span class="nav-brand-sub">Empirical Research &amp; Computational Heuristics</span>
+        <div class="nav-brand-name">
+          AI Architecture Lab
+          <span class="nav-brand-badge">LAB</span>
+        </div>
+        <span class="nav-brand-sub">Empirical Research &bull; ETSAM Madrid</span>
       </a>
-      <nav class="nav-links">
-        <a href="/demo-home-auralis.html" class="nav-lk act">Home</a>
-        <a href="/demo-auralis-style.html" class="nav-lk">Dossier EXP_004</a>
+
+      <!-- Desktop Nav -->
+      <nav class="nav-center" aria-label="Main Navigation">
+        <a href="#featured-tools" class="nav-lk">Tools</a>
+        <a href="#featured-workflows" class="nav-lk">Workflows</a>
+        <a href="#featured-experiments" class="nav-lk">Experiments</a>
         <a href="/Google_Stitch/index.html" class="nav-lk">Stitch Archive</a>
       </nav>
-      <div class="nav-status">
-        <span class="status-dot"></span>
-        <span>Node Online</span>
+
+      <div class="nav-actions">
+        <!-- CTA Explore AI Tools -->
+        <a href="#explore" class="btn-nav-cta">
+          Explore AI Tools &rarr;
+        </a>
+
+        <!-- Dynamic ES/EN Language Switcher -->
+        <div class="lang-switcher-wrap notranslate" translate="no">
+          <button type="button" id="btn-lang-es" class="lang-btn active" onclick="setSiteLang('es')">ES</button>
+          <span class="lang-divider">/</span>
+          <button type="button" id="btn-lang-en" class="lang-btn" onclick="setSiteLang('en')">EN</button>
+        </div>
+
+        <!-- Mobile Hamburger Toggle -->
+        <button type="button" class="nav-toggle-btn" id="nav-toggle" aria-label="Toggle navigation menu" onclick="toggleMobileMenu()">
+          &#9776;
+        </button>
       </div>
     </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="#featured-tools" class="nav-lk" onclick="toggleMobileMenu()">Tools</a>
+      <a href="#featured-workflows" class="nav-lk" onclick="toggleMobileMenu()">Workflows</a>
+      <a href="#featured-experiments" class="nav-lk" onclick="toggleMobileMenu()">Experiments</a>
+      <a href="/Google_Stitch/index.html" class="nav-lk" onclick="toggleMobileMenu()">Stitch Multi-Version Archive</a>
+      <a href="#explore" class="btn-nav-cta" style="justify-content: center; width: 100%;" onclick="toggleMobileMenu()">Explore AI Tools &rarr;</a>
+    </div>
+
+    <div id="google_translate_element" style="position:fixed;bottom:-200px;left:-200px;opacity:0.001;pointer-events:none;width:1px;height:1px;overflow:hidden;" aria-hidden="true"></div>
   </header>
 
   <div class="home-wrap">
     
-    <!-- HERO / IDENTITY -->
-    <section class="hero-section">
+    <!-- ========================================================
+         SECTION B: HERO / PORTADA PRINCIPAL
+         ======================================================== -->
+    <section class="hero-section" id="hero">
       <div class="ambient-mesh-glow"></div>
       
       <div class="hero-header-meta">
@@ -539,65 +1293,190 @@
         <span class="mono-meta">CYCLE 2026.2 &bull; OPEN SCIENCE</span>
       </div>
 
+      <!-- Main Headline -->
       <h1 class="hero-main-title">
-        Arquitectura, Inteligencia Artificial y Razonamiento Espacial
+        Architecture is changing.<br />
+        <span class="hero-title-accent">Make something new.</span>
       </h1>
 
-      <p class="hero-lead-text">
-        Espacio de investigación empírica y computacional dirigido por <strong>Jorge Ludeña</strong> (ETSAM). Evaluamos con rigor matemático los modelos de frontera, la síntesis topológica IFC y los límites físicos reales de la IA en la disciplina arquitectónica.
+      <!-- Opening Inquiry Question -->
+      <p class="hero-question">
+        What if AI could change the way you design, the tools you use, and the ideas you bring to life?
       </p>
 
-      <div class="principle-box">
-        <span class="principle-lbl">Principio Rector:</span>
-        <span class="principle-txt">Jorge Ludeña selecciona, dirige y aprueba &bull; La IA investiga, desarrolla, diseña e implementa.</span>
+      <!-- Descriptive Body -->
+      <p class="hero-lead-text">
+        Explore new tools, experiment with emerging technologies, and discover new ways to approach architectural design.
+      </p>
+
+      <!-- Punchline -->
+      <div class="hero-punchline-box">
+        <div class="hero-punchline">
+          Less repetition. More exploration. New ways to create.
+        </div>
       </div>
 
+      <!-- Hero Call To Action Group -->
+      <div class="hero-cta-group">
+        <a href="#explore" class="btn-hero-primary">
+          Explore AI Tools &rarr;
+        </a>
+        <a href="#featured" class="btn-hero-secondary">
+          View Active Research
+        </a>
+      </div>
+
+      <!-- Core Principle Box -->
+      <div class="principle-box">
+        <span class="principle-lbl">Operating Principle:</span>
+        <span class="principle-txt">Jorge Lude&ntilde;a selects &amp; directs &bull; AI researches, develops, structures, designs &amp; implements.</span>
+      </div>
+
+      <!-- KPI Ribbon -->
       <div class="kpi-ribbon">
         <div class="kpi-item">
           <span class="kpi-val">4</span>
-          <span class="kpi-lbl">Modelos Testeados</span>
+          <span class="kpi-lbl">Frontier Models Benchmarked</span>
         </div>
         <div class="kpi-sep">/</div>
         <div class="kpi-item">
           <span class="kpi-val">9</span>
-          <span class="kpi-lbl">Dominios de Tareas AEC</span>
+          <span class="kpi-lbl">AEC Task Domains</span>
         </div>
         <div class="kpi-sep">/</div>
         <div class="kpi-item">
           <span class="kpi-val">100%</span>
-          <span class="kpi-lbl">Evaluación Empírica</span>
+          <span class="kpi-lbl">Reproducible Open Data</span>
         </div>
         <div class="kpi-sep">/</div>
         <div class="kpi-item">
           <span class="kpi-val">$0.00</span>
-          <span class="kpi-lbl">Infraestructura Serverless</span>
+          <span class="kpi-lbl">Serverless Recurring Cost</span>
         </div>
       </div>
     </section>
 
-    <!-- FEATURED BENCHMARK DOSSIER CARD -->
-    <section class="featured-section">
+    <!-- ========================================================
+         SECTION C: EXPLORATION (THREE CARDS)
+         ======================================================== -->
+    <section class="explore-section" id="explore">
       <div class="sec-label-row">
-        <span class="sec-kicker">★ INVESTIGACIÓN CENTRAL // DOSSIER ACTIVO</span>
-        <a href="/Google_Stitch/index.html" class="sec-link">Explorar Versiones en Google Stitch &rarr;</a>
+        <div>
+          <span class="sec-kicker">&bull; CORE PILLARS</span>
+          <h2 class="sec-title">Explore what's possible.</h2>
+          <p class="sec-sub">Three pathways to rethink how architectural work gets done, from automated micro-tools to connected workflows and frontier stress-testing.</p>
+        </div>
+        <a href="#featured" class="explore-btn-link">View all active projects &rarr;</a>
       </div>
 
-      <div class="featured-dossier-card">
+      <div class="explore-grid">
+        <!-- 1. TOOLS -->
+        <article class="explore-card">
+          <div class="explore-card-top">
+            <span class="explore-cat-badge">01 // TOOLS &amp; APPS</span>
+            <h3 class="explore-title">TOOLS</h3>
+            <p class="explore-headline">New tools to rethink how architectural work gets done.</p>
+            <p class="explore-desc">Small applications, utilities, and algorithmic prototypes applying artificial intelligence directly to concrete architectural tasks.</p>
+            
+            <div class="explore-diagram">
+              <div class="diagram-row">
+                <span>Spatial Parser</span>
+                <span class="diagram-tag">IFC 4.3</span>
+              </div>
+              <div class="diagram-row">
+                <span>Zoning Synthesizer</span>
+                <span class="diagram-tag">Automated</span>
+              </div>
+            </div>
+          </div>
+          <div class="explore-card-bottom">
+            <span class="mono-meta">Prototype &bull; In Progress</span>
+            <a href="#featured-tools" class="explore-btn-link">See tools &darr;</a>
+          </div>
+        </article>
+
+        <!-- 2. WORKFLOWS -->
+        <article class="explore-card">
+          <div class="explore-card-top">
+            <span class="explore-cat-badge">02 // INTEGRATIONS</span>
+            <h3 class="explore-title">WORKFLOWS</h3>
+            <p class="explore-headline">Smarter ways to connect ideas, processes, and technology.</p>
+            <p class="explore-desc">Practical pipelines bridging foundation models, Grasshopper, Speckle, and BIM environments to eliminate repetitive overhead.</p>
+
+            <div class="explore-diagram">
+              <div class="diagram-row">
+                <span>Prompt Protocol</span>
+                <span class="diagram-tag">Building Code</span>
+              </div>
+              <div class="diagram-row">
+                <span>Parametric Python</span>
+                <span class="diagram-tag">GH + Ladybug</span>
+              </div>
+            </div>
+          </div>
+          <div class="explore-card-bottom">
+            <span class="mono-meta">Pipeline &bull; Verified</span>
+            <a href="#featured-workflows" class="explore-btn-link">See workflows &darr;</a>
+          </div>
+        </article>
+
+        <!-- 3. EXPERIMENTS -->
+        <article class="explore-card">
+          <div class="explore-card-top">
+            <span class="explore-cat-badge">03 // FRONTIER LAB</span>
+            <h3 class="explore-title">EXPERIMENTS</h3>
+            <p class="explore-headline">New possibilities at the intersection of architecture and AI.</p>
+            <p class="explore-desc">Rigorous stress-testing, topological benchmarks, and empirical evaluations examining where frontier models excel and where they fail.</p>
+
+            <div class="explore-diagram">
+              <div class="diagram-row">
+                <span>Code RAG Accuracy</span>
+                <b style="color:var(--text-1);">94%</b>
+              </div>
+              <div class="diagram-row">
+                <span>3D Spatial Topology</span>
+                <b style="color:#DC2626;">0% (Barrier)</b>
+              </div>
+            </div>
+          </div>
+          <div class="explore-card-bottom">
+            <span class="mono-meta">Benchmark &bull; Available</span>
+            <a href="#featured-experiments" class="explore-btn-link">See experiments &darr;</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION D: FEATURED CONTENT (WHAT'S TAKING SHAPE)
+         ======================================================== -->
+    <section class="featured-section" id="featured">
+      <div class="sec-label-row">
+        <div>
+          <span class="sec-kicker">&bull; RESEARCH &amp; DEVELOPMENTS</span>
+          <h2 class="sec-title">What's taking shape.</h2>
+          <p class="sec-sub">Demonstrating what the lab actually tests and builds. No inflated promises: concrete benchmarks, algorithmic systems, and active prototypes.</p>
+        </div>
+      </div>
+
+      <!-- FLAGSHIP EXPERIMENT DOSSIER (EXP_004) -->
+      <div class="featured-dossier-card" id="featured-experiments">
         <div class="dossier-left">
           <div class="dossier-tag-row">
-            <span class="badge-featured">EXPERIMENT 01</span>
-            <span class="badge-peer">PEER-REVIEWED DRAFT</span>
+            <span class="badge-category">EXPERIMENT</span>
+            <span class="badge-status-available">Available &bull; Peer-Reviewed Draft</span>
             <span class="badge-doi">DOI: 10.1038/arch.ai.2026.042</span>
           </div>
 
-          <h2 class="dossier-title">
+          <h3 class="dossier-title">
             <a href="/demo-auralis-style.html">Where AI Actually Works in AEC (and Where It Fails)</a>
-          </h2>
+          </h3>
 
           <p class="dossier-desc">
-            Benchmark empírico que mapea con precisión matemática en qué flujos de trabajo la IA acelera la producción (RAG normativo 94%, Grasshopper 88%) y en cuáles tropieza con una barrera física insalvable (coordinación 2D/3D y edición topológica directa de IFC).
+            Empirical benchmark measuring frontier LLMs across 9 architectural domains. Mapping with mathematical rigor where AI accelerates practice (Building Code RAG at 94%, Grasshopper Python at 88%) and where it encounters an insurmountable geometric barrier (0% 3D spatial coordination).
           </p>
 
+          <!-- MINI ACCURACY BARS -->
           <div class="mini-accuracy-bars">
             <div class="bar-col">
               <div class="bar-header"><span>Building Code &amp; Zoning RAG</span><b>94%</b></div>
@@ -608,7 +1487,7 @@
               <div class="bar-bg"><div class="bar-fill" style="width: 88%;"></div></div>
             </div>
             <div class="bar-col">
-              <div class="bar-header"><span>Multi-drawing Coordination</span><b style="color:#DC2626;">0% (Falla Estructural)</b></div>
+              <div class="bar-header"><span>Multi-drawing Coordination</span><b style="color:#DC2626;">0% (Structural Failure)</b></div>
               <div class="bar-bg"><div class="bar-fill" style="width: 4%; background:#DC2626;"></div></div>
             </div>
           </div>
@@ -617,12 +1496,12 @@
             <div class="author-inline">
               <div class="author-circle">JL</div>
               <div>
-                <strong>Jorge Ludeña</strong>
-                <span>ETSAM Dept. Mecánica Estructural</span>
+                <strong>Jorge Lude&ntilde;a</strong>
+                <span>ETSAM Dept. Mec&aacute;nica Estructural</span>
               </div>
             </div>
             <a href="/demo-auralis-style.html" class="btn-dossier-cta">
-              Explorar Dossier Técnico Completo &rarr;
+              Explore Technical Dossier &rarr;
             </a>
           </div>
         </div>
@@ -632,7 +1511,7 @@
           <div class="mesh-preview-box">
             <div class="glass-inner-quote">
               <div class="quote-header">
-                <span class="qh-lbl">Pregunta Central // Inquirir</span>
+                <span>Core Research Question</span>
                 <span class="qh-status">&bull; Lab Inquiry</span>
               </div>
               <p class="quote-text">
@@ -649,92 +1528,234 @@
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- OTHER RESEARCH & EXPERIMENTS -->
-    <section class="content-section">
-      <div class="sec-label-row">
-        <div>
-          <h2 class="sec-title">Ensayos Técnicos &amp; Métodos</h2>
-          <p class="sec-sub">Protocolos abiertos, análisis de geometría y pruebas de estrés de modelos.</p>
-        </div>
-        <a href="/demo-auralis-style.html" class="sec-link">Ver dossier completo &rarr;</a>
-      </div>
-
-      <div class="card-grid">
-        <article class="auralis-card featured">
-          <div class="card-top">
-            <div class="card-meta">
-              <span class="category-badge">BENCHMARK</span>
-              <span class="id-badge" style="color:#059669; font-weight:700;">EXP_004</span>
-              <span class="read-time">14 min read</span>
+      <!-- SUB-GRID OF VERIFIED EXISTING PROJECTS -->
+      <div class="projects-grid">
+        <!-- 1. TOOL (WORK_001) -->
+        <article class="project-card" id="featured-tools">
+          <div class="project-card-top">
+            <div class="project-card-meta">
+              <span class="badge-category" style="background:#2563EB;">TOOL</span>
+              <span class="badge-status-progress">In progress</span>
             </div>
-            <h3 class="card-title">
-              <a href="/demo-auralis-style.html">Where AI Actually Works in AEC (and Where It Fails)</a>
-            </h3>
-            <p class="card-desc">Evaluación cuantitativa de modelos de frontera en 9 dominios arquitectónicos. De la síntesis de código a la ceguera espacial.</p>
+            <h4 class="project-card-title">Sistema de Clasificaci&oacute;n Espacial Automatizado</h4>
+            <p class="project-card-desc">
+              Algorithmic pipeline for enriching IFC BIM geometries with automated spatial syntax classification and functional program compliance.
+            </p>
           </div>
-          <div class="card-bottom">
+          <div class="project-card-bottom">
             <div class="tag-list">
-              <span class="tag">AI</span>
-              <span class="tag">AEC</span>
               <span class="tag">IFC 4.3</span>
-              <span class="tag">Heuristics</span>
-            </div>
-            <a href="/demo-auralis-style.html" class="card-arrow"><span>Leer</span> &rarr;</a>
-          </div>
-        </article>
-
-        <article class="auralis-card">
-          <div class="card-top">
-            <div class="card-meta">
-              <span class="category-badge">SISTEMAS</span>
-              <span class="read-time">8 min read</span>
-            </div>
-            <h3 class="card-title">Sistema de Clasificación Espacial Automatizado</h3>
-            <p class="card-desc">Pipeline computacional para enriquecer modelos IFC con taxonomías espaciales y cumplimiento de programas funcionales.</p>
-          </div>
-          <div class="card-bottom">
-            <div class="tag-list">
-              <span class="tag">IFC</span>
-              <span class="tag">Taxonomía</span>
+              <span class="tag">Taxonomy</span>
               <span class="tag">BIM</span>
             </div>
-            <span class="card-arrow" style="opacity:0.6;">Próximamente</span>
+            <a href="/Google_Stitch/index.html" class="project-action-link">View in Stitch &rarr;</a>
           </div>
         </article>
 
-        <article class="auralis-card">
-          <div class="card-top">
-            <div class="card-meta">
-              <span class="category-badge">MANIFIESTO</span>
-              <span class="read-time">5 min read</span>
+        <!-- 2. WORKFLOW (RESOURCE_001) -->
+        <article class="project-card" id="featured-workflows">
+          <div class="project-card-top">
+            <div class="project-card-meta">
+              <span class="badge-category" style="background:#7C3AED;">WORKFLOW</span>
+              <span class="badge-status-proto">Prototype</span>
             </div>
-            <h3 class="card-title">Manifiesto del Laboratorio: Tectónica &amp; Precisión</h3>
-            <p class="card-desc">Por qué la arquitectura necesita verificación física y modelos deterministas frente a la seducción de las imágenes difusas.</p>
+            <h4 class="project-card-title">Pipeline de Verificaci&oacute;n Normativa &amp; Urban&iacute;stica</h4>
+            <p class="project-card-desc">
+              Structured multi-agent prompt protocol for rigorous compliance verification against municipal building codes using indexed embeddings.
+            </p>
           </div>
-          <div class="card-bottom">
+          <div class="project-card-bottom">
             <div class="tag-list">
-              <span class="tag">Manifiesto</span>
-              <span class="tag">Epistemología</span>
+              <span class="tag">Building Code</span>
+              <span class="tag">RAG</span>
+              <span class="tag">Multi-Agent</span>
             </div>
-            <span class="card-arrow" style="opacity:0.6;">Lectura</span>
+            <a href="/demo-auralis-style.html" class="project-action-link">Inspect Protocol &rarr;</a>
           </div>
         </article>
+
+        <!-- 3. MANIFESTO (NOTE_001) -->
+        <article class="project-card">
+          <div class="project-card-top">
+            <div class="project-card-meta">
+              <span class="badge-category" style="background:#059669;">EXPERIMENT</span>
+              <span class="badge-status-available">Available</span>
+            </div>
+            <h4 class="project-card-title">Manifiesto del Laboratorio: Tect&oacute;nica &amp; Precisi&oacute;n</h4>
+            <p class="project-card-desc">
+              Why architectural intelligence requires physical verification, deterministic spatial models, and rigorous epistemology over ephemeral diffusion renders.
+            </p>
+          </div>
+          <div class="project-card-bottom">
+            <div class="tag-list">
+              <span class="tag">Manifesto</span>
+              <span class="tag">Epistemology</span>
+              <span class="tag">Open Science</span>
+            </div>
+            <a href="/demo-auralis-style.html" class="project-action-link">Read Thesis &rarr;</a>
+          </div>
+        </article>
+      </div>
+
+    </section>
+
+    <!-- ========================================================
+         SECTION E: CLOSING (BEYOND THE ORDINARY)
+         ======================================================== -->
+    <section class="closing-section" id="closing">
+      <div class="closing-box">
+        <div class="closing-mesh-glow"></div>
+        <div class="closing-content">
+          <div class="closing-kicker">AI ARCHITECTURE LAB // VISION</div>
+          <h2 class="closing-title">Beyond the ordinary.</h2>
+          <p class="closing-text">
+            A space to explore, build, and discover what's next in architecture.
+          </p>
+          <a href="#explore" class="btn-beyond-cta">
+            Discover AI Architecture Lab &rarr;
+          </a>
+        </div>
       </div>
     </section>
 
   </div>
 
-  <!-- FOOTER -->
+  <!-- ========================================================
+       SECTION F: FOOTER
+       ======================================================== -->
   <footer>
-    <div class="fl">
-      <strong>Architecture AI Lab</strong> &bull; Jorge Ludeña &bull; ETSAM Dept. Mecánica Estructural &bull; Madrid, Spain
-    </div>
-    <div class="fr">
-      Open Science &bull; MIT License &bull; Costo Recurrente $0.00/mes
+    <div class="footer-wrap">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-brand-title">AI Architecture Lab</div>
+          <p class="footer-brand-desc">
+            Personal digital laboratory directed by Jorge Lude&ntilde;a exploring the intersection of architecture, artificial intelligence, and computational workflows.
+          </p>
+        </div>
+
+        <nav class="footer-nav" aria-label="Footer Navigation">
+          <div class="footer-col">
+            <span class="footer-col-title">Navigation</span>
+            <a href="#featured-tools" class="footer-lk">Tools</a>
+            <a href="#featured-workflows" class="footer-lk">Workflows</a>
+            <a href="#featured-experiments" class="footer-lk">Experiments</a>
+          </div>
+          <div class="footer-col">
+            <span class="footer-col-title">Dossiers &amp; Archive</span>
+            <a href="/demo-auralis-style.html" class="footer-lk">Benchmark EXP_004</a>
+            <a href="/Google_Stitch/index.html" class="footer-lk">Google Stitch Archive</a>
+          </div>
+          <div class="footer-col">
+            <span class="footer-col-title">Platform</span>
+            <span class="footer-lk" style="opacity:0.7;">Jorge Lude&ntilde;a (ETSAM)</span>
+            <span class="footer-lk" style="opacity:0.7;">Madrid, Spain</span>
+          </div>
+        </nav>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          &copy; 2026 AI Architecture Lab &bull; Jorge Lude&ntilde;a &bull; All rights reserved.
+        </div>
+        <div>
+          Open Science &bull; Static Serverless System &bull; Cost Impact: $0.00 USD/mo
+        </div>
+      </div>
     </div>
   </footer>
+
+  <!-- SCRIPT: Dynamic Language Switcher & Mobile Menu Toggle -->
+  <script>
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      if (menu) {
+        menu.classList.toggle('open');
+      }
+    }
+
+    function getCookie(n){
+      const v = document.cookie.match('(^|;) ?' + n + '=([^;]*)(;|$)');
+      return v ? v[2] : null;
+    }
+
+    function setCookie(n, val){
+      const d = new Date();
+      d.setTime(d.getTime() + 30 * 86400000);
+      document.cookie = n + "=" + val + ";path=/;expires=" + d.toUTCString();
+    }
+
+    function clearCookie(n){
+      document.cookie = n + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    }
+
+    function setSiteLang(lang){
+      const btnEs = document.getElementById('btn-lang-es');
+      const btnEn = document.getElementById('btn-lang-en');
+
+      if (lang === 'en') {
+        setCookie('googtrans', '/es/en');
+        localStorage.setItem('aai_site_lang', 'en');
+        if (btnEs) { btnEs.classList.remove('active'); }
+        if (btnEn) { btnEn.classList.add('active'); }
+        loadTranslate();
+      } else {
+        localStorage.setItem('aai_site_lang', 'es');
+        clearCookie('googtrans');
+        if (btnEs) { btnEs.classList.add('active'); }
+        if (btnEn) { btnEn.classList.remove('active'); }
+        const select = document.querySelector('.goog-te-combo');
+        if (select) {
+          select.value = 'es';
+          select.dispatchEvent(new Event('change'));
+        }
+        setTimeout(() => {
+          if (getCookie('googtrans') && getCookie('googtrans') !== '/es/es') {
+            clearCookie('googtrans');
+            window.location.reload();
+          }
+        }, 200);
+      }
+    }
+
+    function loadTranslate(){
+      if (!window.__gt_loaded) {
+        window.__gt_loaded = true;
+        window.googleTranslateElementInit = function(){
+          new window.google.translate.TranslateElement({
+            pageLanguage: 'es',
+            includedLanguages: 'es,en',
+            autoDisplay: false
+          }, 'google_translate_element');
+          setTimeout(() => {
+            const select = document.querySelector('.goog-te-combo');
+            if (select) {
+              select.value = 'en';
+              select.dispatchEvent(new Event('change'));
+            }
+          }, 300);
+        };
+        const s = document.createElement('script');
+        s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+        s.async = true;
+        document.body.appendChild(s);
+      } else {
+        const select = document.querySelector('.goog-te-combo');
+        if (select) {
+          select.value = 'en';
+          select.dispatchEvent(new Event('change'));
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('aai_site_lang');
+      const cookie = getCookie('googtrans');
+      if (saved === 'en' || (cookie && cookie.includes('/en'))) {
+        setSiteLang('en');
+      }
+    });
+  </script>
 
 </body>
 </html>

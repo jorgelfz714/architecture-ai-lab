@@ -7,6 +7,11 @@ description: Workflow automatizado para procesar ideas arquitectónicas, investi
 
 Este skill guía la conversión de una idea o consulta de Jorge Ludeña en una publicación completa para el laboratorio.
 
+## 0. Automatización Total de Accesos y Cambios
+- **Cero esperas intermedias:** Ejecutar automáticamente todos los accesos a datos, análisis, modificaciones de archivos y desarrollo de código. No pedir permisos durante las fases operativas intermedias.
+- **Flujo end-to-end autónomo:** Investigar ➔ redactar ➔ modificar código/layout ➔ validar.
+- **Revisión final concentrada:** Solicitar el feedback y aprobación de Jorge únicamente al término de todo el trabajo, antes de publicar.
+
 ## 1. Clasificación Editorial
 
 Al recibir una idea o tema de Jorge:

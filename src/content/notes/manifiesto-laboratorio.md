@@ -24,6 +24,6 @@ Frente a la sobreabundancia de herramientas generativas, el valor ya no radica e
 Rechazamos el *hype* tecnológico que promete revoluciones automáticas sin verificar su impacto real. En este laboratorio nos interesan:
 - Ensayos reproducibles.
 - Qué herramientas funcionan y, sobre todo, **cuándo y por qué fallan**.
-- Aplicaciones orientadas a problemas reales: vivienda colectiva, sostenibilidad y optimización de flujos de trabajo.
+- Aplicaciones orientadas a problemas reales: diseño computacional, sostenibilidad y optimización de flujos de trabajo.
 
 El laboratorio busca documentar el proceso de construcción de conocimiento arquitectónico en la era algorítmica.

@@ -5,7 +5,7 @@
 - Arquitectura
 - Inteligencia Artificial
 - Diseño e Investigación
-- Vivienda Colectiva y Social
+- Sistemas Espaciales Complejos
 - Sostenibilidad
 - Nuevos flujos de trabajo computacionales
 
@@ -26,7 +26,7 @@ El objetivo central es minimizar el esfuerzo operativo de Jorge manteniendo inta
 
 ## 4. Filosofía del Contenido
 - **Privilegiar experimentos concretos sobre comentarios abstractos:**
-  *Preferir:* "Evalué el rendimiento de un modelo de visión para clasificar tipologías de vivienda social en Lima".
+  *Preferir:* "Evalué el rendimiento de un modelo de visión para clasificar tipologías espaciales y flujos de circulación".
   *Evitar:* "La inteligencia artificial está revolucionando el diseño arquitectónico mundial".
 - **Sin Hype ni Clickbait:** Lenguaje riguroso, crítico y honesto respecto a las limitaciones de las herramientas.
 
@@ -37,13 +37,14 @@ Toda publicación pertenece estrictamente a una de estas 4 colecciones:
 3. `notes`: Ideas ágiles, reflexiones, lecturas o referencias emergentes.
 4. `resources`: Prompts probados, metodologías, flujos de trabajo y herramientas para arquitectos.
 
-## 6. Límite de Autonomía y Política de Costo $0
-- **Autonomía Total:** Lectura, redacción de borradores, optimización de layouts, compilación, tests y corrección de bugs.
-- **Requiere Aprobación Explicita de Jorge:**
-  - Publicación de contenido editorial en producción.
-  - Eliminación de contenido existente.
-  - Introducción de cualquier servicio con costo (el proyecto mantiene un objetivo estricto de **$0 recurrente**).
-  - Cambios mayores en la arquitectura técnica o identidad visual.
+## 6. Límite de Autonomía, Automatización y Política de Costo $0
+- **Automatización de Accesos y Cambios en el Proyecto:**
+  - El agente **no debe esperar ni pedir permisos intermedios** para acceder a fuentes de información, ejecutar comandos, solicitar cambios, editar archivos o desarrollar contenido para la página.
+  - Toda la investigación, redacción de posts, actualización de componentes, optimización de layouts, maquetación y pruebas técnicas debe ejecutarse de **forma 100% automática y continua**.
+- **Punto de Control Único (Revisión Final):**
+  - Una vez implementados todos los cambios y preparado el contenido, se presenta el resultado consolidado para la **revisión y visto bueno final de Jorge antes de publicar**.
+- **Política de Costo:**
+  - Introducción de cualquier servicio con costo requiere aprobación explícita (el proyecto mantiene un objetivo estricto de **$0 recurrente**).
 
 ## 7. Formato Obligatorio de Change Report
 Tras cada intervención significativa, reportar:

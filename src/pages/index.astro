@@ -15,11 +15,13 @@ const recentNotes = allNotes.sort((a, b) => b.data.date.localeCompare(a.data.dat
 const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.data.date)).slice(0, 3);
 ---
 
-<BaseLayout title="Architecture AI Lab — Jorge Ludeña">
+<BaseLayout title="AI Architecture Lab — Architecture is changing. Make something new.">
   <div class="home-wrap">
     
-    <!-- HERO / IDENTITY WITH AURALIS GLOW -->
-    <section class="hero-section">
+    <!-- ========================================================
+         SECTION B: HERO / PORTADA PRINCIPAL
+         ======================================================== -->
+    <section class="hero-section" id="hero">
       <div class="ambient-mesh-glow"></div>
       
       <div class="hero-header-meta">
@@ -31,79 +33,175 @@ const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.
       </div>
 
       <h1 class="hero-main-title">
-        Arquitectura, Inteligencia Artificial y Razonamiento Espacial
+        Architecture is changing.<br />
+        <span class="hero-title-accent">Make something new.</span>
       </h1>
 
-      <p class="hero-lead-text">
-        Espacio de investigación empírica y computacional dirigido por <strong>Jorge Ludeña</strong>. Evaluamos con rigor los modelos de frontera, la síntesis topológica IFC y los límites físicos reales de la IA en la disciplina arquitectónica.
+      <p class="hero-question">
+        What if AI could change the way you design, the tools you use, and the ideas you bring to life?
       </p>
+
+      <p class="hero-lead-text">
+        Explore new tools, experiment with emerging technologies, and discover new ways to approach architectural design.
+      </p>
+
+      <div class="hero-punchline-box">
+        <div class="hero-punchline">
+          Less repetition. More exploration. New ways to create.
+        </div>
+      </div>
+
+      <div class="hero-cta-group">
+        <a href="#explore" class="btn-hero-primary">
+          Explore AI Tools &rarr;
+        </a>
+        <a href="#featured" class="btn-hero-secondary">
+          View Active Research
+        </a>
+      </div>
 
       <!-- Operational Principle Badge -->
       <div class="principle-box">
-        <span class="principle-lbl">Principio Rector:</span>
-        <span class="principle-txt">Jorge Ludeña selecciona, dirige y aprueba &bull; La IA investiga, desarrolla, diseña e implementa.</span>
+        <span class="principle-lbl">Operating Principle:</span>
+        <span class="principle-txt">Jorge Lude&ntilde;a selects &amp; directs &bull; AI researches, develops, structures, designs &amp; implements.</span>
       </div>
 
       <!-- Quick Metrics Ribbon -->
       <div class="kpi-ribbon">
         <div class="kpi-item">
           <span class="kpi-val">4</span>
-          <span class="kpi-lbl">Modelos de Frontera Testeados</span>
+          <span class="kpi-lbl">Frontier Models Tested</span>
         </div>
         <div class="kpi-sep">/</div>
         <div class="kpi-item">
           <span class="kpi-val">9</span>
-          <span class="kpi-lbl">Dominios de Tareas AEC</span>
+          <span class="kpi-lbl">AEC Task Domains</span>
         </div>
         <div class="kpi-sep">/</div>
         <div class="kpi-item">
           <span class="kpi-val">100%</span>
-          <span class="kpi-lbl">Evaluación Empírica Reproducible</span>
+          <span class="kpi-lbl">Reproducible Open Data</span>
         </div>
         <div class="kpi-sep">/</div>
         <div class="kpi-item">
           <span class="kpi-val">$0.00</span>
-          <span class="kpi-lbl">Costo Recurrente / Serverless Puro</span>
+          <span class="kpi-lbl">Serverless Recurring Cost</span>
         </div>
       </div>
     </section>
 
-    <!-- FEATURED BENCHMARK DOSSIER (AURALIS HERO CARD) -->
-    {featuredExperiment && (
-      <section class="featured-section">
-        <div class="sec-label-row">
-          <span class="sec-kicker">★ INVESTIGACIÓN CENTRAL // DOSSIER ACTIVO</span>
-          <a href="/experiments" class="sec-link">Ver catálogo completo &rarr;</a>
+    <!-- ========================================================
+         SECTION C: EXPLORE WHAT'S POSSIBLE (THREE CARDS)
+         ======================================================== -->
+    <section class="explore-section" id="explore">
+      <div class="sec-label-row">
+        <div>
+          <span class="sec-kicker">&bull; CORE PILLARS</span>
+          <h2 class="sec-title">Explore what's possible.</h2>
+          <p class="sec-sub">Three pathways to rethink how architectural work gets done, from automated micro-tools to connected workflows and frontier stress-testing.</p>
         </div>
+        <a href="#featured" class="sec-link">View all active projects &rarr;</a>
+      </div>
 
-        <div class="featured-dossier-card">
+      <div class="explore-grid">
+        <!-- 1. TOOLS -->
+        <article class="explore-card">
+          <div class="explore-card-top">
+            <span class="explore-cat-badge">01 // TOOLS</span>
+            <h3 class="explore-title">TOOLS</h3>
+            <p class="explore-headline">New tools to rethink how architectural work gets done.</p>
+            <p class="explore-desc">Small applications, utilities, and algorithmic prototypes applying artificial intelligence directly to concrete architectural tasks.</p>
+            <div class="explore-diagram">
+              <div class="diagram-row"><span>Spatial Parser</span><span class="diagram-tag">IFC 4.3</span></div>
+              <div class="diagram-row"><span>Zoning Synthesizer</span><span class="diagram-tag">Automated</span></div>
+            </div>
+          </div>
+          <div class="explore-card-bottom">
+            <span class="mono-meta">Prototype &bull; In Progress</span>
+            <a href="/work" class="explore-btn-link">Explore Tools &rarr;</a>
+          </div>
+        </article>
+
+        <!-- 2. WORKFLOWS -->
+        <article class="explore-card">
+          <div class="explore-card-top">
+            <span class="explore-cat-badge">02 // WORKFLOWS</span>
+            <h3 class="explore-title">WORKFLOWS</h3>
+            <p class="explore-headline">Smarter ways to connect ideas, processes, and technology.</p>
+            <p class="explore-desc">Practical pipelines bridging foundation models, Grasshopper, Speckle, and BIM environments to eliminate repetitive overhead.</p>
+            <div class="explore-diagram">
+              <div class="diagram-row"><span>Prompt Protocol</span><span class="diagram-tag">Building Code</span></div>
+              <div class="diagram-row"><span>Parametric Python</span><span class="diagram-tag">GH + Ladybug</span></div>
+            </div>
+          </div>
+          <div class="explore-card-bottom">
+            <span class="mono-meta">Pipeline &bull; Verified</span>
+            <a href="/resources" class="explore-btn-link">Explore Workflows &rarr;</a>
+          </div>
+        </article>
+
+        <!-- 3. EXPERIMENTS -->
+        <article class="explore-card">
+          <div class="explore-card-top">
+            <span class="explore-cat-badge">03 // EXPERIMENTS</span>
+            <h3 class="explore-title">EXPERIMENTS</h3>
+            <p class="explore-headline">New possibilities at the intersection of architecture and AI.</p>
+            <p class="explore-desc">Rigorous stress-testing, topological benchmarks, and empirical evaluations examining where frontier models excel and where they fail.</p>
+            <div class="explore-diagram">
+              <div class="diagram-row"><span>Code RAG Accuracy</span><b>94%</b></div>
+              <div class="diagram-row"><span>3D Spatial Topology</span><b style="color:#DC2626;">0% (Barrier)</b></div>
+            </div>
+          </div>
+          <div class="explore-card-bottom">
+            <span class="mono-meta">Benchmark &bull; Available</span>
+            <a href="/experiments" class="explore-btn-link">Explore Experiments &rarr;</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION D: FEATURED CONTENT (WHAT'S TAKING SHAPE)
+         ======================================================== -->
+    <section class="featured-section" id="featured">
+      <div class="sec-label-row">
+        <div>
+          <span class="sec-kicker">&bull; RESEARCH &amp; DEVELOPMENTS</span>
+          <h2 class="sec-title">What's taking shape.</h2>
+          <p class="sec-sub">Demonstrating what the lab actually tests and builds. No inflated promises: concrete benchmarks, algorithmic systems, and active prototypes.</p>
+        </div>
+      </div>
+
+      <!-- FEATURED BENCHMARK DOSSIER (AURALIS HERO CARD) -->
+      {featuredExperiment && (
+        <div class="featured-dossier-card" id="featured-experiments">
           <div class="dossier-left">
             <div class="dossier-tag-row">
-              <span class="badge-featured">EXPERIMENT 01</span>
-              <span class="badge-peer">PEER-REVIEWED DRAFT</span>
+              <span class="badge-featured">EXPERIMENT</span>
+              <span class="badge-peer">Available &bull; Peer-Reviewed Draft</span>
               <span class="badge-doi">DOI: {featuredExperiment.data.doi || '10.1038/arch.ai.2026.042'}</span>
             </div>
 
-            <h2 class="dossier-title">
+            <h3 class="dossier-title">
               <a href={`/experiments/${featuredExperiment.id}`}>{featuredExperiment.data.title}</a>
-            </h2>
+            </h3>
 
             <p class="dossier-desc">
-              Benchmark empírico que mapea con precisión matemática en qué flujos de trabajo la IA acelera la producción (RAG normativo 94%, Grasshopper 88%) y en cuáles tropieza con una barrera física insalvable (coordinación 2D/3D y edición topológica directa de IFC).
+              Empirical benchmark measuring frontier LLMs across 9 architectural domains. Mapping with mathematical rigor where AI accelerates practice (Building Code RAG at 94%, Grasshopper Python at 88%) and where it encounters an insurmountable geometric barrier (0% 3D spatial coordination).
             </p>
 
             <!-- Accuracy Mini-Bars -->
             <div class="mini-accuracy-bars">
               <div class="bar-col">
-                <div class="bar-header"><span>Building Code RAG</span><b>94%</b></div>
+                <div class="bar-header"><span>Building Code &amp; Zoning RAG</span><b>94%</b></div>
                 <div class="bar-bg"><div class="bar-fill" style="width: 94%;"></div></div>
               </div>
               <div class="bar-col">
-                <div class="bar-header"><span>Grasshopper Scripting</span><b>88%</b></div>
+                <div class="bar-header"><span>Grasshopper Parametric Python</span><b>88%</b></div>
                 <div class="bar-bg"><div class="bar-fill" style="width: 88%;"></div></div>
               </div>
               <div class="bar-col">
-                <div class="bar-header"><span>Multi-drawing Coordination</span><b style="color:#DC2626;">0%</b></div>
+                <div class="bar-header"><span>Multi-drawing Coordination</span><b style="color:#DC2626;">0% (Structural Failure)</b></div>
                 <div class="bar-bg"><div class="bar-fill" style="width: 4%; background:#DC2626;"></div></div>
               </div>
             </div>
@@ -112,12 +210,12 @@ const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.
               <div class="author-inline">
                 <div class="author-circle">JL</div>
                 <div>
-                  <strong>Jorge Ludeña</strong>
-                  <span>ETSAM Dept. Mecánica Estructural</span>
+                  <strong>Jorge Lude&ntilde;a</strong>
+                  <span>ETSAM Dept. Mec&aacute;nica Estructural</span>
                 </div>
               </div>
               <a href={`/experiments/${featuredExperiment.id}`} class="btn-dossier-cta">
-                Explorar Dossier Técnico Completo &rarr;
+                Explore Full Technical Dossier &rarr;
               </a>
             </div>
           </div>
@@ -127,7 +225,7 @@ const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.
             <div class="mesh-preview-box">
               <div class="glass-inner-quote">
                 <div class="quote-header">
-                  <span class="qh-lbl">Pregunta Central // Inquirir</span>
+                  <span>Core Research Question</span>
                   <span class="qh-status">&bull; Lab Inquiry</span>
                 </div>
                 <p class="quote-text">
@@ -144,103 +242,123 @@ const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.
             </div>
           </div>
         </div>
-      </section>
-    )}
+      )}
 
-    <!-- EXPERIMENTS & RESEARCH CATALOG SECTION -->
-    <section class="content-section">
-      <div class="sec-label-row">
-        <div>
-          <h2 class="sec-title">Ensayos Técnicos &amp; Métodos</h2>
-          <p class="sec-sub">Protocolos abiertos, análisis de geometría y pruebas de estrés de modelos.</p>
+      <!-- MORE EXPERIMENTS & WORKFLOWS -->
+      {otherExperiments.length > 0 && (
+        <div class="content-section" id="more-experiments" style="margin-top: 2.5rem; margin-bottom: 2.5rem;">
+          <div class="sec-label-row">
+            <div>
+              <h3 class="sec-title" style="font-size: 1.45rem;">Investigación &amp; Frameworks</h3>
+              <p class="sec-sub">Nuevos marcos conceptuales, automatización de flujos y metodologías empíricas.</p>
+            </div>
+            <a href="/experiments" class="sec-link">Ver archivo de experimentos &rarr;</a>
+          </div>
+
+          <div class="card-grid">
+            {otherExperiments.map((item) => (
+              <Card
+                title={item.data.title}
+                description={item.data.description}
+                date={item.data.date}
+                href={`/experiments/${item.id}`}
+                category="experiment"
+                tags={item.data.tags}
+                idCode={item.data.idCode}
+                readingTime={item.data.readingTime}
+              />
+            ))}
+          </div>
         </div>
-        <a href="/experiments" class="sec-link">Ver todos los experimentos &rarr;</a>
-      </div>
+      )}
 
-      <div class="card-grid">
-        {allExperiments.map((item) => (
-          <Card
-            title={item.data.title}
-            description={item.data.description}
-            date={item.data.date}
-            href={`/experiments/${item.id}`}
-            category="experiment"
-            tags={item.data.tags}
-            idCode={item.data.idCode}
-            readingTime={item.data.readingTime}
-            isFeatured={item.id === featuredExperiment?.id}
-          />
-        ))}
-      </div>
-    </section>
-
-    <!-- WORK & PROTOCOLS GRID -->
-    <section class="content-section">
-      <div class="sec-label-row">
-        <div>
-          <h2 class="sec-title">Proyectos &amp; Sistemas</h2>
-          <p class="sec-sub">Investigaciones espaciales, marcos computacionales y aplicaciones prácticas.</p>
-        </div>
-        <a href="/work" class="sec-link">Explorar proyectos &rarr;</a>
-      </div>
-
-      <div class="card-grid">
-        {recentWork.map((item) => (
-          <Card
-            title={item.data.title}
-            description={item.data.description}
-            date={item.data.date}
-            href={`/work/${item.id}`}
-            category="work"
-            tags={item.data.tags}
-          />
-        ))}
-      </div>
-    </section>
-
-    <!-- FIELD NOTES & RESOURCES SPLIT -->
-    <section class="content-section split-section">
-      <div class="split-col">
+      <!-- WORK & TOOLS SECTION -->
+      <div class="content-section" id="featured-tools">
         <div class="sec-label-row">
           <div>
-            <h2 class="sec-title">Field Notes</h2>
-            <p class="sec-sub">Observaciones y notas de laboratorio en desarrollo.</p>
+            <h3 class="sec-title" style="font-size: 1.45rem;">Proyectos &amp; Sistemas (Tools)</h3>
+            <p class="sec-sub">Investigaciones espaciales, marcos computacionales y aplicaciones prácticas.</p>
           </div>
-          <a href="/notes" class="sec-link">Ver todas &rarr;</a>
+          <a href="/work" class="sec-link">Explorar proyectos &rarr;</a>
         </div>
-        <div class="vertical-cards">
-          {recentNotes.map((item) => (
+
+        <div class="card-grid">
+          {recentWork.map((item) => (
             <Card
               title={item.data.title}
               description={item.data.description}
               date={item.data.date}
-              href={`/notes/${item.id}`}
-              category="note"
+              href={`/work/${item.id}`}
+              category="work"
               tags={item.data.tags}
             />
           ))}
         </div>
       </div>
 
-      <div class="split-col">
-        <div class="sec-label-row">
-          <div>
-            <h2 class="sec-title">Recursos &amp; Manifiestos</h2>
-            <p class="sec-sub">Taxonomías, prompts verificados y estándares éticos.</p>
+      <!-- FIELD NOTES & WORKFLOWS SPLIT -->
+      <div class="content-section split-section" id="featured-workflows">
+        <div class="split-col">
+          <div class="sec-label-row">
+            <div>
+              <h3 class="sec-title" style="font-size: 1.45rem;">Workflows &amp; Recursos</h3>
+              <p class="sec-sub">Protocolos de verificación y prompts estructurados.</p>
+            </div>
+            <a href="/resources" class="sec-link">Ver workflows &rarr;</a>
           </div>
-          <a href="/resources" class="sec-link">Ver todos &rarr;</a>
+          <div class="vertical-cards">
+            {recentResources.map((item) => (
+              <Card
+                title={item.data.title}
+                description={item.data.description}
+                date={item.data.date}
+                href={`/resources/${item.id}`}
+                category="resource"
+                tags={item.data.tags}
+              />
+            ))}
+          </div>
         </div>
-        <div class="vertical-cards">
-          {recentResources.map((item) => (
-            <Card
-              title={item.data.title}
-              description={item.data.description}
-              date={item.data.date}
-              href={`/resources/${item.id}`}
-              category="resource"
-              tags={item.data.tags}
-            />
-          ))}
+
+        <div class="split-col">
+          <div class="sec-label-row">
+            <div>
+              <h3 class="sec-title" style="font-size: 1.45rem;">Field Notes &amp; Manifiestos</h3>
+              <p class="sec-sub">Observaciones y epistemología de la práctica digital.</p>
+            </div>
+            <a href="/notes" class="sec-link">Ver notas &rarr;</a>
+          </div>
+          <div class="vertical-cards">
+            {recentNotes.map((item) => (
+              <Card
+                title={item.data.title}
+                description={item.data.description}
+                date={item.data.date}
+                href={`/notes/${item.id}`}
+                category="note"
+                tags={item.data.tags}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION E: CLOSING (BEYOND THE ORDINARY)
+         ======================================================== -->
+    <section class="closing-section" id="closing">
+      <div class="closing-box">
+        <div class="closing-mesh-glow"></div>
+        <div class="closing-content">
+          <div class="closing-kicker">AI ARCHITECTURE LAB // VISION</div>
+          <h2 class="closing-title">Beyond the ordinary.</h2>
+          <p class="closing-text">
+            A space to explore, build, and discover what's next in architecture.
+          </p>
+          <a href="#explore" class="btn-beyond-cta">
+            Discover AI Architecture Lab &rarr;
+          </a>
         </div>
       </div>
     </section>
@@ -278,7 +396,7 @@ const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
     position: relative;
     z-index: 1;
     flex-wrap: wrap;
@@ -312,10 +430,10 @@ const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.
   }
 
   .hero-main-title {
-    font-size: clamp(2.4rem, 4.8vw, 3.8rem);
+    font-size: clamp(2.5rem, 5vw, 4.2rem);
     font-weight: 900;
-    line-height: 1.08;
-    letter-spacing: -0.035em;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
     color: #0D0D0D;
     max-width: 980px;
     margin-bottom: 1.35rem;
@@ -323,15 +441,96 @@ const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.
     z-index: 1;
     font-family: 'Inter', system-ui, sans-serif;
   }
+  .hero-title-accent {
+    background: linear-gradient(135deg, #0D0D0D 60%, #4B5563 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-question {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: clamp(1.2rem, 2vw, 1.65rem);
+    line-height: 1.45;
+    font-weight: 400;
+    font-style: italic;
+    color: #0D0D0D;
+    max-width: 860px;
+    margin-bottom: 1.25rem;
+    position: relative;
+    z-index: 1;
+  }
 
   .hero-lead-text {
     font-size: 1.12rem;
     line-height: 1.75;
     color: #383834;
     max-width: 840px;
-    margin-bottom: 1.75rem;
+    margin-bottom: 1.6rem;
     position: relative;
     z-index: 1;
+  }
+
+  .hero-punchline-box {
+    display: inline-block;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-punchline {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #0D0D0D;
+    letter-spacing: -0.015em;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 0, 0, 0.035);
+    border-left: 3px solid #0D0D0D;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .hero-cta-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2.25rem;
+    position: relative;
+    z-index: 1;
+    flex-wrap: wrap;
+  }
+  .btn-hero-primary {
+    background: #0D0D0D;
+    color: #FFFFFF;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 0.75rem 1.85rem;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: transform 0.15s, opacity 0.15s;
+    text-decoration: none;
+  }
+  .btn-hero-primary:hover {
+    transform: translateY(-2px);
+    opacity: 0.92;
+  }
+  .btn-hero-secondary {
+    background: transparent;
+    color: #0D0D0D;
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    transition: all 0.15s;
+    text-decoration: none;
+  }
+  .btn-hero-secondary:hover {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: #0D0D0D;
   }
 
   .principle-box {
@@ -357,19 +556,123 @@ const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.
   .kpi-ribbon {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1.75rem;
     padding-top: 1.75rem;
     border-top: 1px solid rgba(0, 0, 0, 0.08);
     flex-wrap: wrap;
   }
   .kpi-item { display: flex; flex-direction: column; }
-  .kpi-val { font-size: 1.4rem; font-weight: 900; color: #0D0D0D; font-family: 'Inter', sans-serif; letter-spacing: -0.03em; }
+  .kpi-val { font-size: 1.45rem; font-weight: 900; color: #0D0D0D; letter-spacing: -0.03em; }
   .kpi-lbl { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; color: #686862; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.15rem; }
   .kpi-sep { color: rgba(0, 0, 0, 0.15); font-family: 'JetBrains Mono', monospace; font-size: 1.2rem; }
 
+  /* EXPLORE SECTION & CARDS */
+  .explore-section {
+    margin-bottom: 5rem;
+    padding-top: 1rem;
+  }
+  .explore-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+  .explore-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    padding: 2.25rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .explore-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 0, 0, 0.18);
+  }
+  .explore-cat-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 800;
+    color: #686862;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .explore-title {
+    font-size: 1.75rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: #0D0D0D;
+    margin-bottom: 0.65rem;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  .explore-headline {
+    font-size: 1.02rem;
+    font-weight: 600;
+    color: #0D0D0D;
+    line-height: 1.45;
+    margin-bottom: 0.85rem;
+  }
+  .explore-desc {
+    font-size: 0.88rem;
+    color: #383834;
+    line-height: 1.65;
+    margin-bottom: 1.75rem;
+  }
+  .explore-diagram {
+    background: #F7F7F4;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 1.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+  }
+  .diagram-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.25rem 0;
+    color: #383834;
+  }
+  .diagram-tag {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.58rem;
+    font-weight: 600;
+  }
+  .explore-card-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+  }
+  .explore-btn-link {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #0D0D0D;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    text-decoration: none;
+  }
+
   /* FEATURED DOSSIER SECTION */
   .featured-section {
-    margin-bottom: 4.5rem;
+    margin-bottom: 5rem;
+    scroll-margin-top: 4rem;
   }
   .sec-label-row {
     display: flex;
@@ -388,22 +691,22 @@ const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.
     color: #0D0D0D;
   }
   .sec-title {
-    font-size: 1.65rem;
+    font-size: clamp(1.75rem, 2.8vw, 2.3rem);
     font-weight: 800;
     letter-spacing: -0.025em;
     color: #0D0D0D;
     margin-bottom: 0.25rem;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
   }
-  .sec-sub { font-size: 0.88rem; color: #686862; margin-bottom: 0; }
+  .sec-sub { font-size: 0.92rem; color: #686862; margin-bottom: 0; line-height: 1.55; }
   .sec-link {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.68rem;
     font-weight: 700;
     color: #0D0D0D;
-    text-decoration: none;
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     padding-bottom: 2px;
+    text-decoration: none;
     transition: all 0.15s;
   }
   .sec-link:hover { border-color: #0D0D0D; padding-right: 3px; }
@@ -416,6 +719,11 @@ const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.
     grid-template-columns: 1.2fr 0.8fr;
     overflow: hidden;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.05);
+    transition: box-shadow .2s;
+    margin-bottom: 3.5rem;
+  }
+  .featured-dossier-card:hover {
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
   }
   .dossier-left {
     padding: 2.75rem 2.5rem;
@@ -460,7 +768,7 @@ const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.
     letter-spacing: -0.03em;
     color: #0D0D0D;
     margin-bottom: 1rem;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
   }
   .dossier-title a { color: inherit; text-decoration: none; }
   .dossier-desc {
@@ -470,7 +778,7 @@ const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.
     margin-bottom: 1.75rem;
   }
 
-  /* MINI ACCURACY BARS IN HERO */
+  /* MINI ACCURACY BARS */
   .mini-accuracy-bars {
     display: flex;
     flex-direction: column;
@@ -479,7 +787,7 @@ const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.
     background: #F7F7F4;
     padding: 1rem 1.25rem;
     border-radius: 12px;
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.08);
   }
   .bar-col { display: flex; flex-direction: column; gap: 0.25rem; }
   .bar-header { display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: #383834; }
@@ -508,7 +816,6 @@ const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.
     justify-content: center;
     font-weight: 800;
     font-size: 0.7rem;
-    font-family: 'Inter', sans-serif;
   }
   .author-inline strong { display: block; color: #0D0D0D; }
   .author-inline span { font-size: 0.65rem; color: #686862; font-family: 'JetBrains Mono', monospace; }
@@ -606,11 +913,93 @@ const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.
     gap: 1.25rem;
   }
 
-  @media (max-width: 900px) {
+  /* CLOSING SECTION */
+  .closing-section {
+    margin-bottom: 4rem;
+  }
+  .closing-box {
+    background: #0D0D0D;
+    color: #FFFFFF;
+    border-radius: 20px;
+    padding: 4.5rem 3.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+  }
+  .closing-mesh-glow {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(232, 121, 249, 0.25) 0%, rgba(96, 165, 250, 0.2) 50%, transparent 80%);
+    filter: blur(50px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .closing-content {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .closing-kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 1rem;
+  }
+  .closing-title {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    margin-bottom: 1.25rem;
+    color: #FFFFFF;
+  }
+  .closing-text {
+    font-size: 1.15rem;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 2.25rem;
+  }
+  .btn-beyond-cta {
+    background: #FFFFFF;
+    color: #0D0D0D !important;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 800;
+    padding: 0.8rem 2.2rem;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    transition: transform 0.15s, opacity 0.15s;
+  }
+  .btn-beyond-cta:hover {
+    transform: translateY(-2px);
+    opacity: 0.95;
+  }
+
+  @media (max-width: 1024px) {
+    .explore-grid { grid-template-columns: 1fr; }
     .featured-dossier-card { grid-template-columns: 1fr; }
     .dossier-right { padding: 2rem 1.5rem; }
     .split-section { grid-template-columns: 1fr; gap: 2.5rem; }
+  }
+
+  @media (max-width: 768px) {
     .kpi-ribbon { gap: 1rem; }
     .kpi-sep { display: none; }
+    .closing-box { padding: 3rem 1.5rem; }
+    .dossier-left { padding: 1.75rem 1.5rem; }
+    .hero-main-title { font-size: 2.3rem; }
   }
 </style>

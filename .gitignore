@@ -21,3 +21,9 @@ Thumbs.db
 *.gdoc
 *.gsheet
 *.gslides
+
+# Raw multimedia & source topics
+TOPICS/
+*.mp4
+*.wav
+*.mp3

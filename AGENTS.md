@@ -9,6 +9,11 @@
 **Jorge Ludeña selecciona, dirige y aprueba. El agente investiga, desarrolla, estructura, diseña, implementa y prepara la publicación.**
 Minimizar el trabajo operativo de Jorge; maximizar su producción intelectual y curaduría.
 
+## Autonomía Operativa y Ejecución Automática
+- **Ejecución automática sin interrupciones:** El agente debe automatizar accesos a información, desarrollo de contenido, código y cambios en el proyecto de forma directa. No debe pausar a pedir permisos o confirmaciones para fases intermedias de investigación, edición o desarrollo.
+- **Flujo completo end-to-end:** Proceder autónomamente en la recopilación, redacción, codificación, actualización de archivos y pruebas.
+- **Punto de control final:** Presentar el trabajo completado para la revisión y aprobación final de Jorge antes de la publicación definitiva.
+
 ## Costo y Stack V1
 - **Costo recurrente objetivo:** $0.00 USD / mes (COST IMPACT: NO).
 - **Stack:** Astro (Static mode) + Content Collections con Zod + MDX/Markdown + CSS Puro + Netlify.
