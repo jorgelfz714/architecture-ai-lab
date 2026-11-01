@@ -38,11 +38,11 @@ const navItems = [
     <title>{title === "Architecture AI Lab" ? title : `${title} — Architecture AI Lab`}</title>
     <meta name="description" content={description} />
 
-    <!-- Google Fonts: Inter (Sans), JetBrains Mono (Mono), Newsreader (Serif) -->
+    <!-- Google Fonts: Inter (Sans), Courier Prime (Technical Mono), JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link 
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" 
+      href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" 
       rel="stylesheet" 
     />
 
@@ -59,13 +59,25 @@ const navItems = [
   </head>
   <body>
     {showProgress && <div id="prog"></div>}
+    
+    <!-- TOP TECHNICAL STRIP -->
+    <aside class="top-strip" aria-label="Información técnica del laboratorio">
+      <div class="top-strip-left">
+        <span class="live-dot" aria-hidden="true"></span>
+        <span class="mono-meta">ARCHITECTURE AI LAB &bull; DIGITAL RESEARCH FACILITY</span>
+      </div>
+      <div>
+        <span class="mono-meta">MADRID &bull; EST. 2026 &bull; OPEN SCIENCE</span>
+      </div>
+    </aside>
+
     <header class="site-header">
       <div class="container nav-wrapper">
         <a href="/" class="site-title">
-          AI Architecture Lab
-          <span style="background:var(--text-primary);color:#fff;font-family:var(--font-mono);font-size:0.58rem;padding:0.12rem 0.45rem;border-radius:9999px;margin-left:0.35rem;">LAB</span>
+          Architecture AI Lab
+          <span class="site-title-badge">RESEARCH</span>
         </a>
-        <div style="display: flex; align-items: center; gap: 1.25rem;">
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
           <nav class="site-nav" aria-label="Navegación principal">
             {navItems.map((item) => {
               const isActive = item.href === "/" 
@@ -81,8 +93,8 @@ const navItems = [
               );
             })}
           </nav>
-          <a href="/work" class="btn-primary" style="font-family:var(--font-mono);font-size:0.7rem;font-weight:700;padding:0.4rem 0.9rem;border-radius:9999px;white-space:nowrap;background:var(--text-primary);color:#fff;">
-            Explore AI Tools &rarr;
+          <a href="/experiments" class="nav-btn-tech">
+            Lab Dossiers &rarr;
           </a>
           <LanguageSwitcher />
         </div>
@@ -94,13 +106,40 @@ const navItems = [
     </main>
 
     <footer class="site-footer">
-      <div class="container footer-content">
-        <p class="mono">
-          Architecture AI Lab &mdash; Jorge Lude&ntilde;a &copy; {new Date().getFullYear()}
-        </p>
-        <p class="mono" style="color: var(--text-muted);">
-          Astro Static &bull; Netlify &bull; Minimalist System
-        </p>
+      <div class="container footer-content-andmade">
+        <div class="footer-left">
+          <div class="footer-logo">Architecture AI Lab</div>
+          <p class="footer-lead">
+            A living research platform exploring computational morphology, automated spatial workflows, and empirical AI benchmarking without commercial hype.
+          </p>
+          <div class="mono-meta">
+            DIRECTOR: JORGE LUDE&Ntilde;A &bull; ETSAM STRUCTURAL RESEARCH &bull; MADRID
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">Collections</div>
+          <ul class="footer-nav-list">
+            <li><a href="/experiments">Experiments &amp; Benchmarks</a></li>
+            <li><a href="/work">Systems &amp; Prototypes</a></li>
+            <li><a href="/resources">Workflows &amp; Protocols</a></li>
+            <li><a href="/notes">Field Notes &amp; Theory</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">Open Standards</div>
+          <ul class="footer-nav-list">
+            <li><a href="https://github.com/jorgelfz714/architecture-ai-lab" target="_blank" rel="noopener">GitHub Repository</a></li>
+            <li><a href="/about">Editorial Protocol</a></li>
+            <li><a href="/experiments">Verified Lab Records</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="container sub-footer-andmade">
+        <span class="mono-meta">&copy; {new Date().getFullYear()} ARCHITECTURE AI LAB &bull; ALL RIGHTS RESERVED</span>
+        <span class="mono-meta">COST TARGET: $0.00/MO &bull; ASTRO STATIC &bull; NETLIFY EDGE</span>
       </div>
     </footer>
 

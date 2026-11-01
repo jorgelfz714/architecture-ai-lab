@@ -1,0 +1,163 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  date: string;
+  href: string;
+  category: string;
+  tags?: string[];
+  readingTime?: string;
+  idCode?: string;
+  isFeatured?: boolean;
+}
+
+const { 
+  title, 
+  description, 
+  date, 
+  href, 
+  category, 
+  tags = [], 
+  readingTime = "10 min read",
+  idCode,
+  isFeatured = false 
+} = Astro.props;
+---
+
+<article class={`auralis-card ${isFeatured ? 'featured' : ''}`}>
+  <div class="card-top">
+    <div class="card-meta mono">
+      <span class="category-badge">{category}</span>
+      {idCode && <span class="id-badge">{idCode}</span>}
+      <span class="meta-sep">&bull;</span>
+      <time datetime={date}>{date}</time>
+      <span class="read-time">{readingTime}</span>
+    </div>
+    <h3 class="card-title">
+      <a href={href}>{title}</a>
+    </h3>
+    <p class="card-desc">{description}</p>
+  </div>
+  
+  <div class="card-bottom">
+    {tags.length > 0 && (
+      <div class="tag-list">
+        {tags.map((tag) => (
+          <span class="tag">{tag}</span>
+        ))}
+      </div>
+    )}
+    <a href={href} class="card-arrow" aria-label={`Leer ${title}`}>
+      <span>Ver</span> &rarr;
+    </a>
+  </div>
+</article>
+
+<style>
+  .auralis-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 14px;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.02);
+    position: relative;
+    overflow: hidden;
+  }
+  .auralis-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.16);
+  }
+  .auralis-card.featured {
+    border: 1.5px solid #0D0D0D;
+  }
+  .card-top { margin-bottom: 1.25rem; }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.62rem;
+    color: #686862;
+    margin-bottom: 0.65rem;
+    flex-wrap: wrap;
+    letter-spacing: 0.04em;
+  }
+  .category-badge {
+    text-transform: uppercase;
+    color: #0D0D0D;
+    font-weight: 700;
+    background: rgba(0, 0, 0, 0.045);
+    padding: 0.15rem 0.5rem;
+    border-radius: 9999px;
+  }
+  .id-badge {
+    font-weight: 700;
+    color: #059669;
+    background: rgba(5, 150, 105, 0.08);
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+  }
+  .meta-sep { color: #989890; }
+  .read-time { margin-left: auto; color: #989890; font-size: 0.6rem; }
+  .card-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    color: #0D0D0D;
+    margin-bottom: 0.55rem;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  .card-title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .card-title a:hover {
+    color: #383834;
+  }
+  .card-desc {
+    font-size: 0.86rem;
+    line-height: 1.62;
+    color: #383834;
+  }
+  .card-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    gap: 0.75rem;
+  }
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    color: #686862;
+    background: #EFEFEA;
+    padding: 0.15rem 0.5rem;
+    border-radius: 9999px;
+  }
+  .card-arrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #0D0D0D;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    transition: transform 0.15s;
+  }
+  .card-arrow:hover {
+    transform: translateX(2px);
+  }
+</style>
