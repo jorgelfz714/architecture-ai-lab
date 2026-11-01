@@ -8,313 +8,357 @@ const allWork = await getCollection('work');
 const allNotes = await getCollection('notes');
 const allResources = await getCollection('resources');
 
-// Sort experiments by date descending
-const sortedExperiments = allExperiments.sort((a, b) => b.data.date.localeCompare(a.data.date));
-const exp005 = sortedExperiments.find(e => e.id.includes('conceptual-framework-and-workflow')) || sortedExperiments[0];
-const exp004 = sortedExperiments.find(e => e.id.includes('where-ai-actually-works-in-aec')) || sortedExperiments[1];
-const otherExperiments = sortedExperiments.filter(e => e.id !== exp005?.id && e.id !== exp004?.id);
-
-const recentWork = allWork.sort((a, b) => b.data.date.localeCompare(a.data.date)).slice(0, 3);
-const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.data.date)).slice(0, 3);
+const featuredExperiment = allExperiments.find(e => e.id.includes('where-ai-actually-works-in-aec')) || allExperiments[0];
+const otherExperiments = allExperiments.filter(e => e.id !== featuredExperiment?.id).slice(0, 3);
+const recentWork = allWork.sort((a, b) => b.data.date.localeCompare(a.data.date)).slice(0, 2);
 const recentNotes = allNotes.sort((a, b) => b.data.date.localeCompare(a.data.date)).slice(0, 3);
+const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.data.date)).slice(0, 3);
 ---
 
-<BaseLayout 
-  title="Architecture AI Lab — Technical Craft & Spatial Computation"
-  description="Independent digital laboratory directed by Jorge Ludeña. Empirical AI benchmarking, reproducible architectural frameworks, and automated spatial workflows."
-  fullWidth={true}
->
-  <div class="andmade-home">
+<BaseLayout title="AI Architecture Lab — Architecture is changing. Make something new.">
+  <div class="home-wrap">
     
     <!-- ========================================================
-         HERO SECTION: ANDMADE EDITORIAL DISCIPLINE
+         SECTION B: HERO / PORTADA PRINCIPAL
          ======================================================== -->
-    <section class="hero-grid" aria-labelledby="hero-title">
-      <div class="hero-main">
-        <div class="hero-kicker">
-          <span>CYCLE 2026.2 // COMPUTATIONAL MORPHOLOGY &bull; AEC BENCHMARKS</span>
-        </div>
-        
-        <h1 id="hero-title" class="hero-title">
-          Architecture is changing.
-          <span class="hero-title-light">Make something new.</span>
-        </h1>
+    <section class="hero-section" id="hero">
+      <div class="ambient-mesh-glow"></div>
+      
+      <div class="hero-header-meta">
+        <span class="status-pill">
+          <span class="status-dot"></span>
+          DIGITAL RESEARCH LABORATORY // MADRID &bull; ETSAM
+        </span>
+        <span class="mono-meta">CYCLE 2026.2 &bull; OPEN SCIENCE</span>
+      </div>
 
-        <p class="hero-statement">
-          An independent digital laboratory directed by <strong>Jorge Ludeña</strong>. We conduct empirical investigations, build reproducible spatial workflows, and map the genuine computational inflection points where machine intelligence elevates architectural craft.
-        </p>
+      <h1 class="hero-main-title">
+        Architecture is changing.<br />
+        <span class="hero-title-accent">Make something new.</span>
+      </h1>
 
-        <div class="hero-actions">
-          <a href="#experiments-grid" class="btn-technical">
-            Explore Lab Experiments &darr;
-          </a>
-          <a href="/about" class="btn-ghost-tech">
-            Operating Protocol &rarr;
-          </a>
+      <p class="hero-question">
+        What if AI could change the way you design, the tools you use, and the ideas you bring to life?
+      </p>
+
+      <p class="hero-lead-text">
+        Explore new tools, experiment with emerging technologies, and discover new ways to approach architectural design.
+      </p>
+
+      <div class="hero-punchline-box">
+        <div class="hero-punchline">
+          Less repetition. More exploration. New ways to create.
         </div>
       </div>
 
-      <!-- HERO SIDE SPECIFICATION COLUMN -->
-      <aside class="hero-side">
-        <div class="side-cell">
-          <div class="side-label">01 / Principal Investigator</div>
-          <div class="side-value">Jorge Ludeña</div>
-          <div class="side-sub">Direction, curation &amp; final critical judgment.</div>
-        </div>
-
-        <div class="side-cell">
-          <div class="side-label">02 / Primary Focus</div>
-          <div class="side-value">Spatial Computation</div>
-          <div class="side-sub">Parametric solvers, LLMs, IFC geometry &amp; deterministic checks.</div>
-        </div>
-
-        <div class="side-cell">
-          <div class="side-label">03 / Operational Thesis</div>
-          <div class="side-value">Replicable Systems</div>
-          <div class="side-sub">Moving beyond isolated prompts to structured node graphs.</div>
-        </div>
-
-        <div class="side-cell">
-          <div class="side-label">04 / Target Stack</div>
-          <div class="side-value">$0.00 / Month</div>
-          <div class="side-sub">Astro Static &bull; Netlify Edge &bull; Open Science repositories.</div>
-        </div>
-      </aside>
-    </section>
-
-    <!-- OPERATING PRINCIPLE BANNER -->
-    <section class="director-rule-bar" aria-label="Principio rector">
-      <div class="drb-badge">Golden Rule</div>
-      <div class="drb-content">
-        <strong>Jorge Ludeña selects, directs and approves.</strong> The AI operational partner researches, develops, structures, designs, implements and prepares publication.
+      <div class="hero-cta-group">
+        <a href="#explore" class="btn-hero-primary">
+          Explore AI Tools &rarr;
+        </a>
+        <a href="#featured" class="btn-hero-secondary">
+          View Active Research
+        </a>
       </div>
-      <div class="drb-meta">AUTONOMOUS RUNNER // END-TO-END VERIFIED</div>
+
+      <!-- Operational Principle Badge -->
+      <div class="principle-box">
+        <span class="principle-lbl">Operating Principle:</span>
+        <span class="principle-txt">Jorge Lude&ntilde;a selects &amp; directs &bull; AI researches, develops, structures, designs &amp; implements.</span>
+      </div>
+
+      <!-- Quick Metrics Ribbon -->
+      <div class="kpi-ribbon">
+        <div class="kpi-item">
+          <span class="kpi-val">4</span>
+          <span class="kpi-lbl">Frontier Models Tested</span>
+        </div>
+        <div class="kpi-sep">/</div>
+        <div class="kpi-item">
+          <span class="kpi-val">9</span>
+          <span class="kpi-lbl">AEC Task Domains</span>
+        </div>
+        <div class="kpi-sep">/</div>
+        <div class="kpi-item">
+          <span class="kpi-val">100%</span>
+          <span class="kpi-lbl">Reproducible Open Data</span>
+        </div>
+        <div class="kpi-sep">/</div>
+        <div class="kpi-item">
+          <span class="kpi-val">$0.00</span>
+          <span class="kpi-lbl">Serverless Recurring Cost</span>
+        </div>
+      </div>
     </section>
 
     <!-- ========================================================
-         SECTION 01: CORE STUDIES & BENCHMARKS (EXP_005 & EXP_004)
+         SECTION C: EXPLORE WHAT'S POSSIBLE (THREE CARDS)
          ======================================================== -->
-    <section id="experiments-grid" aria-labelledby="sec-exp-title">
-      <div class="sec-header">
-        <div class="sec-header-left">
-          <span class="sec-num">01</span>
-          <h2 id="sec-exp-title" class="sec-title">Empirical Experiments &amp; Frameworks</h2>
-          <span class="sec-desc">(Verified lab records and benchmarks)</span>
+    <section class="explore-section" id="explore">
+      <div class="sec-label-row">
+        <div>
+          <span class="sec-kicker">&bull; CORE PILLARS</span>
+          <h2 class="sec-title">Explore what's possible.</h2>
+          <p class="sec-sub">Three pathways to rethink how architectural work gets done, from automated micro-tools to connected workflows and frontier stress-testing.</p>
         </div>
-        <a href="/experiments" class="sec-link">View All Records ({sortedExperiments.length}) &rarr;</a>
+        <a href="#featured" class="sec-link">View all active projects &rarr;</a>
       </div>
 
-      <div class="studies-grid">
-        <!-- STUDY 01: EXP_005 -->
-        {exp005 && (
-          <article class="study-cell">
-            <div>
-              <div class="study-header">
-                <span class="study-id-pill">
-                  <strong>{exp005.data.idCode || 'EXP_005'}</strong> // METHODOLOGY
-                </span>
-                <span class="study-status-tag">Published &bull; {exp005.data.date}</span>
-              </div>
-
-              <h3 class="study-title">
-                <a href={`/experiments/${exp005.id}`}>
-                  {exp005.data.title}
-                </a>
-              </h3>
-
-              <p class="study-desc">
-                {exp005.data.description}
-              </p>
+      <div class="explore-grid">
+        <!-- 1. TOOLS -->
+        <article class="explore-card">
+          <div class="explore-card-top">
+            <span class="explore-cat-badge">01 // TOOLS</span>
+            <h3 class="explore-title">TOOLS</h3>
+            <p class="explore-headline">New tools to rethink how architectural work gets done.</p>
+            <p class="explore-desc">Small applications, utilities, and algorithmic prototypes applying artificial intelligence directly to concrete architectural tasks.</p>
+            <div class="explore-diagram">
+              <div class="diagram-row"><span>Spatial Parser</span><span class="diagram-tag">IFC 4.3</span></div>
+              <div class="diagram-row"><span>Zoning Synthesizer</span><span class="diagram-tag">Automated</span></div>
             </div>
+          </div>
+          <div class="explore-card-bottom">
+            <span class="mono-meta">Prototype &bull; In Progress</span>
+            <a href="/work" class="explore-btn-link">Explore Tools &rarr;</a>
+          </div>
+        </article>
 
-            <div class="study-tools-tray">
-              {exp005.data.tools && (
-                <div class="tools-list">
-                  {exp005.data.tools.map((tool: string) => (
-                    <span class="tool-chip">{tool}</span>
-                  ))}
-                </div>
-              )}
-              
-              <div class="study-footer">
-                <span>DOI: {exp005.data.doi || '10.1038/arch.ai.2026.051'}</span>
-                <a href={`/experiments/${exp005.id}`} class="study-arrow-link">
-                  Open Technical Dossier &rarr;
-                </a>
-              </div>
+        <!-- 2. WORKFLOWS -->
+        <article class="explore-card">
+          <div class="explore-card-top">
+            <span class="explore-cat-badge">02 // WORKFLOWS</span>
+            <h3 class="explore-title">WORKFLOWS</h3>
+            <p class="explore-headline">Smarter ways to connect ideas, processes, and technology.</p>
+            <p class="explore-desc">Practical pipelines bridging foundation models, Grasshopper, Speckle, and BIM environments to eliminate repetitive overhead.</p>
+            <div class="explore-diagram">
+              <div class="diagram-row"><span>Prompt Protocol</span><span class="diagram-tag">Building Code</span></div>
+              <div class="diagram-row"><span>Parametric Python</span><span class="diagram-tag">GH + Ladybug</span></div>
             </div>
-          </article>
-        )}
+          </div>
+          <div class="explore-card-bottom">
+            <span class="mono-meta">Pipeline &bull; Verified</span>
+            <a href="/resources" class="explore-btn-link">Explore Workflows &rarr;</a>
+          </div>
+        </article>
 
-        <!-- STUDY 02: EXP_004 -->
-        {exp004 && (
-          <article class="study-cell">
-            <div>
-              <div class="study-header">
-                <span class="study-id-pill">
-                  <strong>{exp004.data.idCode || 'EXP_004'}</strong> // BENCHMARK
-                </span>
-                <span class="study-status-tag">Published &bull; {exp004.data.date}</span>
-              </div>
-
-              <h3 class="study-title">
-                <a href={`/experiments/${exp004.id}`}>
-                  {exp004.data.title}
-                </a>
-              </h3>
-
-              <p class="study-desc">
-                {exp004.data.description}
-              </p>
+        <!-- 3. EXPERIMENTS -->
+        <article class="explore-card">
+          <div class="explore-card-top">
+            <span class="explore-cat-badge">03 // EXPERIMENTS</span>
+            <h3 class="explore-title">EXPERIMENTS</h3>
+            <p class="explore-headline">New possibilities at the intersection of architecture and AI.</p>
+            <p class="explore-desc">Rigorous stress-testing, topological benchmarks, and empirical evaluations examining where frontier models excel and where they fail.</p>
+            <div class="explore-diagram">
+              <div class="diagram-row"><span>Code RAG Accuracy</span><b>94%</b></div>
+              <div class="diagram-row"><span>3D Spatial Topology</span><b style="color:#DC2626;">0% (Barrier)</b></div>
             </div>
+          </div>
+          <div class="explore-card-bottom">
+            <span class="mono-meta">Benchmark &bull; Available</span>
+            <a href="/experiments" class="explore-btn-link">Explore Experiments &rarr;</a>
+          </div>
+        </article>
+      </div>
+    </section>
 
-            <div class="study-tools-tray">
-              {exp004.data.tools && (
-                <div class="tools-list">
-                  {exp004.data.tools.map((tool: string) => (
-                    <span class="tool-chip">{tool}</span>
-                  ))}
-                </div>
-              )}
-              
-              <div class="study-footer">
-                <span>DOI: {exp004.data.doi || '10.1038/arch.ai.2026.042'}</span>
-                <a href={`/experiments/${exp004.id}`} class="study-arrow-link">
-                  Open Technical Dossier &rarr;
-                </a>
-              </div>
-            </div>
-          </article>
-        )}
+    <!-- ========================================================
+         SECTION D: FEATURED CONTENT (WHAT'S TAKING SHAPE)
+         ======================================================== -->
+    <section class="featured-section" id="featured">
+      <div class="sec-label-row">
+        <div>
+          <span class="sec-kicker">&bull; RESEARCH &amp; DEVELOPMENTS</span>
+          <h2 class="sec-title">What's taking shape.</h2>
+          <p class="sec-sub">Demonstrating what the lab actually tests and builds. No inflated promises: concrete benchmarks, algorithmic systems, and active prototypes.</p>
+        </div>
       </div>
 
-      <!-- MORE EXPERIMENTS IF ANY -->
+      <!-- FEATURED BENCHMARK DOSSIER (AURALIS HERO CARD) -->
+      {featuredExperiment && (
+        <div class="featured-dossier-card" id="featured-experiments">
+          <div class="dossier-left">
+            <div class="dossier-tag-row">
+              <span class="badge-featured">EXPERIMENT</span>
+              <span class="badge-peer">Available &bull; Peer-Reviewed Draft</span>
+              <span class="badge-doi">DOI: {featuredExperiment.data.doi || '10.1038/arch.ai.2026.042'}</span>
+            </div>
+
+            <h3 class="dossier-title">
+              <a href={`/experiments/${featuredExperiment.id}`}>{featuredExperiment.data.title}</a>
+            </h3>
+
+            <p class="dossier-desc">
+              Empirical benchmark measuring frontier LLMs across 9 architectural domains. Mapping with mathematical rigor where AI accelerates practice (Building Code RAG at 94%, Grasshopper Python at 88%) and where it encounters an insurmountable geometric barrier (0% 3D spatial coordination).
+            </p>
+
+            <!-- Accuracy Mini-Bars -->
+            <div class="mini-accuracy-bars">
+              <div class="bar-col">
+                <div class="bar-header"><span>Building Code &amp; Zoning RAG</span><b>94%</b></div>
+                <div class="bar-bg"><div class="bar-fill" style="width: 94%;"></div></div>
+              </div>
+              <div class="bar-col">
+                <div class="bar-header"><span>Grasshopper Parametric Python</span><b>88%</b></div>
+                <div class="bar-bg"><div class="bar-fill" style="width: 88%;"></div></div>
+              </div>
+              <div class="bar-col">
+                <div class="bar-header"><span>Multi-drawing Coordination</span><b style="color:#DC2626;">0% (Structural Failure)</b></div>
+                <div class="bar-bg"><div class="bar-fill" style="width: 4%; background:#DC2626;"></div></div>
+              </div>
+            </div>
+
+            <div class="dossier-footer">
+              <div class="author-inline">
+                <div class="author-circle">JL</div>
+                <div>
+                  <strong>Jorge Lude&ntilde;a</strong>
+                  <span>ETSAM Dept. Mec&aacute;nica Estructural</span>
+                </div>
+              </div>
+              <a href={`/experiments/${featuredExperiment.id}`} class="btn-dossier-cta">
+                Explore Full Technical Dossier &rarr;
+              </a>
+            </div>
+          </div>
+
+          <!-- Glassmorphic Preview Card on Right -->
+          <div class="dossier-right">
+            <div class="mesh-preview-box">
+              <div class="glass-inner-quote">
+                <div class="quote-header">
+                  <span>Core Research Question</span>
+                  <span class="qh-status">&bull; Lab Inquiry</span>
+                </div>
+                <p class="quote-text">
+                  &ldquo;Why does frontier AI struggle with authentic spatial reasoning in AEC, and in which specific computational inflection points does it deliver undeniable structural and workflow value?&rdquo;
+                </p>
+                <div class="quote-toolchain">
+                  <span>Stack:</span>
+                  <span class="chip-sm">GPT-4o</span>
+                  <span class="chip-sm">Claude 3.5</span>
+                  <span class="chip-sm">IFC 4.3</span>
+                  <span class="chip-sm">Speckle</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <!-- MORE EXPERIMENTS & WORKFLOWS -->
       {otherExperiments.length > 0 && (
-        <div class="sub-records-grid">
-          {otherExperiments.map((item) => (
+        <div class="content-section" id="more-experiments" style="margin-top: 2.5rem; margin-bottom: 2.5rem;">
+          <div class="sec-label-row">
+            <div>
+              <h3 class="sec-title" style="font-size: 1.45rem;">Investigación &amp; Frameworks</h3>
+              <p class="sec-sub">Nuevos marcos conceptuales, automatización de flujos y metodologías empíricas.</p>
+            </div>
+            <a href="/experiments" class="sec-link">Ver archivo de experimentos &rarr;</a>
+          </div>
+
+          <div class="card-grid">
+            {otherExperiments.map((item) => (
+              <Card
+                title={item.data.title}
+                description={item.data.description}
+                date={item.data.date}
+                href={`/experiments/${item.id}`}
+                category="experiment"
+                tags={item.data.tags}
+                idCode={item.data.idCode}
+                readingTime={item.data.readingTime}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      <!-- WORK & TOOLS SECTION -->
+      <div class="content-section" id="featured-tools">
+        <div class="sec-label-row">
+          <div>
+            <h3 class="sec-title" style="font-size: 1.45rem;">Proyectos &amp; Sistemas (Tools)</h3>
+            <p class="sec-sub">Investigaciones espaciales, marcos computacionales y aplicaciones prácticas.</p>
+          </div>
+          <a href="/work" class="sec-link">Explorar proyectos &rarr;</a>
+        </div>
+
+        <div class="card-grid">
+          {recentWork.map((item) => (
             <Card
               title={item.data.title}
               description={item.data.description}
               date={item.data.date}
-              href={`/experiments/${item.id}`}
-              category="experiment"
+              href={`/work/${item.id}`}
+              category="work"
               tags={item.data.tags}
-              idCode={item.data.idCode}
-              readingTime={item.data.readingTime}
             />
           ))}
         </div>
-      )}
-    </section>
+      </div>
 
-    <!-- ========================================================
-         SECTION 02: TRI-COLUMN MODULES (SYSTEMS, WORKFLOWS, NOTES)
-         ======================================================== -->
-    <section aria-labelledby="sec-tri-title">
-      <div class="sec-header">
-        <div class="sec-header-left">
-          <span class="sec-num">02</span>
-          <h2 id="sec-tri-title" class="sec-title">Systems, Protocols &amp; Field Notes</h2>
-          <span class="sec-desc">(Computational prototypes, prompts and critical inquiry)</span>
+      <!-- FIELD NOTES & WORKFLOWS SPLIT -->
+      <div class="content-section split-section" id="featured-workflows">
+        <div class="split-col">
+          <div class="sec-label-row">
+            <div>
+              <h3 class="sec-title" style="font-size: 1.45rem;">Workflows &amp; Recursos</h3>
+              <p class="sec-sub">Protocolos de verificación y prompts estructurados.</p>
+            </div>
+            <a href="/resources" class="sec-link">Ver workflows &rarr;</a>
+          </div>
+          <div class="vertical-cards">
+            {recentResources.map((item) => (
+              <Card
+                title={item.data.title}
+                description={item.data.description}
+                date={item.data.date}
+                href={`/resources/${item.id}`}
+                category="resource"
+                tags={item.data.tags}
+              />
+            ))}
+          </div>
         </div>
-        <a href="/work" class="sec-link">Explore Systems Archive &rarr;</a>
-      </div>
 
-      <div class="tri-grid">
-        <!-- SYSTEM RECORD -->
-        {recentWork.length > 0 && (
-          <article class="tri-cell">
+        <div class="split-col">
+          <div class="sec-label-row">
             <div>
-              <div class="tri-meta">
-                <span>SYSTEMS &bull; WORK</span>
-                <span>{recentWork[0].data.date}</span>
-              </div>
-              <h3 class="tri-title">
-                <a href={`/work/${recentWork[0].id}`}>
-                  {recentWork[0].data.title}
-                </a>
-              </h3>
-              <p class="tri-desc">
-                {recentWork[0].data.description}
-              </p>
+              <h3 class="sec-title" style="font-size: 1.45rem;">Field Notes &amp; Manifiestos</h3>
+              <p class="sec-sub">Observaciones y epistemología de la práctica digital.</p>
             </div>
-            <div class="tri-foot">
-              <span>{recentWork[0].data.tags?.[0] || 'Computational'}</span>
-              <a href={`/work/${recentWork[0].id}`}>&rarr;</a>
-            </div>
-          </article>
-        )}
-
-        <!-- WORKFLOW RECORD -->
-        {recentResources.length > 0 && (
-          <article class="tri-cell">
-            <div>
-              <div class="tri-meta">
-                <span>PROTOCOLS &bull; RESOURCES</span>
-                <span>{recentResources[0].data.date}</span>
-              </div>
-              <h3 class="tri-title">
-                <a href={`/resources/${recentResources[0].id}`}>
-                  {recentResources[0].data.title}
-                </a>
-              </h3>
-              <p class="tri-desc">
-                {recentResources[0].data.description}
-              </p>
-            </div>
-            <div class="tri-foot">
-              <span>{recentResources[0].data.tags?.[0] || 'Workflow'}</span>
-              <a href={`/resources/${recentResources[0].id}`}>&rarr;</a>
-            </div>
-          </article>
-        )}
-
-        <!-- FIELD NOTE RECORD -->
-        {recentNotes.length > 0 && (
-          <article class="tri-cell">
-            <div>
-              <div class="tri-meta">
-                <span>EPISTEMOLOGY &bull; NOTES</span>
-                <span>{recentNotes[0].data.date}</span>
-              </div>
-              <h3 class="tri-title">
-                <a href={`/notes/${recentNotes[0].id}`}>
-                  {recentNotes[0].data.title}
-                </a>
-              </h3>
-              <p class="tri-desc">
-                {recentNotes[0].data.description}
-              </p>
-            </div>
-            <div class="tri-foot">
-              <span>{recentNotes[0].data.tags?.[0] || 'Theory'}</span>
-              <a href={`/notes/${recentNotes[0].id}`}>&rarr;</a>
-            </div>
-          </article>
-        )}
+            <a href="/notes" class="sec-link">Ver notas &rarr;</a>
+          </div>
+          <div class="vertical-cards">
+            {recentNotes.map((item) => (
+              <Card
+                title={item.data.title}
+                description={item.data.description}
+                date={item.data.date}
+                href={`/notes/${item.id}`}
+                category="note"
+                tags={item.data.tags}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- ========================================================
-         SECTION 03: MANIFESTO STATEMENT
+         SECTION E: CLOSING (BEYOND THE ORDINARY)
          ======================================================== -->
-    <section class="manifesto-callout">
-      <div class="manifesto-inner">
-        <span class="mono-meta-callout">
-          // ARCHITECTURAL DIRECTION //
-        </span>
-        <h2 class="manifesto-title">
-          Traditional design friction is dead.<br />
-          Systemic orchestration is the new architectural craft.
-        </h2>
-        <p class="manifesto-lead">
-          We replace romanticized manual trial-and-error with deterministic computational pipelines. The architect's value is no longer measured by manual drafting hours, but by the precision of design intent and the critical rigor of curation.
-        </p>
-        <div class="manifesto-actions">
-          <a href="/experiments/conceptual-framework-and-workflow-for-architects-with-ai" class="btn-technical">
-            Read Framework 01, 02 &amp; 03 &rarr;
+    <section class="closing-section" id="closing">
+      <div class="closing-box">
+        <div class="closing-mesh-glow"></div>
+        <div class="closing-content">
+          <div class="closing-kicker">AI ARCHITECTURE LAB // VISION</div>
+          <h2 class="closing-title">Beyond the ordinary.</h2>
+          <p class="closing-text">
+            A space to explore, build, and discover what's next in architecture.
+          </p>
+          <a href="#explore" class="btn-beyond-cta">
+            Discover AI Architecture Lab &rarr;
           </a>
-          <span class="mono-meta">ESTIMATED READING: 11 MIN &bull; COMPLETE BLUEPRINT</span>
         </div>
       </div>
     </section>
@@ -323,552 +367,639 @@ const recentNotes = allNotes.sort((a, b) => b.data.date.localeCompare(a.data.dat
 </BaseLayout>
 
 <style>
-  .andmade-home {
-    max-width: var(--max-width);
+  .home-wrap {
+    max-width: 1200px;
     margin: 0 auto;
-    border-left: 1px solid var(--border-subtle);
-    border-right: 1px solid var(--border-subtle);
-    background: var(--bg-primary);
+    padding: 2.5rem 1.5rem 5rem;
   }
 
-  /* HERO GRID */
-  .hero-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    border-bottom: 1px solid var(--border-subtle);
+  /* HERO SECTION WITH AURALIS GLOW */
+  .hero-section {
+    position: relative;
+    padding: 3.5rem 0 3rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    margin-bottom: 3.5rem;
   }
-
-  .hero-main {
-    padding: clamp(3rem, 6vw, 5.5rem) clamp(1.5rem, 3.5vw, 3rem);
-    border-right: 1px solid var(--border-subtle);
+  .ambient-mesh-glow {
+    position: absolute;
+    top: -50px;
+    right: 5%;
+    width: 480px;
+    height: 260px;
+    background: linear-gradient(135deg, rgba(232, 121, 249, 0.22), rgba(96, 165, 250, 0.22), rgba(52, 211, 153, 0.18));
+    filter: blur(60px);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
   }
-
-  .hero-kicker {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-muted);
+  .hero-header-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 1;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .status-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: #383834;
+    background: rgba(0, 0, 0, 0.04);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+  }
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10B981;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+  }
+  .mono-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: #686862;
+    letter-spacing: 0.06em;
   }
 
-  .hero-title {
-    font-family: var(--font-sans);
-    font-size: clamp(2.4rem, 5vw, 4.2rem);
+  .hero-main-title {
+    font-size: clamp(2.5rem, 5vw, 4.2rem);
     font-weight: 900;
     line-height: 1.05;
     letter-spacing: -0.04em;
-    color: var(--text-primary);
+    color: #0D0D0D;
+    max-width: 980px;
+    margin-bottom: 1.35rem;
+    position: relative;
+    z-index: 1;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  .hero-title-accent {
+    background: linear-gradient(135deg, #0D0D0D 60%, #4B5563 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-question {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: clamp(1.2rem, 2vw, 1.65rem);
+    line-height: 1.45;
+    font-weight: 400;
+    font-style: italic;
+    color: #0D0D0D;
+    max-width: 860px;
+    margin-bottom: 1.25rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-lead-text {
+    font-size: 1.12rem;
+    line-height: 1.75;
+    color: #383834;
+    max-width: 840px;
+    margin-bottom: 1.6rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-punchline-box {
+    display: inline-block;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-punchline {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #0D0D0D;
+    letter-spacing: -0.015em;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 0, 0, 0.035);
+    border-left: 3px solid #0D0D0D;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .hero-cta-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2.25rem;
+    position: relative;
+    z-index: 1;
+    flex-wrap: wrap;
+  }
+  .btn-hero-primary {
+    background: #0D0D0D;
+    color: #FFFFFF;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 0.75rem 1.85rem;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: transform 0.15s, opacity 0.15s;
+    text-decoration: none;
+  }
+  .btn-hero-primary:hover {
+    transform: translateY(-2px);
+    opacity: 0.92;
+  }
+  .btn-hero-secondary {
+    background: transparent;
+    color: #0D0D0D;
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    transition: all 0.15s;
+    text-decoration: none;
+  }
+  .btn-hero-secondary:hover {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: #0D0D0D;
+  }
+
+  .principle-box {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-left: 3px solid #0D0D0D;
+    padding: 0.85rem 1.25rem;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 2.25rem;
+    position: relative;
+    z-index: 1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  }
+  .principle-lbl { font-weight: 700; color: #0D0D0D; }
+  .principle-txt { color: #383834; }
+
+  /* KPI RIBBON */
+  .kpi-ribbon {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    flex-wrap: wrap;
+  }
+  .kpi-item { display: flex; flex-direction: column; }
+  .kpi-val { font-size: 1.45rem; font-weight: 900; color: #0D0D0D; letter-spacing: -0.03em; }
+  .kpi-lbl { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; color: #686862; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.15rem; }
+  .kpi-sep { color: rgba(0, 0, 0, 0.15); font-family: 'JetBrains Mono', monospace; font-size: 1.2rem; }
+
+  /* EXPLORE SECTION & CARDS */
+  .explore-section {
+    margin-bottom: 5rem;
+    padding-top: 1rem;
+  }
+  .explore-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+  .explore-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    padding: 2.25rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .explore-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 0, 0, 0.18);
+  }
+  .explore-cat-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 800;
+    color: #686862;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .explore-title {
+    font-size: 1.75rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: #0D0D0D;
+    margin-bottom: 0.65rem;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  .explore-headline {
+    font-size: 1.02rem;
+    font-weight: 600;
+    color: #0D0D0D;
+    line-height: 1.45;
+    margin-bottom: 0.85rem;
+  }
+  .explore-desc {
+    font-size: 0.88rem;
+    color: #383834;
+    line-height: 1.65;
     margin-bottom: 1.75rem;
   }
-
-  .hero-title-light {
-    font-weight: 400;
-    color: var(--text-muted);
-    display: block;
+  .explore-diagram {
+    background: #F7F7F4;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 1.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
   }
-
-  .hero-statement {
-    font-size: clamp(1rem, 1.6vw, 1.25rem);
-    line-height: 1.6;
-    color: var(--text-secondary);
-    max-width: 660px;
-    margin-bottom: 2.25rem;
-    font-weight: 400;
-    letter-spacing: -0.015em;
+  .diagram-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.25rem 0;
+    color: #383834;
   }
-
-  .hero-statement strong {
-    color: var(--text-primary);
+  .diagram-tag {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.58rem;
     font-weight: 600;
   }
-
-  .hero-actions {
+  .explore-card-bottom {
     display: flex;
     align-items: center;
-    gap: 1.25rem;
-    flex-wrap: wrap;
-  }
-
-  .btn-technical {
-    font-family: var(--font-mono);
-    font-size: 0.76rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    padding: 0.85rem 1.6rem;
-    background: var(--text-primary);
-    color: var(--bg-secondary);
-    border: 1px solid var(--text-primary);
-    border-radius: var(--radius-xs);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    transition: all 0.15s ease;
-    cursor: pointer;
-  }
-
-  .btn-technical:hover {
-    background: transparent;
-    color: var(--text-primary);
-  }
-
-  .btn-ghost-tech {
-    font-family: var(--font-mono);
-    font-size: 0.76rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    padding: 0.85rem 1.6rem;
-    background: transparent;
-    color: var(--text-primary);
-    border: 1px solid var(--border-medium);
-    border-radius: var(--radius-xs);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    transition: all 0.15s ease;
-    cursor: pointer;
-  }
-
-  .btn-ghost-tech:hover {
-    border-color: var(--text-primary);
-    background: rgba(0, 0, 0, 0.03);
-  }
-
-  /* HERO SIDE COLUMN */
-  .hero-side {
-    display: flex;
-    flex-direction: column;
-    background: var(--bg-tertiary);
-  }
-
-  .side-cell {
-    padding: 1.6rem 1.75rem;
-    border-bottom: 1px solid var(--border-subtle);
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  .side-cell:last-child {
-    border-bottom: none;
-  }
-
-  .side-label {
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 0.35rem;
-  }
-
-  .side-value {
-    font-family: var(--font-sans);
-    font-size: 1.05rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: var(--text-primary);
-  }
-
-  .side-sub {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    margin-top: 0.2rem;
-    line-height: 1.4;
-  }
-
-  /* DIRECTOR BANNER */
-  .director-rule-bar {
-    border-bottom: 1px solid var(--border-subtle);
-    padding: 1.15rem clamp(1.5rem, 3.5vw, 3rem);
-    background: var(--bg-secondary);
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 1.5rem;
-    align-items: center;
-  }
-
-  .drb-badge {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    background: var(--text-primary);
-    color: var(--bg-secondary);
-    padding: 0.3rem 0.6rem;
-    border-radius: var(--radius-xs);
-    white-space: nowrap;
-  }
-
-  .drb-content {
-    font-size: 0.92rem;
-    color: var(--text-secondary);
-    letter-spacing: -0.01em;
-  }
-
-  .drb-content strong {
-    color: var(--text-primary);
-  }
-
-  .drb-meta {
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    color: var(--text-muted);
-    white-space: nowrap;
-  }
-
-  /* SECTION HEADERS */
-  .sec-header {
-    padding: 1.25rem clamp(1.5rem, 3.5vw, 3rem);
-    border-bottom: 1px solid var(--border-subtle);
-    background: var(--bg-primary);
-    display: flex;
     justify-content: space-between;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 0.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
   }
-
-  .sec-header-left {
-    display: flex;
-    align-items: baseline;
-    gap: 0.85rem;
-    flex-wrap: wrap;
-  }
-
-  .sec-num {
-    font-family: var(--font-mono);
+  .explore-btn-link {
+    font-family: 'JetBrains Mono', monospace;
     font-size: 0.72rem;
     font-weight: 700;
-    letter-spacing: 0.06em;
-    color: var(--text-primary);
-  }
-
-  .sec-title {
-    font-family: var(--font-sans);
-    font-size: 1.35rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    color: var(--text-primary);
-  }
-
-  .sec-desc {
-    font-size: 0.82rem;
-    color: var(--text-muted);
-  }
-
-  .sec-link {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--text-primary);
+    color: #0D0D0D;
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0.4rem;
+    text-decoration: none;
   }
 
-  .sec-link:hover {
-    opacity: 0.6;
+  /* FEATURED DOSSIER SECTION */
+  .featured-section {
+    margin-bottom: 5rem;
+    scroll-margin-top: 4rem;
   }
+  .sec-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .sec-kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #0D0D0D;
+  }
+  .sec-title {
+    font-size: clamp(1.75rem, 2.8vw, 2.3rem);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: #0D0D0D;
+    margin-bottom: 0.25rem;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  .sec-sub { font-size: 0.92rem; color: #686862; margin-bottom: 0; line-height: 1.55; }
+  .sec-link {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #0D0D0D;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    padding-bottom: 2px;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .sec-link:hover { border-color: #0D0D0D; padding-right: 3px; }
 
-  /* STUDIES GRID (EXP_005 & EXP_004) */
-  .studies-grid {
+  .featured-dossier-card {
+    background: #FFFFFF;
+    border: 1.5px solid #0D0D0D;
+    border-radius: 20px;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    background: var(--border-subtle);
-    gap: 1px;
-    border-bottom: 1px solid var(--border-subtle);
+    grid-template-columns: 1.2fr 0.8fr;
+    overflow: hidden;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.05);
+    transition: box-shadow .2s;
+    margin-bottom: 3.5rem;
   }
-
-  .study-cell {
-    background: var(--bg-secondary);
-    padding: clamp(1.75rem, 3.5vw, 2.75rem);
+  .featured-dossier-card:hover {
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+  }
+  .dossier-left {
+    padding: 2.75rem 2.5rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    transition: background 0.15s ease;
-    min-height: 420px;
   }
-
-  .study-cell:hover {
-    background: #FAF9F6;
-  }
-
-  .study-header {
+  .dossier-tag-row {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1.25rem;
-    border-bottom: 1px solid var(--border-subtle);
-    padding-bottom: 0.85rem;
-    gap: 0.75rem;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.15rem;
   }
-
-  .study-id-pill {
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: var(--text-primary);
-  }
-
-  .study-status-tag {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    padding: 0.15rem 0.45rem;
-    border: 1px solid var(--border-medium);
-    border-radius: var(--radius-xs);
-    color: var(--text-secondary);
-  }
-
-  .study-title {
-    font-family: var(--font-sans);
-    font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+  .badge-featured {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
     font-weight: 800;
-    line-height: 1.2;
+    color: #FFFFFF;
+    background: #0D0D0D;
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+  }
+  .badge-peer {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: #059669;
+    background: rgba(5, 150, 105, 0.1);
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+  }
+  .badge-doi {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: #686862;
+  }
+  .dossier-title {
+    font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+    font-weight: 900;
+    line-height: 1.15;
     letter-spacing: -0.03em;
-    color: var(--text-primary);
+    color: #0D0D0D;
     margin-bottom: 1rem;
+    font-family: 'Inter', system-ui, sans-serif;
   }
-
-  .study-title a {
-    color: inherit;
-    text-decoration: none;
-    transition: color 0.15s ease;
-  }
-
-  .study-title a:hover {
-    color: var(--accent-blue);
-  }
-
-  .study-desc {
-    font-size: 0.9rem;
-    line-height: 1.6;
-    color: var(--text-secondary);
+  .dossier-title a { color: inherit; text-decoration: none; }
+  .dossier-desc {
+    font-size: 0.94rem;
+    line-height: 1.68;
+    color: #383834;
     margin-bottom: 1.75rem;
   }
 
-  .study-tools-tray {
-    margin-top: auto;
-    border-top: 1px solid var(--border-subtle);
-    padding-top: 1.25rem;
-  }
-
-  .tools-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-bottom: 1rem;
-  }
-
-  .tool-chip {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    padding: 0.2rem 0.5rem;
-    background: var(--bg-primary);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-xs);
-    color: var(--text-secondary);
-    letter-spacing: 0.02em;
-  }
-
-  .study-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .study-arrow-link {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--text-primary);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    text-decoration: none;
-  }
-
-  .study-arrow-link:hover {
-    text-decoration: underline;
-  }
-
-  .sub-records-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 1px;
-    background: var(--border-subtle);
-    border-bottom: 1px solid var(--border-subtle);
-  }
-
-  /* TRI-GRID (SYSTEMS, WORKFLOWS, NOTES) */
-  .tri-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    background: var(--border-subtle);
-    gap: 1px;
-    border-bottom: 1px solid var(--border-subtle);
-  }
-
-  .tri-cell {
-    background: var(--bg-secondary);
-    padding: 1.75rem 1.75rem;
+  /* MINI ACCURACY BARS */
+  .mini-accuracy-bars {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    transition: background 0.15s ease;
-    min-height: 280px;
-  }
-
-  .tri-cell:hover {
-    background: #FAF9F6;
-  }
-
-  .tri-meta {
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 0.85rem;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .tri-title {
-    font-family: var(--font-sans);
-    font-size: 1.15rem;
-    font-weight: 800;
-    letter-spacing: -0.025em;
-    line-height: 1.3;
-    margin-bottom: 0.75rem;
-  }
-
-  .tri-title a {
-    color: inherit;
-    text-decoration: none;
-    transition: color 0.15s ease;
-  }
-
-  .tri-title a:hover {
-    color: var(--accent-blue);
-  }
-
-  .tri-desc {
-    font-size: 0.85rem;
-    line-height: 1.55;
-    color: var(--text-secondary);
-    margin-bottom: 1.25rem;
-    flex-grow: 1;
-  }
-
-  .tri-foot {
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-primary);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid var(--border-subtle);
-    padding-top: 0.85rem;
-  }
-
-  .tri-foot a {
-    font-size: 0.9rem;
-    text-decoration: none;
-  }
-
-  /* MANIFESTO CALLOUT */
-  .manifesto-callout {
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--border-subtle);
-    padding: clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 3.5vw, 3rem);
-  }
-
-  .manifesto-inner {
-    max-width: 860px;
-  }
-
-  .mono-meta-callout {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-primary);
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-    display: block;
-  }
-
-  .manifesto-title {
-    font-family: var(--font-sans);
-    font-size: clamp(1.8rem, 3.2vw, 2.7rem);
-    font-weight: 900;
-    line-height: 1.15;
-    letter-spacing: -0.035em;
-    color: var(--text-primary);
-    margin-bottom: 1.25rem;
-  }
-
-  .manifesto-lead {
-    font-size: 1.02rem;
-    line-height: 1.6;
-    color: var(--text-secondary);
+    gap: 0.65rem;
     margin-bottom: 2rem;
+    background: #F7F7F4;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
   }
+  .bar-col { display: flex; flex-direction: column; gap: 0.25rem; }
+  .bar-header { display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: #383834; }
+  .bar-header b { font-weight: 800; color: #0D0D0D; }
+  .bar-bg { width: 100%; height: 5px; background: rgba(0, 0, 0, 0.08); border-radius: 9999px; overflow: hidden; }
+  .bar-fill { height: 100%; background: #0D0D0D; border-radius: 9999px; }
 
-  .manifesto-actions {
+  .dossier-footer {
     display: flex;
-    gap: 1rem;
+    justify-content: space-between;
     align-items: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
     flex-wrap: wrap;
+    gap: 1rem;
   }
-
-  .mono-meta {
-    font-family: var(--font-mono);
+  .author-inline { display: flex; align-items: center; gap: 0.65rem; font-size: 0.78rem; }
+  .author-circle {
+    width: 32px;
+    height: 32px;
+    background: #0D0D0D;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
     font-size: 0.7rem;
-    letter-spacing: 0.05em;
+  }
+  .author-inline strong { display: block; color: #0D0D0D; }
+  .author-inline span { font-size: 0.65rem; color: #686862; font-family: 'JetBrains Mono', monospace; }
+
+  .btn-dossier-cta {
+    background: #0D0D0D;
+    color: #FFFFFF;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.55rem 1.35rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: transform 0.15s, opacity 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .btn-dossier-cta:hover { transform: translateY(-1px); opacity: 0.9; }
+
+  /* RIGHT MESH PREVIEW BOX */
+  .dossier-right {
+    background: linear-gradient(135deg, #E879F9, #C084FC, #818CF8, #60A5FA, #34D399, #F472B6);
+    background-size: 300% 300%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .mesh-preview-box { width: 100%; max-width: 380px; position: relative; z-index: 2; }
+  .glass-inner-quote {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 1.75rem;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+  }
+  .quote-header {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    color: #686862;
     text-transform: uppercase;
-    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.85rem;
+  }
+  .qh-status { color: #059669; font-weight: 700; }
+  .quote-text {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    font-style: italic;
+    color: #0D0D0D;
+    margin-bottom: 1.25rem;
+  }
+  .quote-toolchain {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    color: #686862;
+    padding-top: 0.85rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  .chip-sm {
+    background: rgba(0, 0, 0, 0.04);
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    color: #383834;
   }
 
-  @media (max-width: 960px) {
-    .hero-grid {
-      grid-template-columns: 1fr;
-    }
-    .hero-main {
-      border-right: none;
-      border-bottom: 1px solid var(--border-subtle);
-    }
-    .studies-grid {
-      grid-template-columns: 1fr;
-    }
-    .tri-grid {
-      grid-template-columns: 1fr;
-    }
-    .director-rule-bar {
-      grid-template-columns: 1fr;
-      gap: 0.75rem;
-    }
-    .drb-meta { display: none; }
+  /* CONTENT SECTIONS & GRIDS */
+  .content-section {
+    margin-bottom: 4.5rem;
+  }
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+  .split-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+  .vertical-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  /* CLOSING SECTION */
+  .closing-section {
+    margin-bottom: 4rem;
+  }
+  .closing-box {
+    background: #0D0D0D;
+    color: #FFFFFF;
+    border-radius: 20px;
+    padding: 4.5rem 3.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+  }
+  .closing-mesh-glow {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(232, 121, 249, 0.25) 0%, rgba(96, 165, 250, 0.2) 50%, transparent 80%);
+    filter: blur(50px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .closing-content {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .closing-kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 1rem;
+  }
+  .closing-title {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    margin-bottom: 1.25rem;
+    color: #FFFFFF;
+  }
+  .closing-text {
+    font-size: 1.15rem;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 2.25rem;
+  }
+  .btn-beyond-cta {
+    background: #FFFFFF;
+    color: #0D0D0D !important;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 800;
+    padding: 0.8rem 2.2rem;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    transition: transform 0.15s, opacity 0.15s;
+  }
+  .btn-beyond-cta:hover {
+    transform: translateY(-2px);
+    opacity: 0.95;
+  }
+
+  @media (max-width: 1024px) {
+    .explore-grid { grid-template-columns: 1fr; }
+    .featured-dossier-card { grid-template-columns: 1fr; }
+    .dossier-right { padding: 2rem 1.5rem; }
+    .split-section { grid-template-columns: 1fr; gap: 2.5rem; }
+  }
+
+  @media (max-width: 768px) {
+    .kpi-ribbon { gap: 1rem; }
+    .kpi-sep { display: none; }
+    .closing-box { padding: 3rem 1.5rem; }
+    .dossier-left { padding: 1.75rem 1.5rem; }
+    .hero-main-title { font-size: 2.3rem; }
   }
 </style>
