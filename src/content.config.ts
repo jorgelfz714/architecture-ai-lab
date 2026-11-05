@@ -33,6 +33,7 @@ const experimentsCollection = defineCollection({
     readingTime: z.string().optional(),
     peerReviewed: z.boolean().default(true),
     doi: z.string().optional(),
+    coverImage: z.string().optional(),
   }),
 });
 
@@ -47,6 +48,7 @@ const notesCollection = defineCollection({
     tags: z.array(z.string()).default([]),
     status: z.enum(['draft', 'ready', 'published']).default('draft'),
     featured: z.boolean().default(false),
+    coverImage: z.string().optional(),
   }),
 });
 
@@ -62,6 +64,7 @@ const resourcesCollection = defineCollection({
     status: z.enum(['draft', 'ready', 'published']).default('draft'),
     featured: z.boolean().default(false),
     resourceType: z.string().optional(),
+    coverImage: z.string().optional(),
   }),
 });
 

@@ -9,6 +9,7 @@ tags:
   - "Investigación"
 status: "published"
 featured: true
+coverImage: "/graphics/diagram-manifiesto-laboratorio.svg"
 ---
 
 # Manifiesto: Architecture AI Lab

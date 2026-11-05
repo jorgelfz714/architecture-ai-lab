@@ -73,6 +73,7 @@ const featuredExp = sortedExperiments.find(e => e.id.includes('where-ai-actually
             idCode={item.data.idCode}
             readingTime={item.data.readingTime}
             isFeatured={item.id === featuredExp?.id}
+            coverImage={item.data.coverImage}
           />
         ))}
       </div>

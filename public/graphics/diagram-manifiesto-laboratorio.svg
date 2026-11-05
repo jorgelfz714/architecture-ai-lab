@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad-manifiesto" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#18181B"/>
+      <stop offset="50%" stop-color="#27272A"/>
+      <stop offset="100%" stop-color="#09090B"/>
+    </linearGradient>
+    <pattern id="grid-dots-manif" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="0.8" fill="rgba(255,255,255,0.08)"/>
+    </pattern>
+  </defs>
+
+  <rect width="960" height="480" rx="16" fill="url(#bg-grad-manifiesto)"/>
+  <rect width="960" height="480" rx="16" fill="url(#grid-dots-manif)"/>
+  <rect x="25" y="25" width="910" height="430" rx="12" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+
+  <!-- Header -->
+  <text x="50" y="65" font-family="'JetBrains Mono', monospace" font-size="11" fill="#E4E4E7" letter-spacing="2" font-weight="700">ARCHITECTURE AI LAB // FIELD NOTES &bull; EPISTEMOLOGY</text>
+  <text x="50" y="85" font-family="'Inter', sans-serif" font-size="16" fill="#FFFFFF" font-weight="800">Manifiesto: El Arquitecto como Director Frente a la Máquina Generativa</text>
+  <text x="910" y="65" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="10" fill="#A1A1AA">CURATORIAL RATIO: 10:90</text>
+
+  <!-- Visual Pyramid Diagram (Director vs Machine Layers) -->
+  <g transform="translate(180, 120)">
+    <!-- Pyramid Apex: Human Director -->
+    <polygon points="300,20 180,110 420,110" fill="rgba(244, 63, 94, 0.25)" stroke="#F43F5E" stroke-width="2"/>
+    <circle cx="300" cy="65" r="14" fill="#F43F5E" stroke="#FFF" stroke-width="2"/>
+    <text x="300" y="69" text-anchor="middle" font-family="'Inter', sans-serif" font-size="9" fill="#FFF" font-weight="900">JL</text>
+    <text x="300" y="98" text-anchor="middle" font-family="'Inter', sans-serif" font-size="11" fill="#FFF" font-weight="700">EL ARQUITECTO DIRECTIVO</text>
+    <text x="300" y="106" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="7.5" fill="#FDA4AF">Juicio Crítico &bull; Responsabilidad Legal &bull; Poética Espacial</text>
+
+    <!-- Pyramid Mid: Orchestration Layer -->
+    <polygon points="175,115 425,115 480,185 120,185" fill="rgba(56, 189, 248, 0.18)" stroke="#38BDF8" stroke-width="1.8"/>
+    <text x="300" y="145" text-anchor="middle" font-family="'Inter', sans-serif" font-size="12" fill="#FFF" font-weight="700">CAPA DE ORQUESTACIÓN Y REGLAS</text>
+    <text x="300" y="165" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#BAE6FD">n8n &bull; Grasshopper &bull; Filtros Deterministas &bull; Git Versioning</text>
+
+    <!-- Pyramid Base: Probabilistic AI Synthesis -->
+    <polygon points="115,190 485,190 545,275 55,275" fill="rgba(255, 255, 255, 0.05)" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5"/>
+    <text x="300" y="222" text-anchor="middle" font-family="'Inter', sans-serif" font-size="12" fill="#E4E4E7" font-weight="700">SÍNTESIS PROBABILÍSTICA (LLMs &amp; DIFUSIÓN)</text>
+    <text x="300" y="242" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#A1A1AA">Generación de Variaciones Brutas &bull; Permutaciones Masivas &bull; Parseo de Textos</text>
+    <text x="300" y="258" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8" fill="#71717A">Riesgo Intrínseco de AI Slop &bull; Requiere Supervisión Rigurosa</text>
+  </g>
+</svg>

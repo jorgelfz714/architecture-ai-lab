@@ -30,7 +30,8 @@ const sortedWork = allWork.sort((a, b) => b.data.date.localeCompare(a.data.date)
         href={`/work/${item.id}`}
         category="work"
         tags={item.data.tags}
-      />
+        coverImage={item.data.coverImage}
+            />
     ))}
   </div>
 </BaseLayout>

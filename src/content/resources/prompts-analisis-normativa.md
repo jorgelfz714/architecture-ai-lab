@@ -10,6 +10,7 @@ tags:
 status: "published"
 featured: true
 resourceType: "Prompt Guide"
+coverImage: "/graphics/diagram-normativa-protocol.svg"
 ---
 
 # Guía de Prompts Estructurados para Interpretación de Normativa Urbanística

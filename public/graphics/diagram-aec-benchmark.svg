@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad-004" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0E1726"/>
+      <stop offset="50%" stop-color="#1E1B4B"/>
+      <stop offset="100%" stop-color="#090D16"/>
+    </linearGradient>
+    <pattern id="grid-dots-004" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="rgba(255,255,255,0.08)"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="960" height="480" rx="16" fill="url(#bg-grad-004)"/>
+  <rect width="960" height="480" rx="16" fill="url(#grid-dots-004)"/>
+
+  <!-- Border Frame -->
+  <rect x="25" y="25" width="910" height="430" rx="12" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+
+  <!-- Header -->
+  <text x="50" y="65" font-family="'JetBrains Mono', monospace" font-size="11" fill="#818CF8" letter-spacing="2" font-weight="700">ARCHITECTURE AI LAB // BENCHMARK EXP_004</text>
+  <text x="50" y="85" font-family="'Inter', sans-serif" font-size="16" fill="#FFFFFF" font-weight="800">AEC Frontier AI Performance &amp; Structural Ceiling Map</text>
+  <text x="910" y="65" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="10" fill="#34D399">11 WORKFLOW DOMAINS EVALUATED</text>
+
+  <!-- Split Divider -->
+  <line x1="50" y1="110" x2="910" y2="110" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+
+  <!-- SECTION LEFT: HIGH UTILITY DOMAINS -->
+  <g transform="translate(50, 130)">
+    <rect width="410" height="300" rx="8" fill="rgba(255,255,255,0.02)" stroke="rgba(52, 211, 153, 0.3)" stroke-width="1"/>
+    
+    <text x="20" y="32" font-family="'JetBrains Mono', monospace" font-size="10" fill="#34D399" font-weight="700" letter-spacing="1">ZONE A &bull; HIGH MEASURABLE UTILITY</text>
+    <text x="20" y="52" font-family="'Inter', sans-serif" font-size="13" fill="#FFFFFF" font-weight="700">Reliable Generative &amp; Analytical Tasks</text>
+
+    <!-- Bar 1: Text Generation & Summaries -->
+    <text x="20" y="85" font-family="'Inter', sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Specification &amp; Brief Summarization</text>
+    <text x="390" y="85" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="11" fill="#34D399" font-weight="700">85%</text>
+    <rect x="20" y="93" width="370" height="8" rx="4" fill="rgba(255,255,255,0.1)"/>
+    <rect x="20" y="93" width="314" height="8" rx="4" fill="#10B981"/>
+
+    <!-- Bar 2: Parametric Code (Grasshopper) -->
+    <text x="20" y="130" font-family="'Inter', sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Grasshopper C# &amp; Dynamo Python</text>
+    <text x="390" y="130" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="11" fill="#34D399" font-weight="700">88%</text>
+    <rect x="20" y="138" width="370" height="8" rx="4" fill="rgba(255,255,255,0.1)"/>
+    <rect x="20" y="138" width="325" height="8" rx="4" fill="#34D399"/>
+
+    <!-- Bar 3: Regulatory Document Search -->
+    <text x="20" y="175" font-family="'Inter', sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Municipal Zoning &amp; Code RAG</text>
+    <text x="390" y="175" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="11" fill="#34D399" font-weight="700">82%</text>
+    <rect x="20" y="183" width="370" height="8" rx="4" fill="rgba(255,255,255,0.1)"/>
+    <rect x="20" y="183" width="303" height="8" rx="4" fill="#10B981"/>
+
+    <!-- Bar 4: Multimodal Floorplan Parsing -->
+    <text x="20" y="220" font-family="'Inter', sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">2D Drawing Typological Extraction</text>
+    <text x="390" y="220" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="11" fill="#34D399" font-weight="700">86%</text>
+    <rect x="20" y="228" width="370" height="8" rx="4" fill="rgba(255,255,255,0.1)"/>
+    <rect x="20" y="228" width="318" height="8" rx="4" fill="#34D399"/>
+
+    <text x="20" y="275" font-family="'JetBrains Mono', monospace" font-size="9.5" fill="#6EE7B7">&bull; Strong augmentative ROI in studio practice</text>
+  </g>
+
+  <!-- SECTION RIGHT: STRUCTURAL CEILINGS -->
+  <g transform="translate(500, 130)">
+    <rect width="410" height="300" rx="8" fill="rgba(255,255,255,0.02)" stroke="rgba(244, 63, 94, 0.3)" stroke-width="1"/>
+    
+    <text x="20" y="32" font-family="'JetBrains Mono', monospace" font-size="10" fill="#F43F5E" font-weight="700" letter-spacing="1">ZONE B &bull; STRUCTURAL ARCHITECTURAL CEILINGS</text>
+    <text x="20" y="52" font-family="'Inter', sans-serif" font-size="13" fill="#FFFFFF" font-weight="700">Where Probabilistic Models Fail AEC</text>
+
+    <!-- Bar 1: Dimensional Coordination -->
+    <text x="20" y="85" font-family="'Inter', sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Cross-Drawing Metric Coordination</text>
+    <text x="390" y="85" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="11" fill="#F43F5E" font-weight="700">0%</text>
+    <rect x="20" y="93" width="370" height="8" rx="4" fill="rgba(255,255,255,0.1)"/>
+    <rect x="20" y="93" width="16" height="8" rx="4" fill="#EF4444"/>
+
+    <!-- Bar 2: Production BIM Models -->
+    <text x="20" y="130" font-family="'Inter', sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Information-Rich BIM IFC Models</text>
+    <text x="390" y="130" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="11" fill="#F43F5E" font-weight="700">0%</text>
+    <rect x="20" y="138" width="370" height="8" rx="4" fill="rgba(255,255,255,0.1)"/>
+    <rect x="20" y="138" width="16" height="8" rx="4" fill="#EF4444"/>
+
+    <!-- Bar 3: Structural FEA Computations -->
+    <text x="20" y="175" font-family="'Inter', sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Deflection &amp; Shear Mechanics</text>
+    <text x="390" y="175" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="11" fill="#F43F5E" font-weight="700">12%</text>
+    <rect x="20" y="183" width="370" height="8" rx="4" fill="rgba(255,255,255,0.1)"/>
+    <rect x="20" y="183" width="44" height="8" rx="4" fill="#F43F5E"/>
+
+    <!-- Bar 4: Coordinated CD Packages -->
+    <text x="20" y="220" font-family="'Inter', sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Construction Documents Sets</text>
+    <text x="390" y="220" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="11" fill="#F43F5E" font-weight="700">18%</text>
+    <rect x="20" y="228" width="370" height="8" rx="4" fill="rgba(255,255,255,0.1)"/>
+    <rect x="20" y="228" width="66" height="8" rx="4" fill="#F43F5E"/>
+
+    <text x="20" y="275" font-family="'JetBrains Mono', monospace" font-size="9.5" fill="#FDA4AF">&bull; Requires external deterministic CAD solvers &amp; FEA engines</text>
+  </g>
+</svg>

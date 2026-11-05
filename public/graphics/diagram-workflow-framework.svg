@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad-005" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F141C"/>
+      <stop offset="50%" stop-color="#141B26"/>
+      <stop offset="100%" stop-color="#0A0E14"/>
+    </linearGradient>
+    <linearGradient id="cyan-glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00F2FE"/>
+      <stop offset="100%" stop-color="#4FACFE"/>
+    </linearGradient>
+    <linearGradient id="emerald-glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="rose-glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F43F5E"/>
+      <stop offset="100%" stop-color="#E11D48"/>
+    </linearGradient>
+    <filter id="glow-fx" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    <pattern id="grid-dots" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="rgba(255,255,255,0.08)"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="960" height="480" rx="16" fill="url(#bg-grad-005)"/>
+  <rect width="960" height="480" rx="16" fill="url(#grid-dots)"/>
+  
+  <!-- Subtle Framing Coordinate lines -->
+  <line x1="40" y1="40" x2="920" y2="40" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-dasharray="4 4"/>
+  <line x1="40" y1="440" x2="920" y2="440" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-dasharray="4 4"/>
+  <line x1="40" y1="40" x2="40" y2="440" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-dasharray="4 4"/>
+  <line x1="920" y1="40" x2="920" y2="440" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-dasharray="4 4"/>
+
+  <!-- Top Metadata Header -->
+  <text x="60" y="70" font-family="'JetBrains Mono', 'Courier Prime', monospace" font-size="11" fill="#4FACFE" letter-spacing="2" font-weight="700">ARCHITECTURE AI LAB // EXPERIMENT EXP_005</text>
+  <text x="60" y="88" font-family="'Inter', sans-serif" font-size="15" fill="#FFFFFF" font-weight="700">Three-Tier Architectural AI Workflow &amp; Intent Pipeline</text>
+  <text x="900" y="72" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="10" fill="rgba(255,255,255,0.5)">VERIFIED SPEC // 2026.10</text>
+
+  <!-- Connecting Data Bus Lines -->
+  <path d="M 230 250 L 330 250" stroke="#00F2FE" stroke-width="2" stroke-dasharray="6 3" opacity="0.8"/>
+  <path d="M 490 250 L 590 250" stroke="#10B981" stroke-width="2" stroke-dasharray="6 3" opacity="0.8"/>
+  <path d="M 750 250 L 850 250" stroke="#F43F5E" stroke-width="2" stroke-dasharray="6 3" opacity="0.8"/>
+
+  <!-- Feedback Loop Arrow (Deterministic Gate back to Orchestration) -->
+  <path d="M 670 330 C 670 390, 410 390, 410 330" fill="none" stroke="#F43F5E" stroke-width="1.8" stroke-dasharray="4 4" opacity="0.7"/>
+  <polygon points="410,325 405,335 415,335" fill="#F43F5E"/>
+  <text x="540" y="405" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" fill="#F43F5E" letter-spacing="1">PARAMETRIC ERROR FEEDBACK (FAR &gt; 2%)</text>
+
+  <!-- NODE 01: INTENT MAPPING -->
+  <g transform="translate(70, 160)">
+    <rect width="160" height="170" rx="10" fill="rgba(255,255,255,0.03)" stroke="#00F2FE" stroke-width="1.5" />
+    <circle cx="80" cy="45" r="24" fill="rgba(0, 242, 254, 0.1)" stroke="#00F2FE" stroke-width="1"/>
+    <!-- Icon: Dual Resolution Map -->
+    <rect x="68" y="33" width="24" height="24" fill="none" stroke="#00F2FE" stroke-width="1.5" rx="3"/>
+    <line x1="68" y1="45" x2="92" y2="45" stroke="#00F2FE" stroke-width="1"/>
+    <line x1="80" y1="33" x2="80" y2="57" stroke="#00F2FE" stroke-width="1"/>
+
+    <text x="80" y="95" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" fill="#00F2FE" font-weight="700">TIER 01</text>
+    <text x="80" y="112" text-anchor="middle" font-family="'Inter', sans-serif" font-size="12" fill="#FFFFFF" font-weight="700">Intent Mapping</text>
+    <text x="80" y="132" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9.5" fill="rgba(255,255,255,0.6)">Macro Systemic</text>
+    <text x="80" y="148" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9.5" fill="rgba(255,255,255,0.6)">Micro Stress-Test</text>
+  </g>
+
+  <!-- NODE 02: MODULAR ORCHESTRATION -->
+  <g transform="translate(330, 160)">
+    <rect width="160" height="170" rx="10" fill="rgba(255,255,255,0.03)" stroke="#10B981" stroke-width="1.5" />
+    <circle cx="80" cy="45" r="24" fill="rgba(16, 185, 129, 0.1)" stroke="#10B981" stroke-width="1"/>
+    <!-- Icon: Modular Nodes -->
+    <circle cx="72" cy="40" r="4" fill="#10B981"/>
+    <circle cx="88" cy="40" r="4" fill="#10B981"/>
+    <circle cx="80" cy="52" r="4" fill="#10B981"/>
+    <line x1="72" y1="40" x2="80" y2="52" stroke="#10B981" stroke-width="1.2"/>
+    <line x1="88" y1="40" x2="80" y2="52" stroke="#10B981" stroke-width="1.2"/>
+
+    <text x="80" y="95" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" fill="#10B981" font-weight="700">TIER 02</text>
+    <text x="80" y="112" text-anchor="middle" font-family="'Inter', sans-serif" font-size="12" fill="#FFFFFF" font-weight="700">Modular Pipeline</text>
+    <text x="80" y="132" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9.5" fill="rgba(255,255,255,0.6)">n8n / Langflow</text>
+    <text x="80" y="148" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9.5" fill="rgba(255,255,255,0.6)">RhinoCompute</text>
+  </g>
+
+  <!-- NODE 03: DETERMINISTIC GATE -->
+  <g transform="translate(590, 160)">
+    <rect width="160" height="170" rx="10" fill="rgba(255,255,255,0.03)" stroke="#F43F5E" stroke-width="1.5" />
+    <circle cx="80" cy="45" r="24" fill="rgba(244, 63, 94, 0.1)" stroke="#F43F5E" stroke-width="1"/>
+    <!-- Icon: Shield / Check Filter -->
+    <path d="M 80 32 L 92 38 L 92 48 C 92 56 80 61 80 61 C 80 61 68 56 68 48 L 68 38 Z" fill="none" stroke="#F43F5E" stroke-width="1.4"/>
+    <polyline points="74,46 78,50 86,42" fill="none" stroke="#F43F5E" stroke-width="1.5"/>
+
+    <text x="80" y="95" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" fill="#F43F5E" font-weight="700">GATE 03</text>
+    <text x="80" y="112" text-anchor="middle" font-family="'Inter', sans-serif" font-size="12" fill="#FFFFFF" font-weight="700">Deterministic Audit</text>
+    <text x="80" y="132" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9.5" fill="rgba(255,255,255,0.6)">Code Compliance</text>
+    <text x="80" y="148" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9.5" fill="rgba(255,255,255,0.6)">Egress &amp; FAR Checks</text>
+  </g>
+
+  <!-- TIER 04: HUMAN JUDGMENT (THE DIRECTOR) -->
+  <g transform="translate(850, 160)">
+    <rect width="60" height="170" rx="8" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" />
+    <text x="30" y="55" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#FFFFFF" font-weight="700" transform="rotate(-90 30 55)">DIRECTOR</text>
+    <circle cx="30" cy="130" r="14" fill="#000" stroke="#FFF" stroke-width="1.5"/>
+    <text x="30" y="134" text-anchor="middle" font-family="'Inter', sans-serif" font-size="9" fill="#FFF" font-weight="800">JL</text>
+  </g>
+
+  <!-- Bottom Legend Pill -->
+  <rect x="300" y="420" width="360" height="28" rx="14" fill="rgba(0,0,0,0.6)" stroke="rgba(255,255,255,0.15)"/>
+  <text x="480" y="438" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" fill="#A1A1AA" letter-spacing="1">CURATION OVER PRODUCTION &bull; REPLICABLE PIPELINES</text>
+</svg>

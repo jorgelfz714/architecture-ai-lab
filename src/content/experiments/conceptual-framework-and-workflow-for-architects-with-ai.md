@@ -18,6 +18,7 @@ idCode: "EXP_005"
 readingTime: "11 min read"
 peerReviewed: true
 doi: "10.1038/arch.ai.2026.051"
+coverImage: "/graphics/diagram-workflow-framework.svg"
 tools:
   - "Intent Mapping Matrix"
   - "n8n / Langflow"

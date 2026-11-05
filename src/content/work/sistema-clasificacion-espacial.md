@@ -9,6 +9,7 @@ tags:
   - "Grafos"
 status: "published"
 featured: true
+coverImage: "/graphics/diagram-urban-classification.svg"
 ---
 
 # Sistema Algorítmico de Clasificación Espacial para Tejidos Urbanos

@@ -669,6 +669,16 @@ const isAECBenchmark = entry.id.includes('where-ai-actually-works-in-aec');
             ))}
           </div>
         )}
+
+        {entry.data.coverImage && (
+          <div class="article-hero-graphic" style="margin-top: 2rem; border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 8px 30px rgba(0,0,0,0.06);">
+            <img 
+              src={entry.data.coverImage} 
+              alt={`Gráfico ilustrativo y especificación para ${entry.data.title}`} 
+              style="width: 100%; height: auto; display: block;" 
+            />
+          </div>
+        )}
       </header>
 
       <div class="prose">

@@ -30,7 +30,8 @@ const sortedNotes = allNotes.sort((a, b) => b.data.date.localeCompare(a.data.dat
         href={`/notes/${item.id}`}
         category="note"
         tags={item.data.tags}
-      />
+        coverImage={item.data.coverImage}
+            />
     ))}
   </div>
 </BaseLayout>

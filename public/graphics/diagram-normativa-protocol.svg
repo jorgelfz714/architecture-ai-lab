@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad-normativa" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="50%" stop-color="#1E293B"/>
+      <stop offset="100%" stop-color="#0B0F19"/>
+    </linearGradient>
+    <pattern id="grid-dots-rag" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="0.8" fill="rgba(255,255,255,0.06)"/>
+    </pattern>
+  </defs>
+
+  <rect width="960" height="480" rx="16" fill="url(#bg-grad-normativa)"/>
+  <rect width="960" height="480" rx="16" fill="url(#grid-dots-rag)"/>
+  <rect x="25" y="25" width="910" height="430" rx="12" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+
+  <!-- Header -->
+  <text x="50" y="65" font-family="'JetBrains Mono', monospace" font-size="11" fill="#38BDF8" letter-spacing="2" font-weight="700">ARCHITECTURE AI LAB // PROTOCOLS &bull; RESOURCES</text>
+  <text x="50" y="85" font-family="'Inter', sans-serif" font-size="16" fill="#FFFFFF" font-weight="800">Pipeline de Extracción y Verificación Normativa con LLMs</text>
+  <text x="910" y="65" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="10" fill="#4ADE80">ZERO HALLUCINATION PROTOCOL</text>
+
+  <!-- Flow Steps (Ingest -> Chunking -> Vector Search -> Rule-Check -> JSON Spec) -->
+  <g transform="translate(50, 150)">
+    <!-- Step 1: PDF Document -->
+    <rect x="0" y="0" width="140" height="180" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.2)" stroke-width="1.2"/>
+    <text x="70" y="30" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" fill="#94A3B8">INPUT DOC</text>
+    <text x="70" y="55" text-anchor="middle" font-family="'Inter', sans-serif" font-size="12" fill="#FFF" font-weight="700">PGOU / Código</text>
+    <!-- Mini Doc lines -->
+    <line x1="25" y1="80" x2="115" y2="80" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+    <line x1="25" y1="100" x2="95" y2="100" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+    <line x1="25" y1="120" x2="115" y2="120" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+    <line x1="25" y1="140" x2="75" y2="140" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+
+    <!-- Arrow 1 -->
+    <path d="M 145 90 L 175 90" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow)"/>
+    
+    <!-- Step 2: Semantic Chunking -->
+    <rect x="180" y="0" width="140" height="180" rx="8" fill="rgba(255,255,255,0.03)" stroke="#38BDF8" stroke-width="1.2"/>
+    <text x="250" y="30" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" fill="#38BDF8">STEP 01</text>
+    <text x="250" y="55" text-anchor="middle" font-family="'Inter', sans-serif" font-size="12" fill="#FFF" font-weight="700">Chunking &amp; RAG</text>
+    <rect x="195" y="75" width="110" height="24" rx="4" fill="rgba(56, 189, 248, 0.15)"/>
+    <text x="250" y="91" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#BAE6FD">Alturas / Rasante</text>
+    <rect x="195" y="108" width="110" height="24" rx="4" fill="rgba(56, 189, 248, 0.15)"/>
+    <text x="250" y="124" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#BAE6FD">Retranqueos</text>
+    <rect x="195" y="141" width="110" height="24" rx="4" fill="rgba(56, 189, 248, 0.15)"/>
+    <text x="250" y="157" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#BAE6FD">Edificabilidad</text>
+
+    <!-- Arrow 2 -->
+    <path d="M 325 90 L 355 90" stroke="#38BDF8" stroke-width="2"/>
+
+    <!-- Step 3: LLM Cross-Examination -->
+    <rect x="360" y="0" width="150" height="180" rx="8" fill="rgba(255,255,255,0.03)" stroke="#818CF8" stroke-width="1.2"/>
+    <text x="435" y="30" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" fill="#818CF8">STEP 02</text>
+    <text x="435" y="55" text-anchor="middle" font-family="'Inter', sans-serif" font-size="12" fill="#FFF" font-weight="700">Verificación LLM</text>
+    <circle cx="435" cy="115" r="30" fill="rgba(129, 140, 248, 0.15)" stroke="#818CF8" stroke-width="1"/>
+    <text x="435" y="112" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" fill="#FFF">Prompt</text>
+    <text x="435" y="126" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8" fill="#C7D2FE">Validado</text>
+
+    <!-- Arrow 3 -->
+    <path d="M 515 90 L 545 90" stroke="#818CF8" stroke-width="2"/>
+
+    <!-- Step 4: Deterministic Guardrails -->
+    <rect x="550" y="0" width="140" height="180" rx="8" fill="rgba(255,255,255,0.03)" stroke="#34D399" stroke-width="1.2"/>
+    <text x="620" y="30" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" fill="#34D399">GATE 03</text>
+    <text x="620" y="55" text-anchor="middle" font-family="'Inter', sans-serif" font-size="12" fill="#FFF" font-weight="700">Auditoría Reglas</text>
+    <path d="M 620 90 L 632 96 L 632 108 C 632 118 620 125 620 125 C 620 125 608 118 608 108 L 608 96 Z" fill="none" stroke="#34D399" stroke-width="1.5"/>
+    <polyline points="614,106 618,110 626,102" fill="none" stroke="#34D399" stroke-width="1.6"/>
+    <text x="620" y="148" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#86EFAC">100% Citation Match</text>
+
+    <!-- Arrow 4 -->
+    <path d="M 695 90 L 725 90" stroke="#34D399" stroke-width="2"/>
+
+    <!-- Step 5: JSON Parameter Output -->
+    <rect x="730" y="0" width="130" height="180" rx="8" fill="rgba(255,255,255,0.03)" stroke="#F59E0B" stroke-width="1.2"/>
+    <text x="795" y="30" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" fill="#F59E0B">OUTPUT</text>
+    <text x="795" y="55" text-anchor="middle" font-family="'Inter', sans-serif" font-size="12" fill="#FFF" font-weight="700">JSON Geometry</text>
+    <text x="745" y="85" font-family="'JetBrains Mono', monospace" font-size="8" fill="#FCD34D">&#123;</text>
+    <text x="755" y="100" font-family="'JetBrains Mono', monospace" font-size="8" fill="#FCD34D">"max_h": 21.0,</text>
+    <text x="755" y="115" font-family="'JetBrains Mono', monospace" font-size="8" fill="#FCD34D">"far": 2.45,</text>
+    <text x="755" y="130" font-family="'JetBrains Mono', monospace" font-size="8" fill="#FCD34D">"setback": 4.0</text>
+    <text x="745" y="145" font-family="'JetBrains Mono', monospace" font-size="8" fill="#FCD34D">&#125;</text>
+    <text x="795" y="165" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8" fill="#FBBF24">Direct to Rhino</text>
+  </g>
+</svg>

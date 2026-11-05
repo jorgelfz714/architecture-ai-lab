@@ -37,7 +37,17 @@ const { Content } = await render(entry);
           ))}
         </div>
       )}
+{entry.data.coverImage && (
+        <div class="article-hero-graphic" style="margin-top: 1.75rem; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-subtle, rgba(0,0,0,0.1)); box-shadow: 0 8px 30px rgba(0,0,0,0.06);">
+          <img 
+            src={entry.data.coverImage} 
+            alt={`Gráfico ilustrativo para ${entry.data.title}`} 
+            style="width: 100%; height: auto; display: block;" 
+          />
+        </div>
+      )}
     </header>
+
 
     <div class="prose">
       <Content />

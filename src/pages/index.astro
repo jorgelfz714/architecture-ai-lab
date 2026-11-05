@@ -266,6 +266,7 @@ const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.
                 tags={item.data.tags}
                 idCode={item.data.idCode}
                 readingTime={item.data.readingTime}
+                coverImage={item.data.coverImage}
               />
             ))}
           </div>
@@ -291,6 +292,7 @@ const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.
               href={`/work/${item.id}`}
               category="work"
               tags={item.data.tags}
+              coverImage={item.data.coverImage}
             />
           ))}
         </div>
@@ -315,6 +317,7 @@ const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.
                 href={`/resources/${item.id}`}
                 category="resource"
                 tags={item.data.tags}
+                coverImage={item.data.coverImage}
               />
             ))}
           </div>
@@ -337,6 +340,7 @@ const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.
                 href={`/notes/${item.id}`}
                 category="note"
                 tags={item.data.tags}
+                coverImage={item.data.coverImage}
               />
             ))}
           </div>

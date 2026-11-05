@@ -9,6 +9,7 @@ interface Props {
   readingTime?: string;
   idCode?: string;
   isFeatured?: boolean;
+  coverImage?: string;
 }
 
 const { 
@@ -20,36 +21,54 @@ const {
   tags = [], 
   readingTime = "10 min read",
   idCode,
-  isFeatured = false 
+  isFeatured = false,
+  coverImage
 } = Astro.props;
 ---
 
 <article class={`auralis-card ${isFeatured ? 'featured' : ''}`}>
-  <div class="card-top">
-    <div class="card-meta mono">
-      <span class="category-badge">{category}</span>
-      {idCode && <span class="id-badge">{idCode}</span>}
-      <span class="meta-sep">&bull;</span>
-      <time datetime={date}>{date}</time>
-      <span class="read-time">{readingTime}</span>
+  {coverImage && (
+    <div class="card-visual-header">
+      <a href={href} class="visual-link" tabindex="-1" aria-hidden="true">
+        <img 
+          src={coverImage} 
+          alt={`Gráfico ilustrativo de ${title}`} 
+          loading="lazy" 
+          class="card-graphic-img" 
+        />
+        <div class="visual-overlay"></div>
+      </a>
+      <span class="visual-badge">SPEC // GRAPHIC</span>
     </div>
-    <h3 class="card-title">
-      <a href={href}>{title}</a>
-    </h3>
-    <p class="card-desc">{description}</p>
-  </div>
-  
-  <div class="card-bottom">
-    {tags.length > 0 && (
-      <div class="tag-list">
-        {tags.map((tag) => (
-          <span class="tag">{tag}</span>
-        ))}
+  )}
+
+  <div class="card-inner-body">
+    <div class="card-top">
+      <div class="card-meta mono">
+        <span class="category-badge">{category}</span>
+        {idCode && <span class="id-badge">{idCode}</span>}
+        <span class="meta-sep">&bull;</span>
+        <time datetime={date}>{date}</time>
+        <span class="read-time">{readingTime}</span>
       </div>
-    )}
-    <a href={href} class="card-arrow" aria-label={`Leer ${title}`}>
-      <span>Ver</span> &rarr;
-    </a>
+      <h3 class="card-title">
+        <a href={href}>{title}</a>
+      </h3>
+      <p class="card-desc">{description}</p>
+    </div>
+    
+    <div class="card-bottom">
+      {tags.length > 0 && (
+        <div class="tag-list">
+          {tags.map((tag) => (
+            <span class="tag">{tag}</span>
+          ))}
+        </div>
+      )}
+      <a href={href} class="card-arrow" aria-label={`Leer ${title}`}>
+        <span>Explorar</span> &rarr;
+      </a>
+    </div>
   </div>
 </article>
 
@@ -58,24 +77,87 @@ const {
     background: #FFFFFF;
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 14px;
-    padding: 1.75rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
     box-shadow: 0 4px 18px rgba(0, 0, 0, 0.02);
     position: relative;
     overflow: hidden;
   }
+
   .auralis-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-    border-color: rgba(0, 0, 0, 0.16);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 0, 0, 0.22);
   }
+
   .auralis-card.featured {
     border: 1.5px solid #0D0D0D;
   }
+
+  /* VISUAL HEADER WITH ILLUSTRATIVE GRAPHIC */
+  .card-visual-header {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    background: #0E131F;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .visual-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .card-graphic-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .auralis-card:hover .card-graphic-img {
+    transform: scale(1.04);
+  }
+
+  .visual-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,0.3) 100%);
+    pointer-events: none;
+  }
+
+  .visual-badge {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 0.18rem 0.45rem;
+    background: rgba(0, 0, 0, 0.65);
+    color: #FFFFFF;
+    backdrop-filter: blur(4px);
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  /* CARD INNER BODY */
+  .card-inner-body {
+    padding: 1.5rem 1.6rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+  }
+
   .card-top { margin-bottom: 1.25rem; }
+
   .card-meta {
     display: flex;
     align-items: center;
@@ -86,6 +168,7 @@ const {
     flex-wrap: wrap;
     letter-spacing: 0.04em;
   }
+
   .category-badge {
     text-transform: uppercase;
     color: #0D0D0D;
@@ -94,6 +177,7 @@ const {
     padding: 0.15rem 0.5rem;
     border-radius: 9999px;
   }
+
   .id-badge {
     font-weight: 700;
     color: #059669;
@@ -101,8 +185,10 @@ const {
     padding: 0.15rem 0.45rem;
     border-radius: 4px;
   }
+
   .meta-sep { color: #989890; }
   .read-time { margin-left: auto; color: #989890; font-size: 0.6rem; }
+
   .card-title {
     font-size: 1.15rem;
     font-weight: 800;
@@ -112,19 +198,23 @@ const {
     margin-bottom: 0.55rem;
     font-family: 'Inter', system-ui, sans-serif;
   }
+
   .card-title a {
     color: inherit;
     text-decoration: none;
     transition: color 0.15s;
   }
+
   .card-title a:hover {
-    color: #383834;
+    color: #2563EB;
   }
+
   .card-desc {
     font-size: 0.86rem;
     line-height: 1.62;
     color: #383834;
   }
+
   .card-bottom {
     display: flex;
     justify-content: space-between;
@@ -133,11 +223,13 @@ const {
     border-top: 1px solid rgba(0, 0, 0, 0.06);
     gap: 0.75rem;
   }
+
   .tag-list {
     display: flex;
     flex-wrap: wrap;
     gap: 0.35rem;
   }
+
   .tag {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.58rem;
@@ -146,6 +238,7 @@ const {
     padding: 0.15rem 0.5rem;
     border-radius: 9999px;
   }
+
   .card-arrow {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.68rem;
@@ -155,9 +248,11 @@ const {
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
-    transition: transform 0.15s;
+    transition: transform 0.15s, color 0.15s;
   }
+
   .card-arrow:hover {
-    transform: translateX(2px);
+    transform: translateX(3px);
+    color: #2563EB;
   }
 </style>

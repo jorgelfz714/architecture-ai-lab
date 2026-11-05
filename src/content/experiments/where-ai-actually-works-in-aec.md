@@ -15,6 +15,7 @@ idCode: "EXP_004"
 readingTime: "14 min read"
 peerReviewed: true
 doi: "10.1038/arch.ai.2026.042"
+coverImage: "/graphics/diagram-aec-benchmark.svg"
 tools:
   - "Gemini 2.5 Pro"
   - "Claude 3.5 Sonnet"
