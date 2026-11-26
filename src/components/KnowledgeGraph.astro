@@ -1,0 +1,966 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+  theme?: 'paper' | 'genesis';
+  height?: string;
+  showControls?: boolean;
+}
+
+const {
+  theme = 'paper',
+  height = '620px',
+  showControls = true,
+} = Astro.props;
+
+// Fetch all collections dynamically so the graph updates automatically with new posts
+const experiments = await getCollection('experiments');
+const work = await getCollection('work');
+const notes = await getCollection('notes');
+const resources = await getCollection('resources');
+
+// Build nodes and links
+const graphData = {
+  root: {
+    id: 'root',
+    label: 'AI ARCHITECTURE LAB',
+    type: 'root',
+    desc: 'Digital Research Laboratory // Directed by Jorge Ludeña (ETSAM)',
+    url: '/'
+  },
+  categories: [
+    { id: 'cat-tools', label: 'TOOLS', category: 'work', desc: 'Algorithmic applications & spatial utilities' },
+    { id: 'cat-workflows', label: 'WORKFLOWS', category: 'resources', desc: 'Connected computational pipelines (GH, Ladybug, Python)' },
+    { id: 'cat-experiments', label: 'EXPERIMENTS', category: 'experiments', desc: 'Empirical stress-testing & topological benchmarks' },
+    { id: 'cat-notes', label: 'THEORY & NOTES', category: 'notes', desc: 'Epistemology, physical truth & lab manifestos' }
+  ],
+  posts: [
+    ...experiments.map(e => ({
+      id: `exp-${e.id}`,
+      label: e.data.title.length > 32 ? e.data.title.slice(0, 30) + '...' : e.data.title,
+      fullTitle: e.data.title,
+      category: 'experiments',
+      catId: 'cat-experiments',
+      url: `/experiments/${e.id}`,
+      desc: e.data.description,
+      tags: e.data.tags || [],
+      status: e.data.status
+    })),
+    ...work.map(w => ({
+      id: `work-${w.id}`,
+      label: w.data.title.length > 32 ? w.data.title.slice(0, 30) + '...' : w.data.title,
+      fullTitle: w.data.title,
+      category: 'work',
+      catId: 'cat-tools',
+      url: `/work/${w.id}`,
+      desc: w.data.description,
+      tags: w.data.tags || [],
+      status: w.data.status
+    })),
+    ...resources.map(r => ({
+      id: `res-${r.id}`,
+      label: r.data.title.length > 32 ? r.data.title.slice(0, 30) + '...' : r.data.title,
+      fullTitle: r.data.title,
+      category: 'resources',
+      catId: 'cat-workflows',
+      url: `/resources/${r.id}`,
+      desc: r.data.description,
+      tags: r.data.tags || [],
+      status: r.data.status
+    })),
+    ...notes.map(n => ({
+      id: `note-${n.id}`,
+      label: n.data.title.length > 32 ? n.data.title.slice(0, 30) + '...' : n.data.title,
+      fullTitle: n.data.title,
+      category: 'notes',
+      catId: 'cat-notes',
+      url: `/notes/${n.id}`,
+      desc: n.data.description,
+      tags: n.data.tags || [],
+      status: n.data.status
+    }))
+  ],
+  subtopics: [
+    { id: 'sub-ifc', label: 'IFC 4.3', parent: 'cat-tools', faint: true },
+    { id: 'sub-syntax', label: 'SPATIAL SYNTAX', parent: 'cat-tools', faint: true },
+    { id: 'sub-gh', label: 'GRASSHOPPER PYTHON', parent: 'cat-workflows', faint: true },
+    { id: 'sub-speckle', label: 'SPECKLE CONNECTOR', parent: 'cat-workflows', faint: true },
+    { id: 'sub-rag', label: 'BUILDING CODE RAG', parent: 'cat-experiments', faint: true },
+    { id: 'sub-spatial', label: '3D GEOMETRIC REASONING', parent: 'cat-experiments', faint: true },
+    { id: 'sub-tectonics', label: 'PHYSICAL TRUTH', parent: 'cat-notes', faint: true },
+    { id: 'sub-precision', label: 'PRECISION', parent: 'root', faint: true },
+    { id: 'sub-direction', label: 'DIRECTION', parent: 'root', faint: true },
+    { id: 'sub-relentless', label: 'RELENTLESS', parent: 'root', faint: true }
+  ]
+};
+---
+
+<div class={`kg-container theme-${theme}`} style={`height: ${height};`} id="kg-wrapper">
+  <!-- Interactive Canvas -->
+  <canvas id="kg-canvas" class="kg-canvas" aria-label="Grafo interactivo de conocimiento de Architecture AI Lab"></canvas>
+
+  <!-- Crosshair Guides -->
+  <div class="kg-crosshair top-left">+</div>
+  <div class="kg-crosshair bottom-right">+</div>
+
+  <!-- HUD Telemetry Bar -->
+  <div class="kg-hud-telemetry">
+    <div class="telemetry-pill">
+      <span class="telemetry-dot"></span>
+      <span class="telemetry-txt">KNOWLEDGE GRAPH // LIVE CLUSTER</span>
+    </div>
+    <div class="telemetry-coords mono">
+      <span>NODES: {1 + graphData.categories.length + graphData.posts.length + graphData.subtopics.length}</span>
+      <span class="sep">/</span>
+      <span>EDGES: DYNAMIC</span>
+      <span class="sep">/</span>
+      <span>MODE: DRAG &amp; EXPLORE</span>
+    </div>
+  </div>
+
+  <!-- Interactive Controls Overlay -->
+  {showControls && (
+    <div class="kg-controls">
+      <button type="button" class="kg-btn" id="kg-btn-theme" title="Alternar estilo visual (Paper Minimal / Genesis HUD)">
+        <span class="icon">&#9681;</span>
+        <span class="txt">Estilo: Paper / Genesis</span>
+      </button>
+      <button type="button" class="kg-btn" id="kg-btn-center" title="Recentrar grafo">
+        <span class="icon">&#8857;</span>
+        <span class="txt">Recentrar</span>
+      </button>
+    </div>
+  )}
+
+  <!-- Node Hover Detail Popover -->
+  <div class="kg-node-tooltip" id="kg-tooltip" style="display: none;">
+    <div class="tt-kicker" id="tt-kicker">CATEGORY // EXPERIMENT</div>
+    <div class="tt-title" id="tt-title">Node Title</div>
+    <div class="tt-desc" id="tt-desc">Description of the node</div>
+    <div class="tt-action" id="tt-action">Click para abrir investigación completa &rarr;</div>
+  </div>
+</div>
+
+<!-- Embedded JSON Data for Client-side Physics Simulation -->
+<script type="application/json" id="kg-data" is:inline set:html={JSON.stringify(graphData)} />
+
+<script is:inline>
+(function() {
+  const wrapper = document.getElementById('kg-wrapper');
+  const canvas = document.getElementById('kg-canvas');
+  const tooltip = document.getElementById('kg-tooltip');
+  const ttKicker = document.getElementById('tt-kicker');
+  const ttTitle = document.getElementById('tt-title');
+  const ttDesc = document.getElementById('tt-desc');
+  const ttAction = document.getElementById('tt-action');
+  const btnTheme = document.getElementById('kg-btn-theme');
+  const btnCenter = document.getElementById('kg-btn-center');
+
+  if (!canvas || !wrapper) return;
+
+  const dataEl = document.getElementById('kg-data');
+  const graphData = dataEl ? JSON.parse(dataEl.textContent || '{}') : {};
+
+  const ctx = canvas.getContext('2d');
+  let currentTheme = wrapper.classList.contains('theme-genesis') ? 'genesis' : 'paper';
+
+  let width = 0;
+  let height = 0;
+  let dpr = window.devicePixelRatio || 1;
+
+  // Node Objects in Simulation
+  let nodes = [];
+  let links = [];
+
+  // Dragging & Interaction State
+  let hoveredNode = null;
+  let draggedNode = null;
+  let mouseX = 0;
+  let mouseY = 0;
+  let isPointerDown = false;
+  let hasMovedPointer = false;
+  let panX = 0;
+  let panY = 0;
+  let isPanning = false;
+  let panStartX = 0;
+  let panStartY = 0;
+
+  function initGraphData() {
+    nodes = [];
+    links = [];
+
+    const cx = width / 2;
+    const cy = height / 2;
+
+    // 1. Root Anchor Node (Central Solid Hub)
+    const rootNode = {
+      id: graphData.root.id,
+      label: graphData.root.label,
+      fullTitle: 'Architecture AI Lab Hub',
+      desc: graphData.root.desc,
+      url: graphData.root.url,
+      type: 'root',
+      radius: 9,
+      isRoot: true,
+      x: cx,
+      y: cy,
+      vx: 0,
+      vy: 0,
+      fx: cx, // initially anchored
+      fy: cy,
+      color: currentTheme === 'genesis' ? '#00F0FF' : '#0D0D0D'
+    };
+    nodes.push(rootNode);
+
+    // 2. Primary Category Nodes
+    const catRadius = Math.min(width, height) * 0.28;
+    const catMap = {};
+
+    graphData.categories.forEach((cat, index) => {
+      const angle = (index / graphData.categories.length) * Math.PI * 2 - Math.PI / 4;
+      const catNode = {
+        id: cat.id,
+        label: cat.label,
+        fullTitle: cat.label,
+        desc: cat.desc,
+        type: 'category',
+        category: cat.category,
+        radius: 6,
+        x: cx + Math.cos(angle) * catRadius,
+        y: cy + Math.sin(angle) * catRadius,
+        vx: 0,
+        vy: 0,
+        color: getCategoryColor(cat.category, currentTheme)
+      };
+      nodes.push(catNode);
+      catMap[cat.id] = catNode;
+
+      links.push({
+        source: rootNode,
+        target: catNode,
+        length: catRadius,
+        strength: 0.05,
+        type: 'root-spoke'
+      });
+    });
+
+    // 3. Posts Leaf Nodes
+    graphData.posts.forEach((p, idx) => {
+      const parentCat = catMap[p.catId] || rootNode;
+      const offsetAngle = ((idx % 3) - 1) * 0.45;
+      const angle = Math.atan2(parentCat.y - cy, parentCat.x - cx) + offsetAngle;
+      const dist = catRadius + 85 + (idx % 2) * 40;
+
+      const postNode = {
+        id: p.id,
+        label: p.label,
+        fullTitle: p.fullTitle,
+        desc: p.desc,
+        url: p.url,
+        type: 'post',
+        category: p.category,
+        tags: p.tags,
+        radius: 5,
+        x: cx + Math.cos(angle) * dist,
+        y: cy + Math.sin(angle) * dist,
+        vx: 0,
+        vy: 0,
+        color: getCategoryColor(p.category, currentTheme)
+      };
+      nodes.push(postNode);
+
+      links.push({
+        source: parentCat,
+        target: postNode,
+        length: 85,
+        strength: 0.04,
+        type: 'cat-spoke'
+      });
+    });
+
+    // 4. Subtopics & Conceptual Spines
+    graphData.subtopics.forEach((sub, sIdx) => {
+      const parent = nodes.find(n => n.id === sub.parent) || rootNode;
+      const subAngle = (sIdx / graphData.subtopics.length) * Math.PI * 2;
+      const subDist = parent.isRoot ? catRadius * 0.6 : 60;
+
+      const subNode = {
+        id: sub.id,
+        label: sub.label,
+        fullTitle: sub.label,
+        desc: 'Conceptual taxonomy axis',
+        type: 'subtopic',
+        faint: true,
+        radius: 3.5,
+        x: parent.x + Math.cos(subAngle) * subDist,
+        y: parent.y + Math.sin(subAngle) * subDist,
+        vx: 0,
+        vy: 0,
+        color: currentTheme === 'genesis' ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.35)'
+      };
+      nodes.push(subNode);
+
+      links.push({
+        source: parent,
+        target: subNode,
+        length: subDist,
+        strength: 0.03,
+        type: 'sub-spoke'
+      });
+    });
+  }
+
+  function getCategoryColor(cat, theme) {
+    if (theme === 'genesis') {
+      switch(cat) {
+        case 'work': return '#38BDF8';
+        case 'resources': return '#A855F7';
+        case 'experiments': return '#10B981';
+        case 'notes': return '#F59E0B';
+        default: return '#00F0FF';
+      }
+    } else {
+      switch(cat) {
+        case 'work': return '#1A1A1A';
+        case 'resources': return '#333333';
+        case 'experiments': return '#0D0D0D';
+        case 'notes': return '#4A4A4A';
+        default: return '#0D0D0D';
+      }
+    }
+  }
+
+  function resize() {
+    const rect = wrapper.getBoundingClientRect();
+    width = rect.width;
+    height = rect.height;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    ctx.scale(dpr, dpr);
+    initGraphData();
+  }
+
+  // Physics Step (Springs + Coulomb Repulsion + Damping)
+  function updatePhysics() {
+    const cx = width / 2;
+    const cy = height / 2;
+
+    // 1. Repulsion between all node pairs
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const a = nodes[i];
+        const b = nodes[j];
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+        const distSq = dx * dx + dy * dy + 0.01;
+        const dist = Math.sqrt(distSq);
+
+        if (dist < 260) {
+          const force = (2400 / distSq);
+          const fx = (dx / dist) * force;
+          const fy = (dy / dist) * force;
+          if (a !== draggedNode && !a.fx) { a.vx -= fx; a.vy -= fy; }
+          if (b !== draggedNode && !b.fx) { b.vx += fx; b.vy += fy; }
+        }
+      }
+    }
+
+    // 2. Spring tension along links
+    for (let i = 0; i < links.length; i++) {
+      const link = links[i];
+      const a = link.source;
+      const b = link.target;
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+      const displacement = dist - link.length;
+      const force = displacement * link.strength;
+      const fx = (dx / dist) * force;
+      const fy = (dy / dist) * force;
+
+      if (a !== draggedNode && !a.fx) { a.vx += fx; a.vy += fy; }
+      if (b !== draggedNode && !b.fx) { b.vx -= fx; b.vy -= fy; }
+    }
+
+    // 3. Subtle gravity to keep cluster centered
+    for (let i = 0; i < nodes.length; i++) {
+      const node = nodes[i];
+      if (node === draggedNode) continue;
+
+      if (!node.fx) {
+        node.vx += (cx - node.x) * 0.0015;
+        node.vy += (cy - node.y) * 0.0015;
+
+        // Damping
+        node.vx *= 0.85;
+        node.vy *= 0.85;
+
+        // Apply velocity
+        node.x += node.vx;
+        node.y += node.vy;
+
+        // Soft viewport bounds
+        const pad = 40;
+        if (node.x < pad) node.x = pad;
+        if (node.x > width - pad) node.x = width - pad;
+        if (node.y < pad) node.y = pad;
+        if (node.y > height - pad) node.y = height - pad;
+      }
+    }
+  }
+
+  // Render Frame
+  function render() {
+    updatePhysics();
+
+    ctx.clearRect(0, 0, width, height);
+
+    // Background styling
+    if (currentTheme === 'genesis') {
+      // Futuristic Dark Grid
+      ctx.fillStyle = '#030712';
+      ctx.fillRect(0, 0, width, height);
+
+      // Fine HUD Grid lines
+      ctx.strokeStyle = 'rgba(0, 240, 255, 0.04)';
+      ctx.lineWidth = 1;
+      const step = 40;
+      for (let x = 0; x < width; x += step) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
+      }
+      for (let y = 0; y < height; y += step) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
+      }
+    } else {
+      // Paper Minimalist Textured Canvas (matching user screenshot)
+      ctx.fillStyle = '#E8E8E4';
+      ctx.fillRect(0, 0, width, height);
+    }
+
+    // Draw Spokes / Links
+    for (let i = 0; i < links.length; i++) {
+      const link = links[i];
+      const a = link.source;
+      const b = link.target;
+      const isHighlighted = hoveredNode && (hoveredNode === a || hoveredNode === b);
+
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+
+      if (currentTheme === 'genesis') {
+        if (isHighlighted) {
+          ctx.strokeStyle = 'rgba(0, 240, 255, 0.85)';
+          ctx.lineWidth = 1.8;
+          ctx.shadowColor = '#00F0FF';
+          ctx.shadowBlur = 8;
+        } else {
+          ctx.strokeStyle = link.type === 'sub-spoke' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 240, 255, 0.16)';
+          ctx.lineWidth = 0.8;
+          ctx.shadowBlur = 0;
+        }
+      } else {
+        if (isHighlighted) {
+          ctx.strokeStyle = 'rgba(13, 13, 13, 0.85)';
+          ctx.lineWidth = 1.4;
+        } else {
+          ctx.strokeStyle = link.type === 'sub-spoke' ? 'rgba(0, 0, 0, 0.09)' : 'rgba(0, 0, 0, 0.22)';
+          ctx.lineWidth = 0.75;
+        }
+        ctx.shadowBlur = 0;
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    }
+
+    // Draw Nodes
+    for (let i = 0; i < nodes.length; i++) {
+      const node = nodes[i];
+      const isHovered = (node === hoveredNode);
+      const isConnected = hoveredNode && links.some(l => (l.source === hoveredNode && l.target === node) || (l.target === hoveredNode && l.source === node));
+      const isHighlighted = isHovered || isConnected;
+
+      // 1. Center Solid Square (as in uploaded screenshot)
+      if (node.isRoot) {
+        const sqSize = isHovered ? 18 : 14;
+        ctx.save();
+        ctx.translate(node.x, node.y);
+
+        if (currentTheme === 'genesis') {
+          ctx.fillStyle = '#00F0FF';
+          ctx.shadowColor = '#00F0FF';
+          ctx.shadowBlur = 12;
+          ctx.fillRect(-sqSize/2, -sqSize/2, sqSize, sqSize);
+          ctx.fillStyle = '#030712';
+          ctx.fillRect(-sqSize/4, -sqSize/4, sqSize/2, sqSize/2);
+        } else {
+          ctx.fillStyle = '#0D0D0D';
+          ctx.fillRect(-sqSize/2, -sqSize/2, sqSize, sqSize);
+          // Inner dot
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillRect(-1.5, -1.5, 3, 3);
+        }
+        ctx.restore();
+
+        // Label
+        drawNodeLabel(node, isHovered, true);
+        continue;
+      }
+
+      // 2. Category and Post Nodes
+      ctx.beginPath();
+      const r = isHovered ? node.radius * 1.5 : (isConnected ? node.radius * 1.2 : node.radius);
+      ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
+
+      if (currentTheme === 'genesis') {
+        ctx.fillStyle = isHovered ? '#FFFFFF' : node.color;
+        if (isHovered) {
+          ctx.shadowColor = node.color;
+          ctx.shadowBlur = 10;
+        }
+      } else {
+        ctx.fillStyle = isHovered ? '#0D0D0D' : (node.faint ? 'rgba(0,0,0,0.25)' : '#1A1A1A');
+        ctx.shadowBlur = 0;
+      }
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Draw Node Label
+      drawNodeLabel(node, isHovered, isHighlighted);
+    }
+
+    requestAnimationFrame(render);
+  }
+
+  function drawNodeLabel(node, isHovered, isHighlighted) {
+    ctx.save();
+    const isGenesis = (currentTheme === 'genesis');
+
+    if (node.isRoot) {
+      ctx.font = isGenesis ? '700 10px "JetBrains Mono", monospace' : '800 10px "Inter", sans-serif';
+      ctx.fillStyle = isGenesis ? '#FFFFFF' : '#0D0D0D';
+      ctx.textAlign = 'center';
+      ctx.fillText(node.label, node.x, node.y - 14);
+      ctx.restore();
+      return;
+    }
+
+    if (node.type === 'category') {
+      ctx.font = isGenesis ? '700 9px "JetBrains Mono", monospace' : '800 9.5px "Inter", sans-serif';
+      ctx.fillStyle = isGenesis ? '#00F0FF' : '#0D0D0D';
+      ctx.textAlign = node.x > width / 2 ? 'left' : 'right';
+      const offset = node.x > width / 2 ? 10 : -10;
+      ctx.fillText(node.label, node.x + offset, node.y + 3);
+      ctx.restore();
+      return;
+    }
+
+    if (node.type === 'post') {
+      ctx.font = isHovered ? '700 9.5px "Inter", sans-serif' : '600 8.5px "Inter", sans-serif';
+      if (isGenesis) {
+        ctx.fillStyle = isHovered ? '#FFFFFF' : (isHighlighted ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.65)');
+      } else {
+        ctx.fillStyle = isHovered ? '#0D0D0D' : (isHighlighted ? '#1A1A1A' : '#4A4A4A');
+      }
+      ctx.textAlign = node.x > width / 2 ? 'left' : 'right';
+      const offset = node.x > width / 2 ? 8 : -8;
+      ctx.fillText(node.label, node.x + offset, node.y + 3);
+      ctx.restore();
+      return;
+    }
+
+    if (node.faint) {
+      ctx.font = '500 7.5px "JetBrains Mono", monospace';
+      if (isGenesis) {
+        ctx.fillStyle = isHovered ? '#00F0FF' : (isHighlighted ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.25)');
+      } else {
+        ctx.fillStyle = isHovered ? '#0D0D0D' : (isHighlighted ? '#333333' : 'rgba(0,0,0,0.3)');
+      }
+      ctx.textAlign = node.x > width / 2 ? 'left' : 'right';
+      const offset = node.x > width / 2 ? 6 : -6;
+      ctx.fillText(node.label, node.x + offset, node.y + 2.5);
+      ctx.restore();
+      return;
+    }
+
+    ctx.restore();
+  }
+
+  // Find Node under mouse
+  function getNodeAt(x, y) {
+    for (let i = nodes.length - 1; i >= 0; i--) {
+      const node = nodes[i];
+      const dx = x - node.x;
+      const dy = y - node.y;
+      const hitRadius = node.isRoot ? 22 : (node.type === 'category' ? 18 : 14);
+      if (dx * dx + dy * dy <= hitRadius * hitRadius) {
+        return node;
+      }
+    }
+    return null;
+  }
+
+  // Interaction Listeners
+  canvas.addEventListener('mousemove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    mouseX = e.clientX - rect.left;
+    mouseY = e.clientY - rect.top;
+
+    if (draggedNode) {
+      draggedNode.x = mouseX;
+      draggedNode.y = mouseY;
+      draggedNode.vx = 0;
+      draggedNode.vy = 0;
+      hasMovedPointer = true;
+      return;
+    }
+
+    const hit = getNodeAt(mouseX, mouseY);
+    if (hit !== hoveredNode) {
+      hoveredNode = hit;
+      canvas.style.cursor = hit ? (hit.url ? 'pointer' : 'grab') : 'default';
+
+      if (hit && (hit.url || hit.desc)) {
+        showTooltip(hit, e.clientX, e.clientY);
+      } else {
+        hideTooltip();
+      }
+    } else if (hit) {
+      positionTooltip(e.clientX, e.clientY);
+    }
+  });
+
+  canvas.addEventListener('mousedown', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    isPointerDown = true;
+    hasMovedPointer = false;
+
+    const hit = getNodeAt(x, y);
+    if (hit) {
+      draggedNode = hit;
+      canvas.style.cursor = 'grabbing';
+      if (hit.isRoot) hit.fx = null; // unlock root if dragged
+    }
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (draggedNode && !hasMovedPointer && draggedNode.url) {
+      // Clicked without dragging: navigate directly!
+      window.location.href = draggedNode.url;
+    }
+    draggedNode = null;
+    isPointerDown = false;
+    canvas.style.cursor = hoveredNode ? (hoveredNode.url ? 'pointer' : 'grab') : 'default';
+  });
+
+  // Touch Support
+  canvas.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) {
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      mouseX = touch.clientX - rect.left;
+      mouseY = touch.clientY - rect.top;
+      const hit = getNodeAt(mouseX, mouseY);
+      if (hit) {
+        draggedNode = hit;
+        hoveredNode = hit;
+        hasMovedPointer = false;
+        showTooltip(hit, touch.clientX, touch.clientY);
+        e.preventDefault();
+      }
+    }
+  }, { passive: false });
+
+  canvas.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 1 && draggedNode) {
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      draggedNode.x = touch.clientX - rect.left;
+      draggedNode.y = touch.clientY - rect.top;
+      draggedNode.vx = 0;
+      draggedNode.vy = 0;
+      hasMovedPointer = true;
+      positionTooltip(touch.clientX, touch.clientY);
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  canvas.addEventListener('touchend', () => {
+    if (draggedNode && !hasMovedPointer && draggedNode.url) {
+      window.location.href = draggedNode.url;
+    }
+    draggedNode = null;
+  });
+
+  // Tooltip Functions
+  function showTooltip(node, clientX, clientY) {
+    if (!tooltip) return;
+    ttKicker.textContent = (node.type === 'post' ? `DOSSIER // ${node.category.toUpperCase()}` : (node.type === 'category' ? 'CATEGORY HUB' : 'LAB CORE'));
+    ttTitle.textContent = node.fullTitle || node.label;
+    ttDesc.textContent = node.desc || 'Explore connecting nodes in this research cluster.';
+    ttAction.style.display = node.url ? 'block' : 'none';
+    tooltip.style.display = 'block';
+    positionTooltip(clientX, clientY);
+  }
+
+  function positionTooltip(clientX, clientY) {
+    if (!tooltip) return;
+    const pad = 16;
+    let x = clientX + pad;
+    let y = clientY + pad;
+    if (x + 280 > window.innerWidth) x = clientX - 290;
+    if (y + 160 > window.innerHeight) y = clientY - 170;
+    tooltip.style.left = x + 'px';
+    tooltip.style.top = y + 'px';
+  }
+
+  function hideTooltip() {
+    if (tooltip) tooltip.style.display = 'none';
+  }
+
+  // Theme Toggle
+  if (btnTheme) {
+    btnTheme.addEventListener('click', () => {
+      currentTheme = (currentTheme === 'genesis') ? 'paper' : 'genesis';
+      wrapper.className = `kg-container theme-${currentTheme}`;
+      initGraphData();
+    });
+  }
+
+  // Center Graph
+  if (btnCenter) {
+    btnCenter.addEventListener('click', () => {
+      initGraphData();
+    });
+  }
+
+  // Init & Loop
+  window.addEventListener('resize', resize);
+  resize();
+  render();
+})();
+</script>
+
+<style>
+  .kg-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .kg-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* CROSSHAIR DECORATION */
+  .kg-crosshair {
+    position: absolute;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    pointer-events: none;
+    line-height: 1;
+    z-index: 2;
+  }
+  .kg-crosshair.top-left { top: 1rem; left: 1.25rem; }
+  .kg-crosshair.bottom-right { bottom: 1rem; right: 1.25rem; }
+
+  /* TELEMETRY BAR */
+  .kg-hud-telemetry {
+    position: absolute;
+    top: 1.15rem;
+    left: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    pointer-events: none;
+    z-index: 2;
+    flex-wrap: wrap;
+  }
+
+  .telemetry-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.2rem 0.65rem;
+    border-radius: 9999px;
+    font-weight: 700;
+  }
+
+  .telemetry-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .telemetry-coords {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0.8;
+  }
+  .telemetry-coords .sep { opacity: 0.3; }
+
+  /* CONTROLS */
+  .kg-controls {
+    position: absolute;
+    bottom: 1.15rem;
+    right: 1.25rem;
+    display: flex;
+    gap: 0.5rem;
+    z-index: 3;
+  }
+
+  .kg-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 9999px;
+    padding: 0.35rem 0.85rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #0D0D0D;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    backdrop-filter: blur(8px);
+    transition: all 0.15s ease;
+  }
+  .kg-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  /* TOOLTIP POPOVER */
+  .kg-node-tooltip {
+    position: fixed;
+    z-index: 999;
+    max-width: 280px;
+    padding: 1rem 1.15rem;
+    border-radius: 10px;
+    pointer-events: none;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.95);
+    color: #0D0D0D;
+  }
+
+  .tt-kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #686862;
+    margin-bottom: 0.3rem;
+  }
+
+  .tt-title {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 0.92rem;
+    font-weight: 800;
+    line-height: 1.25;
+    margin-bottom: 0.4rem;
+    color: #0D0D0D;
+  }
+
+  .tt-desc {
+    font-size: 0.76rem;
+    line-height: 1.45;
+    color: #383834;
+    margin-bottom: 0.5rem;
+  }
+
+  .tt-action {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: #2563EB;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding-top: 0.4rem;
+  }
+
+  /* THEME: PAPER MINIMALIST */
+  .theme-paper {
+    background: #E8E8E4;
+  }
+  .theme-paper .kg-crosshair { color: rgba(0, 0, 0, 0.4); }
+  .theme-paper .telemetry-pill {
+    background: rgba(0, 0, 0, 0.06);
+    color: #0D0D0D;
+  }
+  .theme-paper .telemetry-dot {
+    background: #0D0D0D;
+  }
+  .theme-paper .telemetry-coords {
+    color: #4A4A46;
+  }
+
+  /* THEME: GENESIS AI FUTURISTIC */
+  .theme-genesis {
+    background: #030712;
+    border-color: rgba(0, 240, 255, 0.2);
+    box-shadow: 0 12px 40px rgba(0, 240, 255, 0.06);
+  }
+  .theme-genesis .kg-crosshair { color: #00F0FF; opacity: 0.7; }
+  .theme-genesis .telemetry-pill {
+    background: rgba(0, 240, 255, 0.1);
+    color: #00F0FF;
+    border: 1px solid rgba(0, 240, 255, 0.25);
+  }
+  .theme-genesis .telemetry-dot {
+    background: #00F0FF;
+    box-shadow: 0 0 8px #00F0FF;
+  }
+  .theme-genesis .telemetry-coords {
+    color: rgba(255, 255, 255, 0.7);
+  }
+  .theme-genesis .kg-btn {
+    background: rgba(5, 12, 28, 0.85);
+    border-color: rgba(0, 240, 255, 0.3);
+    color: #00F0FF;
+  }
+  .theme-genesis .kg-btn:hover {
+    box-shadow: 0 0 16px rgba(0, 240, 255, 0.35);
+  }
+  .theme-genesis .kg-node-tooltip {
+    background: rgba(3, 7, 18, 0.94);
+    border-color: rgba(0, 240, 255, 0.3);
+    color: #FFFFFF;
+    box-shadow: 0 12px 40px rgba(0, 240, 255, 0.15);
+  }
+  .theme-genesis .tt-kicker { color: #00F0FF; }
+  .theme-genesis .tt-title { color: #FFFFFF; }
+  .theme-genesis .tt-desc { color: rgba(255, 255, 255, 0.75); }
+  .theme-genesis .tt-action { color: #00F0FF; border-color: rgba(0, 240, 255, 0.2); }
+
+  @media (max-width: 768px) {
+    .kg-hud-telemetry {
+      left: 1rem;
+      top: 0.75rem;
+    }
+    .telemetry-coords {
+      display: none;
+    }
+    .kg-controls {
+      bottom: 0.75rem;
+      right: 0.75rem;
+    }
+    .kg-crosshair {
+      display: none;
+    }
+  }
+</style>

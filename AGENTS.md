@@ -25,3 +25,20 @@ Minimizar el trabajo operativo de Jorge; maximizar su producción intelectual y 
 - **Costo recurrente objetivo:** $0.00 USD / mes (COST IMPACT: NO).
 - **Stack:** Astro (Static mode) + Content Collections con Zod + MDX/Markdown + CSS Puro + Netlify.
 - **Sin backend, base de datos ni CMS de terceros.**
+
+## Reglas Editoriales, Visuales y de Arquitectura
+1. **Imagen Única por Post (Nano Banana):**
+   - Cada publicación debe contar obligatoriamente con su propia imagen ilustrativa que represente conceptual y técnicamente el contenido del post.
+   - La imagen debe crearse de forma automática utilizando **Nano Banana** (el pipeline generativo visual del laboratorio), asignándose en el frontmatter mediante `coverImage: ...`.
+2. **Clasificación Autónoma de Contenido:**
+   - El agente decidirá de forma 100% automática y con criterio experto la ubicación de cada nuevo post dentro de:
+     - **`tools`** (utilidades, analizadores espaciales, prototipos algorítmicos),
+     - **`workflows`** (procesos prácticos, prompts estructurados, pipelines paramétricos), o
+     - **`experiments`** (evaluaciones cuantitativas, benchmarks de frontera y pruebas de estrés físico/espacial).
+   - Esta organización garantiza que los usuarios exploren y filtren el contenido con claridad y coherencia.
+3. **Grafo de Conocimiento Interactivo (Inspirado en seunghyuk.com):**
+   - El sitio incluye un grafo de nodos interconectado dinámico donde todos los temas, herramientas, experimentos y flujos de trabajo se enlazan visualmente.
+   - Debe ser interactivo: física elástica de arrastre fluido, centro nodal, despliegue dinámico de conexiones y subtemas al pasar el cursor, y enlace directo al post completo al hacer clic.
+   - Se actualiza automáticamente cada vez que se agrega un nuevo post o tema a las colecciones.
+4. **Línea Estética Futurista (Inspirada en genesis.ai):**
+   - El laboratorio incorpora una línea y versión hiper-futurista de alta tecnología (*Genesis AI edition*): temática oscura espacial, retículas HUD milimétricas, coordenadas y telemetría en tiempo real, acentos de gradientes de plasma/neón y navegación de frontera.

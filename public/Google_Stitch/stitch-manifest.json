@@ -36,6 +36,22 @@
       "localUrl": "http://localhost:4321/demo-where-ai-works-aec.html"
     },
     {
+      "id": "v4-genesis-futuristic",
+      "name": "Versión 4 — Génesis AI Futurista (Dark Cyber-HUD)",
+      "file": "v4-genesis-futuristic.html",
+      "isPrimary": false,
+      "description": "Edición super-futurista inspirada en Genesis AI (genesis.ai/Model). Modo dark profundo (#030507), grilla de radar interactiva, HUD sci-fi con telemetría en tiempo real, wireframe 3D rotativo interactivo en Canvas, tipografía monospaced y neon cian/ámbar, e integración con el Grafo de Conocimiento radial orgánico.",
+      "palette": {
+        "bg": "#030507",
+        "card": "#0A0D14",
+        "border": "rgba(0, 240, 255, 0.2)",
+        "accentCyan": "#00F0FF",
+        "accentAmber": "#FFB800",
+        "text": "#E8F0F8"
+      },
+      "localUrl": "http://localhost:4321/genesis"
+    },
+    {
       "id": "v3-paper-auralis-pastel",
       "name": "Versión 3 — Exploración Paper Editorial + Pastel",
       "file": "v3-paper-auralis-pastel.html",

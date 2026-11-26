@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Card from '../components/Card.astro';
+import KnowledgeGraph from '../components/KnowledgeGraph.astro';
 import { getCollection } from 'astro:content';
 
 const allExperiments = await getCollection('experiments');
@@ -158,6 +159,20 @@ const recentResources = allResources.sort((a, b) => b.data.date.localeCompare(a.
           </div>
         </article>
       </div>
+    </section>
+
+    <!-- ========================================================
+         INTERACTIVE KNOWLEDGE GRAPH (INSPIRADO EN SEUNGHYUK.COM)
+         ======================================================== -->
+    <section class="kg-section" id="knowledge-graph" style="margin-bottom: 5rem;">
+      <div class="sec-label-row">
+        <div>
+          <span class="sec-kicker">&bull; RED DE CONOCIMIENTO // INTERACTIVE GRAPH</span>
+          <h2 class="sec-title">Grafo Interactivo de Temas &amp; Conexiones</h2>
+          <p class="sec-sub">Esquema nodal dinámico inspirado en <a href="https://seunghyuk.com/?ref=siteinspire" target="_blank" rel="noopener" style="text-decoration: underline;">seunghyuk.com</a>. Arrastra los nodos con física fluida, despliega conexiones pasando el cursor y haz clic sobre cualquier nodo para acceder al post completo.</p>
+        </div>
+      </div>
+      <KnowledgeGraph theme="paper" height="600px" showControls={true} />
     </section>
 
     <!-- ========================================================

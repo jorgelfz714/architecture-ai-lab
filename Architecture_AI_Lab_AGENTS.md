@@ -123,9 +123,15 @@ Design references for information organization and visual style:
 
 - [archaiflow.com](https://archaiflow.com/) — Primary reference for content structure, card layout, and editorial tone. An AI + Architecture lab with a minimal, warm, editorial approach.
 - [anthropic.com](https://www.anthropic.com/) — Reference for typographic hierarchy: bold serif headlines, generous whitespace, restrained color palette (warm off-white background + black text + minimal accent).
-- Claude Code presentations — Reference for clean information hierarchy: large serif titles, icon-based feature lists with short descriptions, and structured content blocks.
+- [seunghyuk.com](https://seunghyuk.com/?ref=siteinspire) — Reference for the **Interactive Knowledge Graph**: physics-driven 2D node network with fluid drag motion, expandable connections on hover, and direct post navigation.
+- [genesis.ai](https://www.genesis.ai/?ref=siteinspire#Model) — Reference for the **Super-Futuristic High-Tech Edition**: deep space dark theme, hairline HUD telemetry grids, glowing plasma accents, and real-time computational diagnostics.
 
-The agent should study these references before making design decisions.
+### Image Generation Policy (Nano Banana)
+- Every single post must have its own unique conceptual illustration automatically generated using **Nano Banana** / the lab visual engine.
+- Images must depict the authentic architectural or computational essence of the article and be linked in the frontmatter (`coverImage: ...`).
+
+### Autonomous Content Classification
+- The agent automatically categorizes every new post into `tools`, `workflows`, or `experiments` based on its core technical nature to optimize user navigation and semantic search.
 
 ### Development
 

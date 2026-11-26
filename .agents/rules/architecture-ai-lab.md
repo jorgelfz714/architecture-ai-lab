@@ -30,14 +30,30 @@ El objetivo central es minimizar el esfuerzo operativo de Jorge manteniendo inta
   *Evitar:* "La inteligencia artificial está revolucionando el diseño arquitectónico mundial".
 - **Sin Hype ni Clickbait:** Lenguaje riguroso, crítico y honesto respecto a las limitaciones de las herramientas.
 
-## 5. Taxonomía de Contenido
-Toda publicación pertenece estrictamente a una de estas 4 colecciones:
-1. `work`: Investigaciones mayores, sistemas, proyectos y prototipos arquitectónicos.
-2. `experiments`: Ensayos puntuales (Pregunta, Hipótesis, Proceso, Resultados, Qué funcionó, Qué falló, Conclusiones).
-3. `notes`: Ideas ágiles, reflexiones, lecturas o referencias emergentes.
-4. `resources`: Prompts probados, metodologías, flujos de trabajo y herramientas para arquitectos.
+## 5. Taxonomía de Contenido & Clasificación Autónoma
+- **Decisión Autónoma de Categorización:**
+  - El agente decide automáticamente y con criterio experto dónde alojar cada nuevo post para que los usuarios puedan explorar y buscar con máxima claridad:
+    - **`tools`** (`src/content/work/`): Prototipos, clasificadores espaciales, utilidades algorítmicas y software.
+    - **`workflows`** (`src/content/resources/`): Pipelines de trabajo conectados (Grasshopper, Speckle, Python, RAG normativo).
+    - **`experiments`** (`src/content/experiments/`): Benchmarks cuantitativos, pruebas de estrés y evaluaciones empíricas.
+    - **`notes`** (`src/content/notes/`): Manifiestos teóricos, notas de campo y reflexiones epistemológicas.
 
-## 6. Autonomía Total, Accesos Preautorizados y Política de Costo $0
+## 6. Imágenes Obligatorias por Post (Nano Banana)
+- **Imagen Única para cada Entrada:**
+  - Todo post debe contar obligatoriamente con su propia imagen ilustrativa que traduzca visualmente su contenido arquitectónico y computacional.
+  - Para generar las imágenes se debe utilizar **Nano Banana** de forma automática y vincular el archivo en el frontmatter mediante `coverImage: "/graphics/..."`.
+
+## 7. Grafo de Conocimiento Interactivo (Knowledge Graph)
+- **Visualización de Conexiones (Inspirada en seunghyuk.com):**
+  - El sitio integra un grafo interactivo 2D donde todos los temas, herramientas y posts se enlazan radialmente desde un nodo central.
+  - Movimiento fluido con física de resortes, arrastre con cursor/touch, despliegue de subtemas al pasar el cursor y navegación directa al post al hacer clic.
+  - Se auto-actualiza dinámicamente con cada nuevo post sin requerir intervención manual.
+
+## 8. Línea de Diseño Futurista (Genesis AI)
+- **Estética de Alta Tecnología (Inspirada en genesis.ai):**
+  - Modo espacial/cyber-minimalista con fondo ultra-oscuro, cuadrícula de telemetría HUD, coordenadas de precisión, destellos de gradientes neón y tarjetas de datos de alta frecuencia.
+
+## 9. Autonomía Total, Accesos Preautorizados y Política de Costo $0
 - **Accesos y Permisos Preautorizados:**
   - El proyecto cuenta con **todos los accesos y permisos 100% habilitados** para operar de forma autónoma:
     - Carpetas y archivos de **Google Drive** (lectura, escritura, búsqueda y gestión de datos).
