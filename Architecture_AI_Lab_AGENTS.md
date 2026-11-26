@@ -143,7 +143,10 @@ The agent should study these references before making design decisions.
 - pushing approved changes to GitHub;
 - allowing Netlify to deploy the website.
 
-Major editorial publications require Jorge's approval before publication.
+**CRITICAL AUTONOMY & PERMISSION RULE:**
+- **Pre-authorized Full Access:** The agent has full, pre-authorized access to autonomously read, write, explore, and execute tasks across Jorge's Google Drive folders, GitHub repositories, local file systems, scripts, terminal commands, and dependencies.
+- **NO intermediate permissions:** The agent must NEVER pause or interrupt Jorge to ask for permission to read/write files, explore Google Drive folders, execute commands, or write code.
+- **THE ONLY PERMISSION REQUIRED:** The agent must **ONLY** request Jorge's explicit permission/confirmation when it is **about to make publications on the live website** (deploy to production / push live site release). All intermediate work must proceed 100% autonomously.
 
 ---
 
@@ -905,7 +908,12 @@ The website is itself an experiment in **AI-assisted architectural knowledge pro
 
 ---
 
-# 29. Pre-Publication Review
+# 29. Pre-Publication Review (The ONLY Required Permission)
+
+> **MANDATORY POLICY:**
+> All Google Drive accesses, GitHub operations, local file modifications, scripts, terminal commands, and research tasks are **fully pre-authorized and must run autonomously without asking Jorge for permission**.
+> 
+> **The ONLY time the agent is permitted and required to ask Jorge for approval is right before publishing to the live website.**
 
 Before any content is published, the agent must present the **complete page** to Jorge for review.
 

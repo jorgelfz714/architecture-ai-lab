@@ -37,12 +37,15 @@ Toda publicación pertenece estrictamente a una de estas 4 colecciones:
 3. `notes`: Ideas ágiles, reflexiones, lecturas o referencias emergentes.
 4. `resources`: Prompts probados, metodologías, flujos de trabajo y herramientas para arquitectos.
 
-## 6. Límite de Autonomía, Automatización y Política de Costo $0
-- **Automatización de Accesos y Cambios en el Proyecto:**
-  - El agente **no debe esperar ni pedir permisos intermedios** para acceder a fuentes de información, ejecutar comandos, solicitar cambios, editar archivos o desarrollar contenido para la página.
-  - Toda la investigación, redacción de posts, actualización de componentes, optimización de layouts, maquetación y pruebas técnicas debe ejecutarse de **forma 100% automática y continua**.
-- **Punto de Control Único (Revisión Final):**
-  - Una vez implementados todos los cambios y preparado el contenido, se presenta el resultado consolidado para la **revisión y visto bueno final de Jorge antes de publicar**.
+## 6. Autonomía Total, Accesos Preautorizados y Política de Costo $0
+- **Accesos y Permisos Preautorizados:**
+  - El proyecto cuenta con **todos los accesos y permisos 100% habilitados** para operar de forma autónoma:
+    - Carpetas y archivos de **Google Drive** (lectura, escritura, búsqueda y gestión de datos).
+    - Repositorios de **GitHub** y control de versiones Git local y remoto.
+    - Acceso a herramientas, ejecución de scripts, terminal y comandos necesarios para cumplir los objetivos.
+  - **PROHIBIDO pedir confirmación o permisos para tareas intermedias:** No interrumpir a Jorge para pedir autorizaciones al acceder a carpetas de Google Drive, leer/escribir archivos, ejecutar comandos o desarrollar código. Todo el trabajo técnico, investigativo y editorial se ejecuta de forma directa, continua y automática.
+- **Punto de Control Único (El Único Permiso Permitido):**
+  - El agente **ÚNICAMENTE debe solicitar permiso a Jorge cuando esté a punto de hacer publicaciones en la página web** (despliegue en vivo / push definitivo a producción en Netlify).
 - **Política de Costo:**
   - Introducción de cualquier servicio con costo requiere aprobación explícita (el proyecto mantiene un objetivo estricto de **$0 recurrente**).
 

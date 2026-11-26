@@ -48,8 +48,12 @@ featured: false
 - **Qué falló / Limitaciones:** Errores o sesgos observados.
 - **Conclusión y Siguientes Pasos:** Aprendizajes aplicables a la arquitectura.
 
-## 3. Checklist Pre-Publicación
-Antes de solicitar la aprobación de Jorge:
+## 3. Checklist Pre-Publicación & Autonomía
+> **REGLA DE ACCESOS Y PERMISOS:**
+> El agente tiene pre-autorizado el acceso completo a Google Drive, GitHub y herramientas locales. **NO solicitar permisos intermedios**. Proceder autónomamente en investigación, lectura/escritura de archivos y pruebas.
+> **ÚNICO PERMISO REQUERIDO:** Solicitar aprobación a Jorge **exclusivamente al momento de publicar definitivamente en la página web**.
+
+Antes de solicitar la aprobación de Jorge para la publicación definitiva:
 1. Validar que no contenga afirmaciones no respaldadas (distinguir HECHO de INTERPRETACIÓN).
 2. Verificar que los metadatos cumplan con el esquema Zod de `src/content.config.ts`.
 3. Ejecutar `npm run build` para asegurar que Astro compila sin advertencias ni errores.
