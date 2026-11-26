@@ -1,4 +1,4 @@
----
+﻿---
 title: "Where AI Actually Works in AEC (and Where It Fails)"
 description: "An empirical investigation into AI performance across 11 core architectural and engineering workflows — mapping where machine intelligence delivers measurable utility, where it struggles, and where structural architectural ceilings exist."
 category: "experiment"
@@ -15,7 +15,7 @@ idCode: "EXP_004"
 readingTime: "14 min read"
 peerReviewed: true
 doi: "10.1038/arch.ai.2026.042"
-coverImage: "/graphics/diagram-aec-benchmark.svg"
+coverImage: "/graphics/cover-aec-benchmark.jpg"
 tools:
   - "Gemini 2.5 Pro"
   - "Claude 3.5 Sonnet"

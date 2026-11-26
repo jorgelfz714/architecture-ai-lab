@@ -1,4 +1,4 @@
----
+﻿---
 title: "A Conceptual Framework and Scalable Workflow for Architects with AI"
 description: "A three-tier operational framework for modern architectural practice: intent mapping across dual resolutions, modular node orchestration (n8n/Langflow), and human judgment as the non-negotiable director in the age of generative slop."
 category: "experiment"
@@ -18,7 +18,7 @@ idCode: "EXP_005"
 readingTime: "11 min read"
 peerReviewed: true
 doi: "10.1038/arch.ai.2026.051"
-coverImage: "/graphics/diagram-workflow-framework.svg"
+coverImage: "/graphics/cover-workflow-framework.jpg"
 tools:
   - "Intent Mapping Matrix"
   - "n8n / Langflow"

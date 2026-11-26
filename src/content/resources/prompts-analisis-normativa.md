@@ -1,4 +1,4 @@
----
+﻿---
 title: "Guía de Prompts Estructurados para Interpretación de Normativa Urbanística"
 description: "Plantillas de prompting con esquemas JSON para auditar memorias técnicas frente a ordenanzas municipales."
 category: "resource"
@@ -10,7 +10,7 @@ tags:
 status: "published"
 featured: true
 resourceType: "Prompt Guide"
-coverImage: "/graphics/diagram-normativa-protocol.svg"
+coverImage: "/graphics/cover-normativa-protocol.jpg"
 ---
 
 # Guía de Prompts Estructurados para Interpretación de Normativa Urbanística

@@ -1,4 +1,4 @@
----
+﻿---
 title: "Sistema Algorítmico de Clasificación Espacial para Tejidos Urbanos"
 description: "Investigación sobre la categorización automatizada de morfologías urbanas utilizando grafos y modelos espaciales."
 category: "work"
@@ -9,7 +9,7 @@ tags:
   - "Grafos"
 status: "published"
 featured: true
-coverImage: "/graphics/diagram-urban-classification.svg"
+coverImage: "/graphics/cover-urban-classification.jpg"
 ---
 
 # Sistema Algorítmico de Clasificación Espacial para Tejidos Urbanos

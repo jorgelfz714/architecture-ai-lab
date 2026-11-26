@@ -1,4 +1,4 @@
----
+﻿---
 title: "Manifiesto: Architecture AI Lab"
 description: "Principios para una práctica arquitectónica asistida por inteligencia artificial sin perder el control intelectual."
 category: "note"
@@ -9,7 +9,7 @@ tags:
   - "Investigación"
 status: "published"
 featured: true
-coverImage: "/graphics/diagram-manifiesto-laboratorio.svg"
+coverImage: "/graphics/cover-manifiesto-laboratorio.jpg"
 ---
 
 # Manifiesto: Architecture AI Lab
