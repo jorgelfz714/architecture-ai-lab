@@ -1,4 +1,4 @@
----
+﻿---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
@@ -164,7 +164,7 @@ const isAECBenchmark = entry.id.includes('where-ai-actually-works-in-aec');
       </aside>
 
       <!-- MAIN CONTENT COLUMN -->
-      <main class="content">
+      <div class="content">
 
         <!-- 00. CENTRAL INQUIRY -->
         <section class="sec" id="s00">
@@ -513,7 +513,7 @@ const isAECBenchmark = entry.id.includes('where-ai-actually-works-in-aec');
           </div>
         </section>
 
-      </main>
+      </div>
     </div>
 
     <!-- Client Script for Step Navigation & Scrollspy -->
@@ -825,7 +825,7 @@ const isAECBenchmark = entry.id.includes('where-ai-actually-works-in-aec');
   .btn-step-pill:hover { background: var(--text-1); color: #fff; border-color: var(--text-1); }
 
   /* RIGHT CONTENT */
-  .content { padding: 1.75rem 2.25rem 5rem 2.5rem; max-width: 960px; }
+  .content { padding: 1.75rem 2.25rem 5rem 2.5rem; max-width: 960px; min-width: 0; overflow-wrap: anywhere; }
   .sec { padding: 2.5rem 0; border-bottom: 1px solid var(--border); scroll-margin-top: 85px; }
   .sec:first-of-type { padding-top: 0; }
   .sec:last-child { border-bottom: none; }
@@ -1055,7 +1055,7 @@ const isAECBenchmark = entry.id.includes('where-ai-actually-works-in-aec');
   .btn-nav-next { margin-left: auto; }
 
   @media(max-width: 960px) {
-    .layout { grid-template-columns: 1fr; }
+    .layout { grid-template-columns: minmax(0, 1fr); }
     .sidebar { display: none; }
     .content { padding: 1.75rem 1.5rem 3.5rem; }
     .hero { padding: 2rem 1.5rem 1.5rem; }
