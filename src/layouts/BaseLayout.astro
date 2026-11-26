@@ -65,7 +65,12 @@ const navItems = [
           AI Architecture Lab
           <span style="background:var(--text-primary);color:#fff;font-family:var(--font-mono);font-size:0.58rem;padding:0.12rem 0.45rem;border-radius:9999px;margin-left:0.35rem;">LAB</span>
         </a>
-        <div style="display: flex; align-items: center; gap: 1.25rem;">
+        <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-panel">
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+        </button>
+        <div class="nav-panel" id="nav-panel">
           <nav class="site-nav" aria-label="Navegación principal">
             {navItems.map((item) => {
               const isActive = item.href === "/" 
@@ -103,6 +108,24 @@ const navItems = [
         </p>
       </div>
     </footer>
+
+    <script is:inline>
+      (function () {
+        var btn = document.getElementById('nav-toggle');
+        var panel = document.getElementById('nav-panel');
+        if (!btn || !panel) return;
+        function setOpen(open) {
+          panel.classList.toggle('open', open);
+          btn.classList.toggle('open', open);
+          btn.setAttribute('aria-expanded', String(open));
+          btn.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+        }
+        btn.addEventListener('click', function () { setOpen(!panel.classList.contains('open')); });
+        panel.addEventListener('click', function (e) { if (e.target.closest('a')) setOpen(false); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+        window.addEventListener('resize', function () { if (window.innerWidth > 768) setOpen(false); });
+      })();
+    </script>
 
     {showProgress && (
       <script is:inline>

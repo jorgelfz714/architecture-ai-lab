@@ -170,6 +170,25 @@ const featuredExp = experiments.find(e => e.id.includes('where-ai-actually-works
       text-shadow: 0 0 8px var(--cyan-glow);
     }
 
+    .nav-lk-mobile { display: none; }
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 40px;
+      height: 40px;
+      padding: 0 9px;
+      background: rgba(0, 240, 255, 0.06);
+      border: 1px solid var(--border-hud);
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .nav-toggle span { display: block; height: 1.5px; width: 100%; background: var(--cyan); transition: transform .2s, opacity .2s; }
+    .nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
     .nav-actions {
       display: flex;
       align-items: center;
@@ -702,7 +721,46 @@ const featuredExp = experiments.find(e => e.id.includes('where-ai-actually-works
       .dossier-right-hud { border-left: none; border-top: 1px solid var(--border-card); }
     }
     @media (max-width: 768px) {
-      .nav-links { display: none; }
+      .nav-inner { padding: 0.75rem 1.25rem; gap: 0.75rem; position: relative; }
+      .brand-tag { display: none; }
+      .brand-name { font-size: 1rem; }
+      .nav-toggle { display: inline-flex; margin-left: auto; }
+      .nav-lk-mobile { display: none; }
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 40px;
+      height: 40px;
+      padding: 0 9px;
+      background: rgba(0, 240, 255, 0.06);
+      border: 1px solid var(--border-hud);
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .nav-toggle span { display: block; height: 1.5px; width: 100%; background: var(--cyan); transition: transform .2s, opacity .2s; }
+    .nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .nav-actions { display: none; }
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 0.5rem 1.25rem 1rem;
+        background: rgba(2, 4, 8, 0.97);
+        border-bottom: 1px solid var(--border-hud);
+      }
+      .nav-links.open { display: flex; }
+      .nav-links .nav-lk { padding: 0.9rem 0; border-bottom: 1px solid var(--border-card); font-size: 0.78rem; }
+      .nav-links .nav-lk-mobile { display: block; color: var(--cyan); }
       .telemetry-grid { grid-template-columns: 1fr; }
       .hero-title { font-size: 2.6rem; }
       .genesis-wrap { padding: 2rem 1.25rem 4rem; }
@@ -729,12 +787,13 @@ const featuredExp = experiments.find(e => e.id.includes('where-ai-actually-works
         <span class="brand-tag">GENESIS HUD</span>
       </a>
 
-      <nav class="nav-links" aria-label="Cyber Navigation">
+      <nav class="nav-links" id="genesis-nav-links" aria-label="Cyber Navigation">
         <a href="#knowledge-graph" class="nav-lk">Neural Graph</a>
         <a href="#pathways" class="nav-lk">Tools</a>
         <a href="#pathways" class="nav-lk">Workflows</a>
         <a href="#pathways" class="nav-lk">Experiments</a>
         <a href="/experiments/where-ai-actually-works-in-aec" class="nav-lk">Benchmark EXP_004</a>
+        <a href="/" class="nav-lk nav-lk-mobile">&larr; Ver Versión Editorial</a>
       </nav>
 
       <div class="nav-actions">
@@ -742,6 +801,10 @@ const featuredExp = experiments.find(e => e.id.includes('where-ai-actually-works
           &larr; Ver Versión Editorial
         </a>
       </div>
+
+      <button type="button" class="nav-toggle" id="genesis-nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="genesis-nav-links">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </header>
 
@@ -970,6 +1033,23 @@ const featuredExp = experiments.find(e => e.id.includes('where-ai-actually-works
       </div>
     </div>
   </footer>
+  <script is:inline>
+    (function () {
+      var btn = document.getElementById('genesis-nav-toggle');
+      var links = document.getElementById('genesis-nav-links');
+      if (!btn || !links) return;
+      function setOpen(open) {
+        links.classList.toggle('open', open);
+        btn.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', String(open));
+        btn.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+      }
+      btn.addEventListener('click', function () { setOpen(!links.classList.contains('open')); });
+      links.addEventListener('click', function (e) { if (e.target.closest('a')) setOpen(false); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+      window.addEventListener('resize', function () { if (window.innerWidth > 768) setOpen(false); });
+    })();
+  </script>
 
 </body>
 </html>
