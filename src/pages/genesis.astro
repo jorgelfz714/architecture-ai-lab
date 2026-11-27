@@ -1,4 +1,4 @@
----
+﻿---
 import { getCollection } from 'astro:content';
 import KnowledgeGraph from '../components/KnowledgeGraph.astro';
 
@@ -725,25 +725,7 @@ const featuredExp = experiments.find(e => e.id.includes('where-ai-actually-works
       .brand-tag { display: none; }
       .brand-name { font-size: 1rem; }
       .nav-toggle { display: inline-flex; margin-left: auto; }
-      .nav-lk-mobile { display: none; }
-    .nav-toggle {
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      gap: 5px;
-      width: 40px;
-      height: 40px;
-      padding: 0 9px;
-      background: rgba(0, 240, 255, 0.06);
-      border: 1px solid var(--border-hud);
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .nav-toggle span { display: block; height: 1.5px; width: 100%; background: var(--cyan); transition: transform .2s, opacity .2s; }
-    .nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-    .nav-toggle.open span:nth-child(2) { opacity: 0; }
-    .nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-
+      .nav-actions { display: none; }
     .nav-actions { display: none; }
       .nav-links {
         display: none;
