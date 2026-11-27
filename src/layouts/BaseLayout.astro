@@ -10,7 +10,7 @@ interface Props {
 }
 
 const {
-  title = "Architecture AI Lab",
+  title = "AI Architecture Lab",
   description = "Digital laboratory exploring the intersection of architecture, artificial intelligence, and computational workflows.",
   fullWidth = false,
   showProgress = false,
@@ -19,7 +19,6 @@ const {
 const currentPath = Astro.url.pathname;
 
 const navItems = [
-  { href: "/", label: "Home" },
   { href: "/work", label: "Tools" },
   { href: "/resources", label: "Workflows" },
   { href: "/experiments", label: "Experiments" },
@@ -35,15 +34,15 @@ const navItems = [
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
 
-    <title>{title === "Architecture AI Lab" ? title : `${title} — Architecture AI Lab`}</title>
+    <title>{title === "AI Architecture Lab" ? title : `${title} — AI Architecture Lab`}</title>
     <meta name="description" content={description} />
 
-    <!-- Google Fonts: Inter (Sans), JetBrains Mono (Mono), Newsreader (Serif) -->
+    <!-- Unified Genesis.ai Typography: Inter (400/500) + IBM Plex Mono (400/500) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link 
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" 
-      rel="stylesheet" 
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap"
+      rel="stylesheet"
     />
 
     <!-- Open Graph -->
@@ -57,57 +56,105 @@ const navItems = [
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
   </head>
-  <body>
+  <body class="genesis-unified">
     {showProgress && <div id="prog"></div>}
-    <header class="site-header">
-      <div class="container nav-wrapper">
-        <a href="/" class="site-title">
-          AI Architecture Lab
-          <span style="background:var(--text-primary);color:#fff;font-family:var(--font-mono);font-size:0.58rem;padding:0.12rem 0.45rem;border-radius:9999px;margin-left:0.35rem;">LAB</span>
+
+    <div class="g-shell">
+      <!-- TOP ANNOUNCEMENT BAR (Identical to Home) -->
+      <div class="g-announce-wrap">
+        <a href="/experiments/where-ai-actually-works-in-aec" class="g-announce-bar">
+          <span class="g-announce-dot"></span>
+          <span>New Benchmark EXP_004: Where AI Actually Works in AEC &mdash; Read full dossier</span>
         </a>
-        <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-panel">
-          <span class="nav-toggle-bar"></span>
-          <span class="nav-toggle-bar"></span>
-          <span class="nav-toggle-bar"></span>
-        </button>
-        <div class="nav-panel" id="nav-panel">
-          <nav class="site-nav" aria-label="Navegación principal">
-            {navItems.map((item) => {
-              const isActive = item.href === "/" 
-                ? currentPath === "/" 
-                : currentPath.startsWith(item.href);
-              return (
-                <a 
-                  href={item.href} 
-                  class={`nav-link ${isActive ? 'active' : ''}`}
-                >
-                  {item.label}
-                </a>
-              );
-            })}
-          </nav>
-          <a href="/work" class="btn-primary" style="font-family:var(--font-mono);font-size:0.7rem;font-weight:700;padding:0.4rem 0.9rem;border-radius:9999px;white-space:nowrap;background:var(--text-primary);color:#fff;">
-            Explore AI Tools &rarr;
+      </div>
+
+      <!-- MINIMAL GENESIS HEADER (Identical to Home) -->
+      <header class="site-header g-header">
+        <div class="g-header-inner">
+          <a href="/" class="g-brand">
+            <span class="g-logo-ring" aria-hidden="true"></span>
+            <span>AI Architecture Lab</span>
           </a>
-          <LanguageSwitcher />
+
+          <div class="nav-panel" id="nav-panel">
+            <nav class="site-nav" aria-label="Navegación principal">
+              {navItems.map((item) => {
+                const isActive = currentPath.startsWith(item.href);
+                return (
+                  <a
+                    href={item.href}
+                    class={`nav-link hover-ul ${isActive ? 'active' : ''}`}
+                  >
+                    {item.label}
+                  </a>
+                );
+              })}
+              <a href="/#knowledge-graph" class="nav-link hover-ul g-nav-mobile-only">Knowledge Graph</a>
+              <a href="/editorial" class="nav-link hover-ul g-nav-mobile-only">Versión Editorial</a>
+            </nav>
+          </div>
+
+          <div class="g-nav-right">
+            <a href="/#knowledge-graph" class="hover-ul">Graph</a>
+            <a href="/editorial" class="hover-ul">Editorial</a>
+            <LanguageSwitcher />
+          </div>
+
+          <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-panel">
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+          </button>
         </div>
-      </div>
-    </header>
+      </header>
 
-    <main class={fullWidth ? "main-full" : "container main-constrained"}>
-      <slot />
-    </main>
+      <main class={fullWidth ? "main-full" : "container main-constrained"}>
+        <slot />
+      </main>
 
-    <footer class="site-footer">
-      <div class="container footer-content">
-        <p class="mono">
-          Architecture AI Lab &mdash; Jorge Lude&ntilde;a &copy; {new Date().getFullYear()}
-        </p>
-        <p class="mono" style="color: var(--text-muted);">
-          Astro Static &bull; Netlify &bull; Minimalist System
-        </p>
+      <!-- DEEP NAVY FOOTER CARD (Identical to Home) -->
+      <div class="g-footer-band">
+        <footer class="g-footer">
+          <div class="g-footer-ticks" aria-hidden="true">
+            <span class="g-tick"></span><span class="g-tick"></span><span class="g-tick"></span>
+          </div>
+
+          <div class="g-footer-grid">
+            <div>
+              <a href="/" class="g-footer-brand">
+                <span class="g-logo-ring" aria-hidden="true"></span>
+                <span>AI Architecture Lab</span>
+              </a>
+            </div>
+
+            <div>
+              <span class="g-tick" aria-hidden="true"></span>
+              <p class="g-footer-tagline">Less repetition.<br />More exploration.</p>
+            </div>
+
+            <div class="g-footer-col">
+              <span class="g-tick" aria-hidden="true" style="margin-bottom: 6px;"></span>
+              <a href="/work" class="g-footer-link">Tools</a>
+              <a href="/resources" class="g-footer-link">Workflows</a>
+              <a href="/experiments" class="g-footer-link">Experiments</a>
+              <a href="/about" class="g-footer-link">About</a>
+            </div>
+
+            <div class="g-footer-col">
+              <span class="g-tick" aria-hidden="true" style="margin-bottom: 6px;"></span>
+              <a href="/#knowledge-graph" class="g-footer-link">Knowledge Graph</a>
+              <a href="/editorial" class="g-footer-link">Editorial Edition</a>
+              <a href="/Google_Stitch/" class="g-footer-link">Design Archive</a>
+            </div>
+          </div>
+
+          <div class="g-footer-bottom">
+            <span>&copy; {new Date().getFullYear()} Architecture AI Lab &mdash; Jorge Lude&ntilde;a</span>
+            <span>Astro Static &middot; Open Research</span>
+          </div>
+        </footer>
       </div>
-    </footer>
+    </div>
 
     <script is:inline>
       (function () {

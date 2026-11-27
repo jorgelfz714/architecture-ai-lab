@@ -124,11 +124,16 @@ const graphData = {
   <!-- Interactive Controls Overlay (Bottom-Right) -->
   {showControls && (
     <div class="kg-controls">
+      <div class="kg-zoom-group" role="group" aria-label="Controles de zoom">
+        <button type="button" class="kg-btn kg-zoom-btn" id="kg-btn-zoom-out" title="Alejar (−)" aria-label="Alejar">&minus;</button>
+        <span class="kg-zoom-val" id="kg-zoom-val">100%</span>
+        <button type="button" class="kg-btn kg-zoom-btn" id="kg-btn-zoom-in" title="Acercar (+)" aria-label="Acercar">+</button>
+      </div>
       <button type="button" class="kg-btn" id="kg-btn-theme" title="Alternar estilo visual (Obsidian / Paper)">
         <span class="icon">&#9681;</span>
-        <span class="txt">Estilo: Obsidian / Paper</span>
+        <span class="txt">Estilo</span>
       </button>
-      <button type="button" class="kg-btn" id="kg-btn-center" title="Recentrar grafo">
+      <button type="button" class="kg-btn" id="kg-btn-center" title="Recentrar grafo y reiniciar zoom">
         <span class="icon">&#8857;</span>
         <span class="txt">Recentrar</span>
       </button>
@@ -158,6 +163,9 @@ const graphData = {
   const ttAction = document.getElementById('tt-action');
   const btnTheme = document.getElementById('kg-btn-theme');
   const btnCenter = document.getElementById('kg-btn-center');
+  const btnZoomIn = document.getElementById('kg-btn-zoom-in');
+  const btnZoomOut = document.getElementById('kg-btn-zoom-out');
+  const zoomValEl = document.getElementById('kg-zoom-val');
   const groupChips = Array.from(document.querySelectorAll('#kg-groups-panel .kg-chip'));
 
   if (!canvas || !wrapper) return;
@@ -181,7 +189,7 @@ const graphData = {
   let ambientEdges = [];
   let haloDots = [];
 
-  // Interaction state
+  // Interaction & Camera Zoom/Pan state
   let hoveredNode = null;
   let draggedNode = null;
   let mouseX = 0;
@@ -190,6 +198,41 @@ const graphData = {
   let hasMovedPointer = false;
   let downX = 0;
   let downY = 0;
+  let zoom = 1;
+  let targetZoom = 1;
+  let panX = 0;
+  let panY = 0;
+  let isPanning = false;
+  let panStartX = 0;
+  let panStartY = 0;
+  let panOriginX = 0;
+  let panOriginY = 0;
+
+  function screenToWorld(sx, sy) {
+    const cx = width * 0.5;
+    const cy = height * 0.5;
+    return {
+      x: (sx - cx - panX) / zoom + cx,
+      y: (sy - cy - panY) / zoom + cy
+    };
+  }
+
+  function updateZoomLabel() {
+    if (zoomValEl) zoomValEl.textContent = Math.round(targetZoom * 100) + '%';
+  }
+
+  function applyZoom(factor, pivotX, pivotY) {
+    const prevZoom = targetZoom;
+    targetZoom = Math.max(0.55, Math.min(3.2, targetZoom * factor));
+    const ratio = targetZoom / prevZoom;
+    if (pivotX != null && pivotY != null) {
+      const cx = width * 0.5;
+      const cy = height * 0.5;
+      panX = (pivotX - cx) - ((pivotX - cx) - panX) * ratio;
+      panY = (pivotY - cy) - ((pivotY - cy) - panY) * ratio;
+    }
+    updateZoomLabel();
+  }
 
   // Deterministic PRNG for stable organic constellation
   function makeRng(seed) {
@@ -523,6 +566,7 @@ const graphData = {
 
   function render() {
     stepPhysics();
+    zoom += (targetZoom - zoom) * 0.18;
     ctx.clearRect(0, 0, width, height);
 
     const pal = getPalette();
@@ -531,16 +575,22 @@ const graphData = {
     const cx = (offsetRight && isDesktop) ? width * 0.59 : width * 0.5;
     const cy = height * 0.5;
 
-    // 1. Subtle radial nebula depth glow in Obsidian mode
+    // 1. Subtle radial nebula depth glow in Obsidian mode (screen-space backdrop)
     if (isObsidian) {
       const rad = Math.min(width, height) * 0.52;
-      const glow = ctx.createRadialGradient(cx, cy, 10, cx, cy, rad);
+      const glow = ctx.createRadialGradient(cx + panX, cy + panY, 10, cx + panX, cy + panY, rad * zoom);
       glow.addColorStop(0, 'rgba(234, 122, 28, 0.08)');
       glow.addColorStop(0.55, 'rgba(180, 48, 62, 0.04)');
       glow.addColorStop(1, 'rgba(14, 17, 23, 0)');
       ctx.fillStyle = glow;
       ctx.fillRect(0, 0, width, height);
     }
+
+    // Apply camera pan + zoom transform centered on viewport
+    ctx.save();
+    ctx.translate(width * 0.5 + panX, height * 0.5 + panY);
+    ctx.scale(zoom, zoom);
+    ctx.translate(-width * 0.5, -height * 0.5);
 
     // 2. Outer Obsidian Halo Ring dots
     const haloAlpha = hoveredNode ? 0.25 : 0.72;
@@ -664,28 +714,45 @@ const graphData = {
       }
     }
     ctx.globalAlpha = 1;
+    ctx.restore();
 
     requestAnimationFrame(render);
   }
 
-  function getNodeAt(x, y) {
-    // Check interactive nodes from top (posts) to bottom (root)
+  function getNodeAt(wx, wy) {
+    // Check interactive nodes from top (posts) to bottom (root) in world coordinates
     for (let i = nodes.length - 1; i >= 0; i--) {
       const n = nodes[i];
-      const hitR = Math.max(n.radius + 10, 16);
-      if (Math.hypot(x - n.x, y - n.y) <= hitR) {
+      const hitR = Math.max(n.radius + 10 / zoom, 15 / zoom);
+      if (Math.hypot(wx - n.x, wy - n.y) <= hitR) {
         return n;
       }
     }
     return null;
   }
 
-  // Drag tracking on window so dragging continues smoothly over buttons / outside canvas
+  // Mouse Wheel Zoom (zooms smoothly toward cursor)
+  canvas.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const sx = e.clientX - rect.left;
+    const sy = e.clientY - rect.top;
+    const factor = e.deltaY < 0 ? 1.14 : 1 / 1.14;
+    applyZoom(factor, sx, sy);
+  }, { passive: false });
+
+  // Drag tracking on window (node drag OR background pan)
   window.addEventListener('mousemove', (e) => {
+    if (isPanning) {
+      panX = panOriginX + (e.clientX - panStartX);
+      panY = panOriginY + (e.clientY - panStartY);
+      return;
+    }
     if (!draggedNode) return;
     const rect = canvas.getBoundingClientRect();
-    mouseX = e.clientX - rect.left;
-    mouseY = e.clientY - rect.top;
+    const world = screenToWorld(e.clientX - rect.left, e.clientY - rect.top);
+    mouseX = world.x;
+    mouseY = world.y;
     if (Math.abs(e.clientX - downX) + Math.abs(e.clientY - downY) > 4) hasMovedPointer = true;
     if (hasMovedPointer) {
       draggedNode.x = mouseX;
@@ -697,14 +764,15 @@ const graphData = {
 
   canvas.addEventListener('mousemove', (e) => {
     const rect = canvas.getBoundingClientRect();
-    mouseX = e.clientX - rect.left;
-    mouseY = e.clientY - rect.top;
-    if (draggedNode) return;
+    const world = screenToWorld(e.clientX - rect.left, e.clientY - rect.top);
+    mouseX = world.x;
+    mouseY = world.y;
+    if (draggedNode || isPanning) return;
 
     const hit = getNodeAt(mouseX, mouseY);
     if (hit !== hoveredNode) {
       hoveredNode = hit;
-      canvas.style.cursor = hit ? (hit.url ? 'pointer' : 'grab') : 'default';
+      canvas.style.cursor = hit ? (hit.url ? 'pointer' : 'grab') : 'grab';
       if (hit && (hit.url || hit.desc)) {
         showTooltip(hit, e.clientX, e.clientY);
       } else {
@@ -716,7 +784,7 @@ const graphData = {
   });
 
   canvas.addEventListener('mouseleave', () => {
-    if (!draggedNode) {
+    if (!draggedNode && !isPanning) {
       hoveredNode = null;
       hideTooltip();
     }
@@ -724,18 +792,24 @@ const graphData = {
 
   canvas.addEventListener('mousedown', (e) => {
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const world = screenToWorld(e.clientX - rect.left, e.clientY - rect.top);
     isPointerDown = true;
     hasMovedPointer = false;
     downX = e.clientX;
     downY = e.clientY;
 
-    const hit = getNodeAt(x, y);
+    const hit = getNodeAt(world.x, world.y);
     if (hit) {
       draggedNode = hit;
       canvas.style.cursor = 'grabbing';
       if (hit.isRoot) hit.fx = null;
+    } else {
+      isPanning = true;
+      panStartX = e.clientX;
+      panStartY = e.clientY;
+      panOriginX = panX;
+      panOriginY = panY;
+      canvas.style.cursor = 'grabbing';
     }
   });
 
@@ -744,18 +818,18 @@ const graphData = {
       window.location.href = draggedNode.url;
     }
     draggedNode = null;
+    isPanning = false;
     isPointerDown = false;
-    canvas.style.cursor = hoveredNode ? (hoveredNode.url ? 'pointer' : 'grab') : 'default';
+    canvas.style.cursor = hoveredNode ? (hoveredNode.url ? 'pointer' : 'grab') : 'grab';
   });
 
-  // Touch support
+  // Touch support (1-finger node drag or pan)
   canvas.addEventListener('touchstart', (e) => {
     if (e.touches.length === 1) {
       const rect = canvas.getBoundingClientRect();
       const touch = e.touches[0];
-      mouseX = touch.clientX - rect.left;
-      mouseY = touch.clientY - rect.top;
-      const hit = getNodeAt(mouseX, mouseY);
+      const world = screenToWorld(touch.clientX - rect.left, touch.clientY - rect.top);
+      const hit = getNodeAt(world.x, world.y);
       if (hit) {
         draggedNode = hit;
         hoveredNode = hit;
@@ -770,8 +844,9 @@ const graphData = {
     if (e.touches.length === 1 && draggedNode) {
       const rect = canvas.getBoundingClientRect();
       const touch = e.touches[0];
-      draggedNode.x = touch.clientX - rect.left;
-      draggedNode.y = touch.clientY - rect.top;
+      const world = screenToWorld(touch.clientX - rect.left, touch.clientY - rect.top);
+      draggedNode.x = world.x;
+      draggedNode.y = world.y;
       draggedNode.vx = 0;
       draggedNode.vy = 0;
       hasMovedPointer = true;
@@ -833,11 +908,23 @@ const graphData = {
     });
   }
 
-  // Recenter Graph
+  // Zoom Buttons (+ / -)
+  if (btnZoomIn) {
+    btnZoomIn.addEventListener('click', () => applyZoom(1.25));
+  }
+  if (btnZoomOut) {
+    btnZoomOut.addEventListener('click', () => applyZoom(1 / 1.25));
+  }
+
+  // Recenter Graph & Reset Zoom/Pan
   if (btnCenter) {
     btnCenter.addEventListener('click', () => {
       hoveredNode = null;
       hideTooltip();
+      targetZoom = 1;
+      panX = 0;
+      panY = 0;
+      updateZoomLabel();
       initGraphData();
     });
   }
@@ -974,7 +1061,42 @@ const graphData = {
     right: 22px;
     z-index: 10;
     display: flex;
+    align-items: center;
     gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .kg-zoom-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 4px;
+    border-radius: 6px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .theme-obsidian .kg-zoom-group {
+    background: rgba(20, 24, 33, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .theme-paper .kg-zoom-group {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(26, 29, 52, 0.14);
+  }
+  .kg-zoom-btn {
+    border: 0 !important;
+    background: transparent !important;
+    padding: 3px 8px !important;
+    font-size: 0.82rem !important;
+    line-height: 1;
+  }
+  .kg-zoom-val {
+    font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    min-width: 34px;
+    text-align: center;
+    opacity: 0.78;
   }
 
   .kg-btn {
