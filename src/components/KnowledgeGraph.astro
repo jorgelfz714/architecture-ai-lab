@@ -2,15 +2,17 @@
 import { getCollection } from 'astro:content';
 
 interface Props {
-  theme?: 'paper' | 'genesis';
+  theme?: 'obsidian' | 'paper' | 'genesis';
   height?: string;
   showControls?: boolean;
+  offsetRight?: boolean;
 }
 
 const {
-  theme = 'paper',
+  theme = 'obsidian',
   height = '620px',
   showControls = true,
+  offsetRight = false,
 } = Astro.props;
 
 // Fetch all collections dynamically so the graph updates automatically with new posts
@@ -19,7 +21,7 @@ const work = await getCollection('work');
 const notes = await getCollection('notes');
 const resources = await getCollection('resources');
 
-// Build nodes and links
+// Build live graph data
 const graphData = {
   root: {
     id: 'root',
@@ -32,98 +34,99 @@ const graphData = {
     { id: 'cat-tools', label: 'TOOLS', category: 'work', desc: 'Algorithmic applications & spatial utilities' },
     { id: 'cat-workflows', label: 'WORKFLOWS', category: 'resources', desc: 'Connected computational pipelines (GH, Ladybug, Python)' },
     { id: 'cat-experiments', label: 'EXPERIMENTS', category: 'experiments', desc: 'Empirical stress-testing & topological benchmarks' },
-    { id: 'cat-notes', label: 'THEORY & NOTES', category: 'notes', desc: 'Epistemology, physical truth & lab manifestos' }
+    { id: 'cat-notes', label: 'MANIFESTO', category: 'notes', desc: 'Epistemology, physical truth & lab manifestos' }
   ],
   posts: [
     ...experiments.map(e => ({
       id: `exp-${e.id}`,
-      label: e.data.title.length > 32 ? e.data.title.slice(0, 30) + '...' : e.data.title,
+      label: e.data.title.length > 30 ? e.data.title.slice(0, 28) + '…' : e.data.title,
       fullTitle: e.data.title,
       category: 'experiments',
       catId: 'cat-experiments',
       url: `/experiments/${e.id}`,
       desc: e.data.description,
       tags: e.data.tags || [],
-      status: e.data.status
+      status: e.data.status || 'Published'
     })),
     ...work.map(w => ({
       id: `work-${w.id}`,
-      label: w.data.title.length > 32 ? w.data.title.slice(0, 30) + '...' : w.data.title,
+      label: w.data.title.length > 30 ? w.data.title.slice(0, 28) + '…' : w.data.title,
       fullTitle: w.data.title,
       category: 'work',
       catId: 'cat-tools',
       url: `/work/${w.id}`,
       desc: w.data.description,
       tags: w.data.tags || [],
-      status: w.data.status
+      status: w.data.status || 'Prototype'
     })),
     ...resources.map(r => ({
       id: `res-${r.id}`,
-      label: r.data.title.length > 32 ? r.data.title.slice(0, 30) + '...' : r.data.title,
+      label: r.data.title.length > 30 ? r.data.title.slice(0, 28) + '…' : r.data.title,
       fullTitle: r.data.title,
       category: 'resources',
       catId: 'cat-workflows',
       url: `/resources/${r.id}`,
       desc: r.data.description,
       tags: r.data.tags || [],
-      status: r.data.status
+      status: r.data.status || 'Available'
     })),
     ...notes.map(n => ({
       id: `note-${n.id}`,
-      label: n.data.title.length > 32 ? n.data.title.slice(0, 30) + '...' : n.data.title,
+      label: n.data.title.length > 30 ? n.data.title.slice(0, 28) + '…' : n.data.title,
       fullTitle: n.data.title,
       category: 'notes',
       catId: 'cat-notes',
       url: `/notes/${n.id}`,
       desc: n.data.description,
       tags: n.data.tags || [],
-      status: n.data.status
+      status: n.data.status || 'Lab Core'
     }))
-  ],
-  subtopics: [
-    { id: 'sub-ifc', label: 'IFC 4.3', parent: 'cat-tools', faint: true },
-    { id: 'sub-syntax', label: 'SPATIAL SYNTAX', parent: 'cat-tools', faint: true },
-    { id: 'sub-gh', label: 'GRASSHOPPER PYTHON', parent: 'cat-workflows', faint: true },
-    { id: 'sub-speckle', label: 'SPECKLE CONNECTOR', parent: 'cat-workflows', faint: true },
-    { id: 'sub-rag', label: 'BUILDING CODE RAG', parent: 'cat-experiments', faint: true },
-    { id: 'sub-spatial', label: '3D GEOMETRIC REASONING', parent: 'cat-experiments', faint: true },
-    { id: 'sub-tectonics', label: 'PHYSICAL TRUTH', parent: 'cat-notes', faint: true },
-    { id: 'sub-precision', label: 'PRECISION', parent: 'root', faint: true },
-    { id: 'sub-direction', label: 'DIRECTION', parent: 'root', faint: true },
-    { id: 'sub-relentless', label: 'RELENTLESS', parent: 'root', faint: true }
   ]
 };
 ---
 
-<div class={`kg-container theme-${theme}`} style={`height: ${height};`} id="kg-wrapper">
+<div
+  class={`kg-container theme-${theme === 'genesis' ? 'obsidian' : theme}`}
+  style={`height: ${height};`}
+  id="kg-wrapper"
+  data-offset-right={offsetRight ? 'true' : 'false'}
+>
   <!-- Interactive Canvas -->
   <canvas id="kg-canvas" class="kg-canvas" aria-label="Grafo interactivo de conocimiento de Architecture AI Lab"></canvas>
 
-  <!-- Crosshair Guides -->
-  <div class="kg-crosshair top-left">+</div>
-  <div class="kg-crosshair bottom-right">+</div>
-
-  <!-- HUD Telemetry Bar -->
-  <div class="kg-hud-telemetry">
-    <div class="telemetry-pill">
-      <span class="telemetry-dot"></span>
-      <span class="telemetry-txt">KNOWLEDGE GRAPH // LIVE CLUSTER</span>
+  <!-- Obsidian-style Compact Groups Filter Panel (Top-Right) -->
+  {showControls && (
+    <div class="kg-groups-panel" id="kg-groups-panel" aria-label="Filtros de grupos del grafo">
+      <div class="kg-groups-head">
+        <span class="kg-groups-dot"></span>
+        <span>GRAPH VIEW // GROUPS</span>
+      </div>
+      <div class="kg-group-chips">
+        <button type="button" class="kg-chip active" data-group="all">
+          <span class="dot" style="background:#F8FAFC;"></span>All
+        </button>
+        <button type="button" class="kg-chip" data-group="notes">
+          <span class="dot" style="background:#EA7A1C;"></span>Core
+        </button>
+        <button type="button" class="kg-chip" data-group="experiments">
+          <span class="dot" style="background:#E04F5F;"></span>Experiments
+        </button>
+        <button type="button" class="kg-chip" data-group="work">
+          <span class="dot" style="background:#7C9CE5;"></span>Tools
+        </button>
+        <button type="button" class="kg-chip" data-group="resources">
+          <span class="dot" style="background:#6EE7B7;"></span>Workflows
+        </button>
+      </div>
     </div>
-    <div class="telemetry-coords mono">
-      <span>NODES: {1 + graphData.categories.length + graphData.posts.length + graphData.subtopics.length}</span>
-      <span class="sep">/</span>
-      <span>EDGES: DYNAMIC</span>
-      <span class="sep">/</span>
-      <span>MODE: DRAG &amp; EXPLORE</span>
-    </div>
-  </div>
+  )}
 
-  <!-- Interactive Controls Overlay -->
+  <!-- Interactive Controls Overlay (Bottom-Right) -->
   {showControls && (
     <div class="kg-controls">
-      <button type="button" class="kg-btn" id="kg-btn-theme" title="Alternar estilo visual (Paper Minimal / Genesis HUD)">
+      <button type="button" class="kg-btn" id="kg-btn-theme" title="Alternar estilo visual (Obsidian / Paper)">
         <span class="icon">&#9681;</span>
-        <span class="txt">Estilo: Paper / Genesis</span>
+        <span class="txt">Estilo: Obsidian / Paper</span>
       </button>
       <button type="button" class="kg-btn" id="kg-btn-center" title="Recentrar grafo">
         <span class="icon">&#8857;</span>
@@ -145,7 +148,7 @@ const graphData = {
 <script type="application/json" id="kg-data" is:inline set:html={JSON.stringify(graphData)} />
 
 <script is:inline>
-(function() {
+(function () {
   const wrapper = document.getElementById('kg-wrapper');
   const canvas = document.getElementById('kg-canvas');
   const tooltip = document.getElementById('kg-tooltip');
@@ -155,44 +158,106 @@ const graphData = {
   const ttAction = document.getElementById('tt-action');
   const btnTheme = document.getElementById('kg-btn-theme');
   const btnCenter = document.getElementById('kg-btn-center');
+  const groupChips = Array.from(document.querySelectorAll('#kg-groups-panel .kg-chip'));
 
   if (!canvas || !wrapper) return;
 
   const dataEl = document.getElementById('kg-data');
   const graphData = dataEl ? JSON.parse(dataEl.textContent || '{}') : {};
+  const offsetRight = wrapper.getAttribute('data-offset-right') === 'true';
 
   const ctx = canvas.getContext('2d');
-  let currentTheme = wrapper.classList.contains('theme-genesis') ? 'genesis' : 'paper';
+  let currentTheme = wrapper.classList.contains('theme-paper') ? 'paper' : 'obsidian';
+  let activeGroup = 'all';
 
   let width = 0;
   let height = 0;
-  let dpr = window.devicePixelRatio || 1;
+  let dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-  // Node Objects in Simulation
+  // Interactive real nodes + ambient Obsidian galaxy micro-nodes
   let nodes = [];
   let links = [];
+  let ambientNodes = [];
+  let ambientEdges = [];
+  let haloDots = [];
 
-  // Dragging & Interaction State
+  // Interaction state
   let hoveredNode = null;
   let draggedNode = null;
   let mouseX = 0;
   let mouseY = 0;
   let isPointerDown = false;
   let hasMovedPointer = false;
-  let panX = 0;
-  let panY = 0;
-  let isPanning = false;
-  let panStartX = 0;
-  let panStartY = 0;
+  let downX = 0;
+  let downY = 0;
+
+  // Deterministic PRNG for stable organic constellation
+  function makeRng(seed) {
+    let s = seed >>> 0;
+    return function () {
+      s = (s * 1664525 + 1013904223) >>> 0;
+      return s / 4294967296;
+    };
+  }
+
+  const PALETTE = {
+    obsidian: {
+      root: '#F8FAFC',
+      notes: '#EA7A1C',
+      experiments: '#E04F5F',
+      work: '#7C9CE5',
+      resources: '#6EE7B7',
+      violet: '#A78BFA',
+      amber: '#F59E0B',
+      pink: '#F472B6',
+      edgeBase: 'rgba(182, 54, 54, 0.24)',
+      edgeBridge: 'rgba(165, 68, 76, 0.16)',
+      edgeHighlight: 'rgba(248, 250, 252, 0.72)',
+      label: '#E2E8F0',
+      labelMuted: 'rgba(203, 213, 225, 0.58)'
+    },
+    paper: {
+      root: '#1A1D34',
+      notes: '#C25E0C',
+      experiments: '#B83240',
+      work: '#3B66C4',
+      resources: '#1B8A62',
+      violet: '#6D4CC4',
+      amber: '#B4690E',
+      pink: '#BE3A74',
+      edgeBase: 'rgba(26, 29, 52, 0.14)',
+      edgeBridge: 'rgba(26, 29, 52, 0.09)',
+      edgeHighlight: 'rgba(26, 29, 52, 0.78)',
+      label: '#1A1D34',
+      labelMuted: 'rgba(26, 29, 52, 0.55)'
+    }
+  };
+
+  function getPalette() {
+    return PALETTE[currentTheme] || PALETTE.obsidian;
+  }
+
+  function getCategoryColor(cat) {
+    const p = getPalette();
+    return p[cat] || p.root;
+  }
 
   function initGraphData() {
     nodes = [];
     links = [];
+    ambientNodes = [];
+    ambientEdges = [];
+    haloDots = [];
 
-    const cx = width / 2;
-    const cy = height / 2;
+    const rng = makeRng(2026042);
+    const isDesktop = width > 768;
+    const cx = (offsetRight && isDesktop) ? width * 0.59 : width * 0.5;
+    const cy = height * 0.5;
+    const galaxyR = isDesktop
+      ? Math.min(width * (offsetRight ? 0.33 : 0.42), height * 0.43)
+      : Math.min(width, height) * 0.40;
 
-    // 1. Root Anchor Node (Central Solid Hub)
+    // 1. Root Core Hub (Central pearl-white / amber heart)
     const rootNode = {
       id: graphData.root.id,
       label: graphData.root.label,
@@ -200,24 +265,36 @@ const graphData = {
       desc: graphData.root.desc,
       url: graphData.root.url,
       type: 'root',
-      radius: 9,
+      category: 'notes',
+      radius: isDesktop ? 8 : 6.5,
       isRoot: true,
       x: cx,
       y: cy,
+      baseX: cx,
+      baseY: cy,
       vx: 0,
       vy: 0,
-      fx: cx, // initially anchored
-      fy: cy,
-      color: currentTheme === 'genesis' ? '#00F0FF' : '#0D0D0D'
+      fx: cx,
+      fy: cy
     };
     nodes.push(rootNode);
 
-    // 2. Primary Category Nodes
-    const catRadius = Math.min(width, height) * 0.28;
-    const catMap = {};
+    // 2. Primary Category Cluster Centers (organic Obsidian positions)
+    const catCoords = {
+      'cat-notes':       { ax: -0.06, ay: -0.04 }, // central orange-amber core
+      'cat-experiments': { ax: -0.44, ay: -0.22 }, // upper-left crimson cluster
+      'cat-tools':       { ax:  0.14, ay:  0.34 }, // lower-center periwinkle cluster
+      'cat-workflows':   { ax:  0.46, ay:  0.46 }  // lower-right mint emerald cluster
+    };
 
-    graphData.categories.forEach((cat, index) => {
-      const angle = (index / graphData.categories.length) * Math.PI * 2 - Math.PI / 4;
+    const catMap = {};
+    (graphData.categories || []).forEach((cat, index) => {
+      const c = catCoords[cat.id] || {
+        ax: Math.cos((index / 4) * Math.PI * 2) * 0.4,
+        ay: Math.sin((index / 4) * Math.PI * 2) * 0.4
+      };
+      const x = cx + c.ax * galaxyR;
+      const y = cy + c.ay * galaxyR;
       const catNode = {
         id: cat.id,
         label: cat.label,
@@ -225,31 +302,26 @@ const graphData = {
         desc: cat.desc,
         type: 'category',
         category: cat.category,
-        radius: 6,
-        x: cx + Math.cos(angle) * catRadius,
-        y: cy + Math.sin(angle) * catRadius,
+        radius: isDesktop ? 6.5 : 5.5,
+        x, y,
+        baseX: x,
+        baseY: y,
         vx: 0,
-        vy: 0,
-        color: getCategoryColor(cat.category, currentTheme)
+        vy: 0
       };
       nodes.push(catNode);
       catMap[cat.id] = catNode;
-
-      links.push({
-        source: rootNode,
-        target: catNode,
-        length: catRadius,
-        strength: 0.05,
-        type: 'root-spoke'
-      });
+      links.push({ source: rootNode, target: catNode, length: Math.hypot(x - cx, y - cy), strength: 0.045 });
     });
 
-    // 3. Posts Leaf Nodes
-    graphData.posts.forEach((p, idx) => {
+    // 3. Real Publication Leaf Nodes (automatically loaded from Astro collections)
+    (graphData.posts || []).forEach((p, idx) => {
       const parentCat = catMap[p.catId] || rootNode;
-      const offsetAngle = ((idx % 3) - 1) * 0.45;
-      const angle = Math.atan2(parentCat.y - cy, parentCat.x - cx) + offsetAngle;
-      const dist = catRadius + 85 + (idx % 2) * 40;
+      const baseAngle = Math.atan2(parentCat.y - cy, parentCat.x - cx);
+      const spread = ((idx % 3) - 1) * 0.55 + (rng() - 0.5) * 0.25;
+      const dist = galaxyR * (isDesktop ? 0.28 : 0.24);
+      const x = parentCat.x + Math.cos(baseAngle + spread) * dist;
+      const y = parentCat.y + Math.sin(baseAngle + spread) * dist;
 
       const postNode = {
         id: p.id,
@@ -259,74 +331,92 @@ const graphData = {
         url: p.url,
         type: 'post',
         category: p.category,
-        tags: p.tags,
-        radius: 5,
-        x: cx + Math.cos(angle) * dist,
-        y: cy + Math.sin(angle) * dist,
+        catId: p.catId,
+        radius: isDesktop ? 6 : 5,
+        x, y,
+        baseX: x,
+        baseY: y,
         vx: 0,
-        vy: 0,
-        color: getCategoryColor(p.category, currentTheme)
+        vy: 0
       };
       nodes.push(postNode);
-
-      links.push({
-        source: parentCat,
-        target: postNode,
-        length: 85,
-        strength: 0.04,
-        type: 'cat-spoke'
-      });
+      links.push({ source: parentCat, target: postNode, length: dist, strength: 0.04 });
+      links.push({ source: rootNode, target: postNode, length: Math.hypot(x - cx, y - cy), strength: 0.012 });
     });
 
-    // 4. Subtopics & Conceptual Spines
-    graphData.subtopics.forEach((sub, sIdx) => {
-      const parent = nodes.find(n => n.id === sub.parent) || rootNode;
-      const subAngle = (sIdx / graphData.subtopics.length) * Math.PI * 2;
-      const subDist = parent.isRoot ? catRadius * 0.6 : 60;
+    // 4. Dense Obsidian-Style Multi-Cluster Micro-Constellation (~220 semantic micro-nodes)
+    const clusterDefs = [
+      // Central dense warm-orange & white core (just like the reference image!)
+      { parent: catMap['cat-notes'] || rootNode, cat: 'notes', count: isDesktop ? 76 : 44, spreadX: 0.28, spreadY: 0.18, offsetX: 0.02, offsetY: -0.02, colors: ['#EA7A1C', '#F59E0B', '#D97706', '#F8FAFC', '#FB923C'] },
+      // Upper-left & lower-left crimson/coral experiments clusters
+      { parent: catMap['cat-experiments'] || rootNode, cat: 'experiments', count: isDesktop ? 48 : 28, spreadX: 0.24, spreadY: 0.22, offsetX: -0.14, offsetY: 0.04, colors: ['#D94654', '#C0392B', '#EF5350', '#F472B6'] },
+      { parent: catMap['cat-experiments'] || rootNode, cat: 'experiments', count: isDesktop ? 26 : 16, spreadX: 0.16, spreadY: 0.16, offsetX: -0.08, offsetY: 0.66, colors: ['#C0392B', '#D94654', '#E57373'] },
+      // Lower-mid periwinkle blue Tools cluster
+      { parent: catMap['cat-tools'] || rootNode, cat: 'work', count: isDesktop ? 44 : 26, spreadX: 0.22, spreadY: 0.15, offsetX: 0.04, offsetY: 0.02, colors: ['#7C9CE5', '#93C5FD', '#818CF8', '#A5B4FC'] },
+      // Lower-right mint green Workflows cluster
+      { parent: catMap['cat-workflows'] || rootNode, cat: 'resources', count: isDesktop ? 36 : 22, spreadX: 0.16, spreadY: 0.15, offsetX: 0.02, offsetY: 0.04, colors: ['#6EE7B7', '#34D399', '#A7F3D0', '#5EEAD4'] },
+      // Upper-right violet/pink conceptual bridge cluster
+      { parent: rootNode, cat: 'experiments', count: isDesktop ? 30 : 18, spreadX: 0.22, spreadY: 0.18, offsetX: 0.28, offsetY: -0.44, colors: ['#A78BFA', '#C084FC', '#F472B6', '#E2E8F0'] }
+    ];
 
-      const subNode = {
-        id: sub.id,
-        label: sub.label,
-        fullTitle: sub.label,
-        desc: 'Conceptual taxonomy axis',
-        type: 'subtopic',
-        faint: true,
-        radius: 3.5,
-        x: parent.x + Math.cos(subAngle) * subDist,
-        y: parent.y + Math.sin(subAngle) * subDist,
-        vx: 0,
-        vy: 0,
-        color: currentTheme === 'genesis' ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.35)'
-      };
-      nodes.push(subNode);
+    clusterDefs.forEach((def) => {
+      const startIdx = ambientNodes.length;
+      for (let i = 0; i < def.count; i++) {
+        // Gaussian-like radial falloff for organic density
+        const u = (rng() + rng() + rng()) / 3 - 0.5;
+        const v = (rng() + rng() + rng()) / 3 - 0.5;
+        const ox = (def.offsetX + u * def.spreadX * 2.1) * galaxyR;
+        const oy = (def.offsetY + v * def.spreadY * 2.1) * galaxyR;
+        const col = def.colors[Math.floor(rng() * def.colors.length)];
+        const r = 1.3 + Math.pow(rng(), 2.2) * 3.1;
 
-      links.push({
-        source: parent,
-        target: subNode,
-        length: subDist,
-        strength: 0.03,
-        type: 'sub-spoke'
-      });
+        ambientNodes.push({
+          parent: def.parent,
+          cat: def.cat,
+          ox, oy,
+          x: def.parent.x + ox,
+          y: def.parent.y + oy,
+          r,
+          color: col,
+          phase: rng() * Math.PI * 2,
+          drift: 0.4 + rng() * 0.9
+        });
+      }
+
+      // Connect nearby intra-cluster micro-nodes to form gossamer web filaments
+      const endIdx = ambientNodes.length;
+      for (let i = startIdx; i < endIdx; i++) {
+        const a = ambientNodes[i];
+        let connections = 0;
+        for (let j = i + 1; j < endIdx && connections < 3; j++) {
+          const b = ambientNodes[j];
+          const d = Math.hypot(a.ox - b.ox, a.oy - b.oy);
+          if (d < galaxyR * 0.16 && rng() < 0.62) {
+            ambientEdges.push({ a, b, cat: def.cat, kind: 'intra' });
+            connections++;
+          }
+        }
+        // Occasional long-range semantic filament across clusters
+        if (rng() < 0.12 && startIdx > 0) {
+          const other = ambientNodes[Math.floor(rng() * startIdx)];
+          ambientEdges.push({ a, b: other, cat: def.cat, kind: 'bridge' });
+        }
+      }
     });
-  }
 
-  function getCategoryColor(cat, theme) {
-    if (theme === 'genesis') {
-      switch(cat) {
-        case 'work': return '#38BDF8';
-        case 'resources': return '#A855F7';
-        case 'experiments': return '#10B981';
-        case 'notes': return '#F59E0B';
-        default: return '#00F0FF';
-      }
-    } else {
-      switch(cat) {
-        case 'work': return '#1A1A1A';
-        case 'resources': return '#333333';
-        case 'experiments': return '#0D0D0D';
-        case 'notes': return '#4A4A4A';
-        default: return '#0D0D0D';
-      }
+    // 5. Outer Obsidian Orbital Halo Ring (scattered micro-dots around perimeter)
+    const haloCount = isDesktop ? 130 : 72;
+    const haloColors = ['#A78BFA', '#F59E0B', '#6EE7B7', '#E2E8F0', '#F472B6', '#7C9CE5'];
+    for (let i = 0; i < haloCount; i++) {
+      const ang = (i / haloCount) * Math.PI * 2 + (rng() - 0.5) * 0.08;
+      const rad = galaxyR * (0.94 + (rng() - 0.5) * 0.12);
+      haloDots.push({
+        angle: ang,
+        rad,
+        r: 0.9 + rng() * 1.4,
+        color: haloColors[Math.floor(rng() * haloColors.length)],
+        speed: (rng() - 0.5) * 0.0004
+      });
     }
   }
 
@@ -334,278 +424,263 @@ const graphData = {
     const rect = wrapper.getBoundingClientRect();
     width = rect.width;
     height = rect.height;
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-    canvas.style.width = width + 'px';
-    canvas.style.height = height + 'px';
-    ctx.scale(dpr, dpr);
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.max(1, Math.floor(width * dpr));
+    canvas.height = Math.max(1, Math.floor(height * dpr));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     initGraphData();
   }
 
-  // Physics Step (Springs + Coulomb Repulsion + Damping)
-  function updatePhysics() {
-    const cx = width / 2;
-    const cy = height / 2;
+  let tickTime = 0;
 
-    // 1. Repulsion between all node pairs
+  function stepPhysics() {
+    tickTime += 0.014;
+    const isDesktop = width > 768;
+    const cx = (offsetRight && isDesktop) ? width * 0.59 : width * 0.5;
+    const cy = height * 0.5;
+
+    // 1. Repulsion between real interactive nodes
     for (let i = 0; i < nodes.length; i++) {
+      const a = nodes[i];
       for (let j = i + 1; j < nodes.length; j++) {
-        const a = nodes[i];
         const b = nodes[j];
-        const dx = b.x - a.x;
-        const dy = b.y - a.y;
-        const distSq = dx * dx + dy * dy + 0.01;
-        const dist = Math.sqrt(distSq);
-
-        if (dist < 260) {
-          const force = (2400 / distSq);
+        let dx = b.x - a.x;
+        let dy = b.y - a.y;
+        let dist = Math.hypot(dx, dy) || 1;
+        const minDist = isDesktop ? 95 : 64;
+        if (dist < minDist) {
+          const force = ((minDist - dist) / minDist) * 0.28;
           const fx = (dx / dist) * force;
           const fy = (dy / dist) * force;
-          if (a !== draggedNode && !a.fx) { a.vx -= fx; a.vy -= fy; }
-          if (b !== draggedNode && !b.fx) { b.vx += fx; b.vy += fy; }
+          if (!a.isRoot && a !== draggedNode) { a.vx -= fx; a.vy -= fy; }
+          if (!b.isRoot && b !== draggedNode) { b.vx += fx; b.vy += fy; }
         }
       }
     }
 
-    // 2. Spring tension along links
+    // 2. Spring links between real nodes
     for (let i = 0; i < links.length; i++) {
-      const link = links[i];
-      const a = link.source;
-      const b = link.target;
-      const dx = b.x - a.x;
-      const dy = b.y - a.y;
-      const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-      const displacement = dist - link.length;
-      const force = displacement * link.strength;
+      const lk = links[i];
+      const dx = lk.target.x - lk.source.x;
+      const dy = lk.target.y - lk.source.y;
+      const dist = Math.hypot(dx, dy) || 1;
+      const force = (dist - lk.length) * lk.strength;
       const fx = (dx / dist) * force;
       const fy = (dy / dist) * force;
-
-      if (a !== draggedNode && !a.fx) { a.vx += fx; a.vy += fy; }
-      if (b !== draggedNode && !b.fx) { b.vx -= fx; b.vy -= fy; }
+      if (!lk.source.isRoot && lk.source !== draggedNode) { lk.source.vx += fx; lk.source.vy += fy; }
+      if (!lk.target.isRoot && lk.target !== draggedNode) { lk.target.vx -= fx; lk.target.vy -= fy; }
     }
 
-    // 3. Subtle gravity to keep cluster centered
+    // 3. Soft return toward home position + damping
+    const padX = isDesktop ? 42 : 24;
+    const padY = isDesktop ? 36 : 24;
     for (let i = 0; i < nodes.length; i++) {
-      const node = nodes[i];
-      if (node === draggedNode) continue;
-
-      if (!node.fx) {
-        node.vx += (cx - node.x) * 0.0015;
-        node.vy += (cy - node.y) * 0.0015;
-
-        // Damping
-        node.vx *= 0.85;
-        node.vy *= 0.85;
-
-        // Apply velocity
-        node.x += node.vx;
-        node.y += node.vy;
-
-        // Soft viewport bounds
-        const pad = 40;
-        if (node.x < pad) node.x = pad;
-        if (node.x > width - pad) node.x = width - pad;
-        if (node.y < pad) node.y = pad;
-        if (node.y > height - pad) node.y = height - pad;
+      const n = nodes[i];
+      if (n === draggedNode) continue;
+      if (n.isRoot && n.fx != null) {
+        n.x += (n.fx - n.x) * 0.12;
+        n.y += (n.fy - n.y) * 0.12;
+        continue;
       }
+      n.vx += (n.baseX - n.x) * 0.004;
+      n.vy += (n.baseY - n.y) * 0.004;
+      n.vx *= 0.86;
+      n.vy *= 0.86;
+      n.x = Math.max(padX, Math.min(width - padX, n.x + n.vx));
+      n.y = Math.max(padY, Math.min(height - padY, n.y + n.vy));
+    }
+
+    // 4. Ambient micro-nodes smoothly follow parent hub with elastic lag + breathing drift
+    for (let i = 0; i < ambientNodes.length; i++) {
+      const an = ambientNodes[i];
+      const tx = an.parent.x + an.ox + Math.cos(tickTime * an.drift + an.phase) * 2.2;
+      const ty = an.parent.y + an.oy + Math.sin(tickTime * an.drift + an.phase) * 2.2;
+      an.x += (tx - an.x) * 0.14;
+      an.y += (ty - an.y) * 0.14;
+    }
+
+    // 5. Gentle halo rotation
+    for (let i = 0; i < haloDots.length; i++) {
+      haloDots[i].angle += haloDots[i].speed;
     }
   }
 
-  // Render Frame
-  function render() {
-    updatePhysics();
+  function isNodeInActiveGroup(cat) {
+    return activeGroup === 'all' || cat === activeGroup;
+  }
 
+  function isNeighbor(nodeA, nodeB) {
+    if (!nodeA || !nodeB) return false;
+    if (nodeA === nodeB) return true;
+    for (let i = 0; i < links.length; i++) {
+      if ((links[i].source === nodeA && links[i].target === nodeB) ||
+          (links[i].source === nodeB && links[i].target === nodeA)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function render() {
+    stepPhysics();
     ctx.clearRect(0, 0, width, height);
 
-    // Background styling
-    if (currentTheme === 'genesis') {
-      // Futuristic Dark Grid
-      ctx.fillStyle = '#030712';
-      ctx.fillRect(0, 0, width, height);
+    const pal = getPalette();
+    const isObsidian = currentTheme === 'obsidian';
+    const isDesktop = width > 768;
+    const cx = (offsetRight && isDesktop) ? width * 0.59 : width * 0.5;
+    const cy = height * 0.5;
 
-      // Fine HUD Grid lines
-      ctx.strokeStyle = 'rgba(0, 240, 255, 0.04)';
-      ctx.lineWidth = 1;
-      const step = 40;
-      for (let x = 0; x < width; x += step) {
-        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
-      }
-      for (let y = 0; y < height; y += step) {
-        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
-      }
-    } else {
-      // Paper Minimalist Textured Canvas (matching user screenshot)
-      ctx.fillStyle = '#E8E8E4';
+    // 1. Subtle radial nebula depth glow in Obsidian mode
+    if (isObsidian) {
+      const rad = Math.min(width, height) * 0.52;
+      const glow = ctx.createRadialGradient(cx, cy, 10, cx, cy, rad);
+      glow.addColorStop(0, 'rgba(234, 122, 28, 0.08)');
+      glow.addColorStop(0.55, 'rgba(180, 48, 62, 0.04)');
+      glow.addColorStop(1, 'rgba(14, 17, 23, 0)');
+      ctx.fillStyle = glow;
       ctx.fillRect(0, 0, width, height);
     }
 
-    // Draw Spokes / Links
-    for (let i = 0; i < links.length; i++) {
-      const link = links[i];
-      const a = link.source;
-      const b = link.target;
-      const isHighlighted = hoveredNode && (hoveredNode === a || hoveredNode === b);
-
+    // 2. Outer Obsidian Halo Ring dots
+    const haloAlpha = hoveredNode ? 0.25 : 0.72;
+    for (let i = 0; i < haloDots.length; i++) {
+      const hd = haloDots[i];
+      const hx = cx + Math.cos(hd.angle) * hd.rad;
+      const hy = cy + Math.sin(hd.angle) * hd.rad;
+      ctx.globalAlpha = haloAlpha;
+      ctx.fillStyle = isObsidian ? hd.color : 'rgba(26, 29, 52, 0.25)';
       ctx.beginPath();
-      ctx.moveTo(a.x, a.y);
-      ctx.lineTo(b.x, b.y);
-
-      if (currentTheme === 'genesis') {
-        if (isHighlighted) {
-          ctx.strokeStyle = 'rgba(0, 240, 255, 0.85)';
-          ctx.lineWidth = 1.8;
-          ctx.shadowColor = '#00F0FF';
-          ctx.shadowBlur = 8;
-        } else {
-          ctx.strokeStyle = link.type === 'sub-spoke' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 240, 255, 0.16)';
-          ctx.lineWidth = 0.8;
-          ctx.shadowBlur = 0;
-        }
-      } else {
-        if (isHighlighted) {
-          ctx.strokeStyle = 'rgba(13, 13, 13, 0.85)';
-          ctx.lineWidth = 1.4;
-        } else {
-          ctx.strokeStyle = link.type === 'sub-spoke' ? 'rgba(0, 0, 0, 0.09)' : 'rgba(0, 0, 0, 0.22)';
-          ctx.lineWidth = 0.75;
-        }
-        ctx.shadowBlur = 0;
-      }
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-    }
-
-    // Draw Nodes
-    for (let i = 0; i < nodes.length; i++) {
-      const node = nodes[i];
-      const isHovered = (node === hoveredNode);
-      const isConnected = hoveredNode && links.some(l => (l.source === hoveredNode && l.target === node) || (l.target === hoveredNode && l.source === node));
-      const isHighlighted = isHovered || isConnected;
-
-      // 1. Center Solid Square (as in uploaded screenshot)
-      if (node.isRoot) {
-        const sqSize = isHovered ? 18 : 14;
-        ctx.save();
-        ctx.translate(node.x, node.y);
-
-        if (currentTheme === 'genesis') {
-          ctx.fillStyle = '#00F0FF';
-          ctx.shadowColor = '#00F0FF';
-          ctx.shadowBlur = 12;
-          ctx.fillRect(-sqSize/2, -sqSize/2, sqSize, sqSize);
-          ctx.fillStyle = '#030712';
-          ctx.fillRect(-sqSize/4, -sqSize/4, sqSize/2, sqSize/2);
-        } else {
-          ctx.fillStyle = '#0D0D0D';
-          ctx.fillRect(-sqSize/2, -sqSize/2, sqSize, sqSize);
-          // Inner dot
-          ctx.fillStyle = '#FFFFFF';
-          ctx.fillRect(-1.5, -1.5, 3, 3);
-        }
-        ctx.restore();
-
-        // Label
-        drawNodeLabel(node, isHovered, true);
-        continue;
-      }
-
-      // 2. Category and Post Nodes
-      ctx.beginPath();
-      const r = isHovered ? node.radius * 1.5 : (isConnected ? node.radius * 1.2 : node.radius);
-      ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
-
-      if (currentTheme === 'genesis') {
-        ctx.fillStyle = isHovered ? '#FFFFFF' : node.color;
-        if (isHovered) {
-          ctx.shadowColor = node.color;
-          ctx.shadowBlur = 10;
-        }
-      } else {
-        ctx.fillStyle = isHovered ? '#0D0D0D' : (node.faint ? 'rgba(0,0,0,0.25)' : '#1A1A1A');
-        ctx.shadowBlur = 0;
-      }
+      ctx.arc(hx, hy, hd.r, 0, Math.PI * 2);
       ctx.fill();
-      ctx.shadowBlur = 0;
-
-      // Draw Node Label
-      drawNodeLabel(node, isHovered, isHighlighted);
     }
+    ctx.globalAlpha = 1;
+
+    // 3. Ambient Gossamer Web Filaments
+    ctx.lineWidth = 0.65;
+    for (let i = 0; i < ambientEdges.length; i++) {
+      const e = ambientEdges[i];
+      const inGroup = isNodeInActiveGroup(e.cat);
+      const focusMatch = !hoveredNode || hoveredNode.category === e.cat || hoveredNode.isRoot;
+      ctx.globalAlpha = (!inGroup ? 0.08 : (focusMatch ? 1 : 0.16));
+      ctx.strokeStyle = e.kind === 'bridge' ? pal.edgeBridge : pal.edgeBase;
+      ctx.beginPath();
+      ctx.moveTo(e.a.x, e.a.y);
+      ctx.lineTo(e.b.x, e.b.y);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+
+    // 4. Ambient Semantic Micro-Nodes
+    for (let i = 0; i < ambientNodes.length; i++) {
+      const an = ambientNodes[i];
+      const inGroup = isNodeInActiveGroup(an.cat);
+      const focusMatch = !hoveredNode || hoveredNode.category === an.cat || hoveredNode.isRoot;
+      ctx.globalAlpha = !inGroup ? 0.1 : (focusMatch ? 0.88 : 0.18);
+      ctx.fillStyle = isObsidian ? an.color : getCategoryColor(an.cat);
+      ctx.beginPath();
+      ctx.arc(an.x, an.y, an.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    // 5. Real Interactive Edges (connecting Lab Root -> Categories -> Live Posts)
+    for (let i = 0; i < links.length; i++) {
+      const lk = links[i];
+      const isHi = hoveredNode && (hoveredNode === lk.source || hoveredNode === lk.target);
+      const inGroup = isNodeInActiveGroup(lk.target.category) || isNodeInActiveGroup(lk.source.category);
+      ctx.globalAlpha = !inGroup ? 0.12 : (hoveredNode ? (isHi ? 0.95 : 0.15) : 0.55);
+      ctx.strokeStyle = isHi ? pal.edgeHighlight : pal.edgeBase;
+      ctx.lineWidth = isHi ? 1.4 : 0.9;
+      ctx.beginPath();
+      ctx.moveTo(lk.source.x, lk.source.y);
+      ctx.lineTo(lk.target.x, lk.target.y);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+
+    // 6. Real Interactive Nodes (Root, Categories, Live Posts) + Crisp Labels
+    for (let i = 0; i < nodes.length; i++) {
+      const n = nodes[i];
+      const isHov = hoveredNode === n;
+      const isAdj = hoveredNode && isNeighbor(hoveredNode, n);
+      const inGroup = n.isRoot || isNodeInActiveGroup(n.category);
+      const alpha = !inGroup ? 0.18 : (hoveredNode ? (isHov || isAdj ? 1 : 0.25) : 1);
+
+      const col = n.isRoot ? pal.root : getCategoryColor(n.category);
+      const r = isHov ? n.radius + 2.5 : n.radius;
+
+      ctx.globalAlpha = alpha;
+
+      // Soft outer halo on real publication & hub nodes
+      if (isObsidian) {
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, r + (isHov ? 8 : 4.5), 0, Math.PI * 2);
+        ctx.fillStyle = col;
+        ctx.globalAlpha = alpha * (isHov ? 0.28 : 0.14);
+        ctx.fill();
+        ctx.globalAlpha = alpha;
+      }
+
+      // Solid circular node
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+      ctx.fillStyle = col;
+      ctx.fill();
+
+      // Subtle crisp ring on clickable post nodes
+      if (n.type === 'post') {
+        ctx.lineWidth = 1.2;
+        ctx.strokeStyle = isObsidian ? 'rgba(255,255,255,0.65)' : 'rgba(255,255,255,0.9)';
+        ctx.stroke();
+      }
+
+      // Labels: always show Root & Categories; show Post labels on desktop or when hovered/active group
+      const showLabel = n.isRoot || n.type === 'category' || isHov || isAdj || (isDesktop && n.type === 'post');
+      if (showLabel) {
+        const fontSize = n.isRoot ? 11 : (n.type === 'category' ? 10 : 9.5);
+        const weight = (n.isRoot || n.type === 'category' || isHov) ? '600' : '400';
+        ctx.font = `${weight} ${fontSize}px 'IBM Plex Mono', 'JetBrains Mono', monospace`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+
+        const text = n.label;
+        const tw = ctx.measureText(text).width;
+        let lx = n.x;
+        let ly = n.y + r + 6;
+        // Clamp label inside canvas bounds so nothing clips on mobile or edges
+        lx = Math.max(tw / 2 + 10, Math.min(width - tw / 2 - 10, lx));
+        ly = Math.min(height - 18, ly);
+
+        // Soft dark pill backing behind text in Obsidian mode for razor readability
+        if (isObsidian && (isHov || n.type === 'post' || n.type === 'category' || n.isRoot)) {
+          ctx.fillStyle = 'rgba(14, 17, 23, 0.72)';
+          ctx.fillRect(lx - tw / 2 - 4, ly - 2, tw + 8, fontSize + 5);
+        }
+
+        ctx.fillStyle = isHov ? '#FFFFFF' : (n.type === 'post' ? pal.labelMuted : pal.label);
+        if (!isObsidian && isHov) ctx.fillStyle = '#000000';
+        ctx.fillText(text, lx, ly);
+      }
+    }
+    ctx.globalAlpha = 1;
 
     requestAnimationFrame(render);
   }
 
-  function drawNodeLabel(node, isHovered, isHighlighted) {
-    ctx.save();
-    const isGenesis = (currentTheme === 'genesis');
-
-    if (node.isRoot) {
-      ctx.font = isGenesis ? '700 10px "JetBrains Mono", monospace' : '800 10px "Inter", sans-serif';
-      ctx.fillStyle = isGenesis ? '#FFFFFF' : '#0D0D0D';
-      ctx.textAlign = 'center';
-      ctx.fillText(node.label, node.x, node.y - 14);
-      ctx.restore();
-      return;
-    }
-
-    if (node.type === 'category') {
-      ctx.font = isGenesis ? '700 9px "JetBrains Mono", monospace' : '800 9.5px "Inter", sans-serif';
-      ctx.fillStyle = isGenesis ? '#00F0FF' : '#0D0D0D';
-      ctx.textAlign = node.x > width / 2 ? 'left' : 'right';
-      const offset = node.x > width / 2 ? 10 : -10;
-      ctx.fillText(node.label, node.x + offset, node.y + 3);
-      ctx.restore();
-      return;
-    }
-
-    if (node.type === 'post') {
-      ctx.font = isHovered ? '700 9.5px "Inter", sans-serif' : '600 8.5px "Inter", sans-serif';
-      if (isGenesis) {
-        ctx.fillStyle = isHovered ? '#FFFFFF' : (isHighlighted ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.65)');
-      } else {
-        ctx.fillStyle = isHovered ? '#0D0D0D' : (isHighlighted ? '#1A1A1A' : '#4A4A4A');
-      }
-      ctx.textAlign = node.x > width / 2 ? 'left' : 'right';
-      const offset = node.x > width / 2 ? 8 : -8;
-      ctx.fillText(node.label, node.x + offset, node.y + 3);
-      ctx.restore();
-      return;
-    }
-
-    if (node.faint) {
-      ctx.font = '500 7.5px "JetBrains Mono", monospace';
-      if (isGenesis) {
-        ctx.fillStyle = isHovered ? '#00F0FF' : (isHighlighted ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.25)');
-      } else {
-        ctx.fillStyle = isHovered ? '#0D0D0D' : (isHighlighted ? '#333333' : 'rgba(0,0,0,0.3)');
-      }
-      ctx.textAlign = node.x > width / 2 ? 'left' : 'right';
-      const offset = node.x > width / 2 ? 6 : -6;
-      ctx.fillText(node.label, node.x + offset, node.y + 2.5);
-      ctx.restore();
-      return;
-    }
-
-    ctx.restore();
-  }
-
-  // Find Node under mouse
   function getNodeAt(x, y) {
+    // Check interactive nodes from top (posts) to bottom (root)
     for (let i = nodes.length - 1; i >= 0; i--) {
-      const node = nodes[i];
-      const dx = x - node.x;
-      const dy = y - node.y;
-      const hitRadius = node.isRoot ? 22 : (node.type === 'category' ? 18 : 14);
-      if (dx * dx + dy * dy <= hitRadius * hitRadius) {
-        return node;
+      const n = nodes[i];
+      const hitR = Math.max(n.radius + 10, 16);
+      if (Math.hypot(x - n.x, y - n.y) <= hitR) {
+        return n;
       }
     }
     return null;
   }
 
-  // Interaction Listeners
-  let downX = 0, downY = 0;
-
-  // Drag tracking on window so dragging continues over buttons / outside the canvas
+  // Drag tracking on window so dragging continues smoothly over buttons / outside canvas
   window.addEventListener('mousemove', (e) => {
     if (!draggedNode) return;
     const rect = canvas.getBoundingClientRect();
@@ -624,14 +699,12 @@ const graphData = {
     const rect = canvas.getBoundingClientRect();
     mouseX = e.clientX - rect.left;
     mouseY = e.clientY - rect.top;
-
     if (draggedNode) return;
 
     const hit = getNodeAt(mouseX, mouseY);
     if (hit !== hoveredNode) {
       hoveredNode = hit;
       canvas.style.cursor = hit ? (hit.url ? 'pointer' : 'grab') : 'default';
-
       if (hit && (hit.url || hit.desc)) {
         showTooltip(hit, e.clientX, e.clientY);
       } else {
@@ -639,6 +712,13 @@ const graphData = {
       }
     } else if (hit) {
       positionTooltip(e.clientX, e.clientY);
+    }
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    if (!draggedNode) {
+      hoveredNode = null;
+      hideTooltip();
     }
   });
 
@@ -655,12 +735,11 @@ const graphData = {
     if (hit) {
       draggedNode = hit;
       canvas.style.cursor = 'grabbing';
-      if (hit.isRoot) hit.fx = null; // unlock root if dragged
+      if (hit.isRoot) hit.fx = null;
     }
   });
 
   window.addEventListener('mouseup', (e) => {
-    // Navigate only on a real click (no drag) released over the canvas itself
     if (draggedNode && !hasMovedPointer && draggedNode.url && e.target === canvas) {
       window.location.href = draggedNode.url;
     }
@@ -669,7 +748,7 @@ const graphData = {
     canvas.style.cursor = hoveredNode ? (hoveredNode.url ? 'pointer' : 'grab') : 'default';
   });
 
-  // Touch Support
+  // Touch support
   canvas.addEventListener('touchstart', (e) => {
     if (e.touches.length === 1) {
       const rect = canvas.getBoundingClientRect();
@@ -708,10 +787,12 @@ const graphData = {
     draggedNode = null;
   });
 
-  // Tooltip Functions
+  // Tooltip helpers
   function showTooltip(node, clientX, clientY) {
     if (!tooltip) return;
-    ttKicker.textContent = (node.type === 'post' ? `DOSSIER // ${node.category.toUpperCase()}` : (node.type === 'category' ? 'CATEGORY HUB' : 'LAB CORE'));
+    ttKicker.textContent = node.type === 'post'
+      ? `DOSSIER // ${node.category.toUpperCase()}`
+      : (node.type === 'category' ? 'CLUSTER HUB' : 'LAB CORE');
     ttTitle.textContent = node.fullTitle || node.label;
     ttDesc.textContent = node.desc || 'Explore connecting nodes in this research cluster.';
     ttAction.style.display = node.url ? 'block' : 'none';
@@ -724,8 +805,8 @@ const graphData = {
     const pad = 16;
     let x = clientX + pad;
     let y = clientY + pad;
-    if (x + 280 > window.innerWidth) x = clientX - 290;
-    if (y + 160 > window.innerHeight) y = clientY - 170;
+    if (x + 280 > window.innerWidth) x = Math.max(12, clientX - 290);
+    if (y + 160 > window.innerHeight) y = Math.max(12, clientY - 170);
     tooltip.style.left = x + 'px';
     tooltip.style.top = y + 'px';
   }
@@ -734,18 +815,25 @@ const graphData = {
     if (tooltip) tooltip.style.display = 'none';
   }
 
-  // Theme Toggle
+  // Group Filter Chips
+  groupChips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      activeGroup = chip.getAttribute('data-group') || 'all';
+      groupChips.forEach((c) => c.classList.toggle('active', c === chip));
+    });
+  });
+
+  // Theme Toggle (Obsidian <-> Paper)
   if (btnTheme) {
     btnTheme.addEventListener('click', () => {
-      currentTheme = (currentTheme === 'genesis') ? 'paper' : 'genesis';
+      currentTheme = currentTheme === 'obsidian' ? 'paper' : 'obsidian';
       wrapper.className = `kg-container theme-${currentTheme}`;
       hoveredNode = null;
       hideTooltip();
-      initGraphData();
     });
   }
 
-  // Center Graph
+  // Recenter Graph
   if (btnCenter) {
     btnCenter.addEventListener('click', () => {
       hoveredNode = null;
@@ -754,7 +842,6 @@ const graphData = {
     });
   }
 
-  // Init & Loop
   window.addEventListener('resize', resize);
   resize();
   render();
@@ -766,217 +853,227 @@ const graphData = {
     position: relative;
     width: 100%;
     overflow: hidden;
-    border-radius: 16px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
     user-select: none;
     -webkit-user-select: none;
+    border-radius: 16px;
+    transition: background-color 0.35s ease;
+  }
+
+  .kg-container.theme-obsidian {
+    background-color: #0E1117;
+    color: #E2E8F0;
+  }
+
+  .kg-container.theme-paper {
+    background-color: #F6F6F4;
+    color: #1A1D34;
   }
 
   .kg-canvas {
     display: block;
     width: 100%;
     height: 100%;
+    cursor: default;
   }
 
-  /* CROSSHAIR DECORATION */
-  .kg-crosshair {
+  /* Obsidian-style Groups Panel */
+  .kg-groups-panel {
     position: absolute;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 1rem;
-    pointer-events: none;
-    line-height: 1;
-    z-index: 2;
+    top: 44px;
+    right: 22px;
+    z-index: 10;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
-  .kg-crosshair.top-left { top: 1rem; left: 1.25rem; }
-  .kg-crosshair.bottom-right { bottom: 1rem; right: 1.25rem; }
 
-  /* TELEMETRY BAR */
-  .kg-hud-telemetry {
-    position: absolute;
-    top: 1.15rem;
-    left: 2.5rem;
+  .theme-obsidian .kg-groups-panel {
+    background: rgba(20, 24, 33, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+  }
+
+  .theme-paper .kg-groups-panel {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(26, 29, 52, 0.1);
+  }
+
+  .kg-groups-head {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.62rem;
-    pointer-events: none;
-    z-index: 2;
-    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+    opacity: 0.72;
+    margin-bottom: 8px;
   }
 
-  .telemetry-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0.2rem 0.65rem;
-    border-radius: 9999px;
-    font-weight: 700;
-  }
-
-  .telemetry-dot {
+  .kg-groups-dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
+    background: #EA7A1C;
+    box-shadow: 0 0 8px rgba(234, 122, 28, 0.7);
   }
 
-  .telemetry-coords {
+  .kg-group-chips {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    opacity: 0.8;
+    flex-wrap: wrap;
+    gap: 5px;
+    max-width: 240px;
   }
-  .telemetry-coords .sep { opacity: 0.3; }
 
-  /* CONTROLS */
+  .kg-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.62rem;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+
+  .theme-obsidian .kg-chip {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    color: rgba(226, 232, 240, 0.78);
+  }
+  .theme-obsidian .kg-chip:hover,
+  .theme-obsidian .kg-chip.active {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.28);
+    color: #FFFFFF;
+  }
+
+  .theme-paper .kg-chip {
+    background: rgba(26, 29, 52, 0.04);
+    border: 1px solid rgba(26, 29, 52, 0.12);
+    color: #4A4D5E;
+  }
+  .theme-paper .kg-chip:hover,
+  .theme-paper .kg-chip.active {
+    background: #1A1D34;
+    border-color: #1A1D34;
+    color: #FFFFFF;
+  }
+
+  .kg-chip .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Bottom-Right Controls */
   .kg-controls {
     position: absolute;
-    bottom: 1.15rem;
-    right: 1.25rem;
+    bottom: 42px;
+    right: 22px;
+    z-index: 10;
     display: flex;
-    gap: 0.5rem;
-    z-index: 3;
+    gap: 8px;
   }
 
   .kg-btn {
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 9999px;
-    padding: 0.35rem 0.85rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: #0D0D0D;
-    cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 6px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace;
+    font-size: 0.64rem;
+    font-weight: 500;
+    cursor: pointer;
     backdrop-filter: blur(8px);
-    transition: all 0.15s ease;
-  }
-  .kg-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    -webkit-backdrop-filter: blur(8px);
+    transition: all 0.18s ease;
   }
 
-  /* TOOLTIP POPOVER */
+  .theme-obsidian .kg-btn {
+    background: rgba(20, 24, 33, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #E2E8F0;
+  }
+  .theme-obsidian .kg-btn:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #FFFFFF;
+  }
+
+  .theme-paper .kg-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(26, 29, 52, 0.14);
+    color: #1A1D34;
+  }
+  .theme-paper .kg-btn:hover {
+    background: #1A1D34;
+    color: #FFFFFF;
+  }
+
+  /* Hover Tooltip Popover */
   .kg-node-tooltip {
     position: fixed;
     z-index: 999;
-    max-width: 280px;
-    padding: 1rem 1.15rem;
+    width: 268px;
+    padding: 13px 15px;
     border-radius: 10px;
     pointer-events: none;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    background: rgba(255, 255, 255, 0.95);
-    color: #0D0D0D;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  }
+
+  .theme-obsidian .kg-node-tooltip {
+    background: rgba(16, 20, 29, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: #F8FAFC;
+  }
+
+  .theme-paper .kg-node-tooltip {
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(26, 29, 52, 0.14);
+    color: #1A1D34;
   }
 
   .tt-kicker {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.55rem;
-    font-weight: 800;
+    font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
     letter-spacing: 0.08em;
-    color: #686862;
-    margin-bottom: 0.3rem;
+    opacity: 0.65;
+    margin-bottom: 4px;
   }
-
   .tt-title {
-    font-family: 'Inter', system-ui, sans-serif;
-    font-size: 0.92rem;
-    font-weight: 800;
+    font-size: 0.88rem;
+    font-weight: 500;
     line-height: 1.25;
-    margin-bottom: 0.4rem;
-    color: #0D0D0D;
+    margin-bottom: 6px;
   }
-
   .tt-desc {
-    font-size: 0.76rem;
-    line-height: 1.45;
-    color: #383834;
-    margin-bottom: 0.5rem;
+    font-size: 0.74rem;
+    line-height: 1.4;
+    opacity: 0.78;
+    margin-bottom: 8px;
   }
-
   .tt-action {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace;
     font-size: 0.62rem;
-    font-weight: 700;
-    color: #2563EB;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    padding-top: 0.4rem;
+    color: #EA7A1C;
   }
-
-  /* THEME: PAPER MINIMALIST */
-  .theme-paper {
-    background: #E8E8E4;
-  }
-  .theme-paper .kg-crosshair { color: rgba(0, 0, 0, 0.4); }
-  .theme-paper .telemetry-pill {
-    background: rgba(0, 0, 0, 0.06);
-    color: #0D0D0D;
-  }
-  .theme-paper .telemetry-dot {
-    background: #0D0D0D;
-  }
-  .theme-paper .telemetry-coords {
-    color: #4A4A46;
-  }
-
-  /* THEME: GENESIS AI FUTURISTIC */
-  .theme-genesis {
-    background: #030712;
-    border-color: rgba(0, 240, 255, 0.2);
-    box-shadow: 0 12px 40px rgba(0, 240, 255, 0.06);
-  }
-  .theme-genesis .kg-crosshair { color: #00F0FF; opacity: 0.7; }
-  .theme-genesis .telemetry-pill {
-    background: rgba(0, 240, 255, 0.1);
-    color: #00F0FF;
-    border: 1px solid rgba(0, 240, 255, 0.25);
-  }
-  .theme-genesis .telemetry-dot {
-    background: #00F0FF;
-    box-shadow: 0 0 8px #00F0FF;
-  }
-  .theme-genesis .telemetry-coords {
-    color: rgba(255, 255, 255, 0.7);
-  }
-  .theme-genesis .kg-btn {
-    background: rgba(5, 12, 28, 0.85);
-    border-color: rgba(0, 240, 255, 0.3);
-    color: #00F0FF;
-  }
-  .theme-genesis .kg-btn:hover {
-    box-shadow: 0 0 16px rgba(0, 240, 255, 0.35);
-  }
-  .theme-genesis .kg-node-tooltip {
-    background: rgba(3, 7, 18, 0.94);
-    border-color: rgba(0, 240, 255, 0.3);
-    color: #FFFFFF;
-    box-shadow: 0 12px 40px rgba(0, 240, 255, 0.15);
-  }
-  .theme-genesis .tt-kicker { color: #00F0FF; }
-  .theme-genesis .tt-title { color: #FFFFFF; }
-  .theme-genesis .tt-desc { color: rgba(255, 255, 255, 0.75); }
-  .theme-genesis .tt-action { color: #00F0FF; border-color: rgba(0, 240, 255, 0.2); }
 
   @media (max-width: 768px) {
-    .kg-hud-telemetry {
-      left: 1rem;
-      top: 0.75rem;
-    }
-    .telemetry-coords {
+    .kg-groups-panel {
       display: none;
     }
     .kg-controls {
-      bottom: 0.75rem;
-      right: 0.75rem;
+      bottom: 10px;
+      right: 10px;
     }
-    .kg-crosshair {
-      display: none;
+    .kg-btn {
+      padding: 4px 8px;
+      font-size: 0.58rem;
     }
   }
 </style>

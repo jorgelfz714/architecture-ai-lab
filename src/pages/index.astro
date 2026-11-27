@@ -1,4 +1,4 @@
-﻿---
+---
 import { getCollection } from 'astro:content';
 import KnowledgeGraph from '../components/KnowledgeGraph.astro';
 
@@ -397,15 +397,28 @@ const allPublications = [
 
     .hero-card {
       position: relative;
-      background: var(--bg-card);
+      background: #0E1117;
+      color: #F8FAFC;
       border-radius: var(--radius-card);
-      height: clamp(620px, calc(100vh - 118px), 840px);
+      height: clamp(640px, calc(100vh - 118px), 840px);
       overflow: hidden;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       padding: var(--card-pad);
       scroll-margin-top: 76px;
+    }
+
+    .hero-card .tick {
+      color: rgba(255, 255, 255, 0.35);
+    }
+
+    .hero-card .t-eyebrow {
+      color: rgba(248, 250, 252, 0.86);
+    }
+
+    .hero-card .t-eyebrow-muted {
+      color: rgba(203, 213, 225, 0.6);
     }
 
     .hero-graph-stage {
@@ -419,18 +432,6 @@ const allPublications = [
       border: 0 !important;
       border-radius: 0 !important;
       box-shadow: none !important;
-    }
-
-    .hero-graph-stage :global(.kg-hud-telemetry) {
-      top: 46px;
-      left: 22px;
-      right: auto;
-    }
-
-    .hero-graph-stage :global(.kg-controls) {
-      bottom: 42px;
-      right: 22px;
-      top: auto;
     }
 
     /* 3x3 subtle registration ticks inside hero */
@@ -467,28 +468,45 @@ const allPublications = [
       max-width: 340px;
       margin-top: auto;
       margin-bottom: auto;
-      padding: 18px 20px;
+      padding: 20px 22px;
       border-radius: 12px;
-      background: rgba(246, 246, 244, 0.78);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: rgba(14, 17, 23, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       pointer-events: none;
     }
 
     .hero-copy-block .tick {
       margin-bottom: 14px;
-      color: var(--ink-navy);
+      color: rgba(255, 255, 255, 0.5);
     }
 
     .hero-copy-block h1 {
       margin-bottom: 14px;
+      color: #FFFFFF;
     }
 
     .hero-copy-block p {
       margin-bottom: 20px;
-      color: var(--ink-navy);
-      opacity: 0.85;
+      color: rgba(226, 232, 240, 0.8);
       max-width: 295px;
+    }
+
+    .hero-copy-block .g-btn-dark {
+      background: #FFFFFF;
+      color: #0E1117;
+    }
+    .hero-copy-block .g-btn-dark:hover {
+      background: #E2E8F0;
+    }
+
+    .hero-copy-block .g-btn-gray {
+      background: rgba(255, 255, 255, 0.12);
+      color: #FFFFFF;
+    }
+    .hero-copy-block .g-btn-gray:hover {
+      background: rgba(255, 255, 255, 0.22);
     }
 
     .hero-actions {
@@ -1085,7 +1103,7 @@ const allPublications = [
         margin-top: 0;
         margin-bottom: 0;
         padding: 16px;
-        background: rgba(255, 255, 255, 0.72);
+        background: rgba(20, 24, 33, 0.88);
         max-width: 100%;
       }
 
@@ -1171,9 +1189,9 @@ const allPublications = [
             <span class="t-eyebrow" id="hero-timecode">00:01:28</span>
           </div>
 
-          <!-- Interactive Knowledge Graph replacing 3D sculpture -->
+          <!-- Interactive Obsidian-style Knowledge Graph -->
           <div class="hero-graph-stage">
-            <KnowledgeGraph theme="paper" height="100%" />
+            <KnowledgeGraph theme="obsidian" height="100%" offsetRight={true} />
           </div>
 
           <div class="hero-copy-block">
