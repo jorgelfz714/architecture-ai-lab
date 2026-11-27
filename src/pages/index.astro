@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import KnowledgeGraph from '../components/KnowledgeGraph.astro';
+import LanguageSwitcher from '../components/LanguageSwitcher.astro';
 
 const experiments = await getCollection('experiments');
 const work = await getCollection('work');
@@ -351,6 +352,12 @@ const allPublications = [
       gap: 56px;
       font-size: 0.875rem;
       letter-spacing: -0.026em;
+    }
+
+    .g-header-controls {
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
 
     .g-nav-right {
@@ -1157,14 +1164,16 @@ const allPublications = [
           <a href="/editorial" class="hover-ul g-nav-mobile-only">Versión Editorial</a>
         </nav>
 
-        <div class="g-nav-right">
-          <a href="#knowledge-graph" class="hover-ul">Graph</a>
-          <a href="/editorial" class="hover-ul">Editorial</a>
+        <div class="g-header-controls">
+          <div class="g-nav-right">
+            <a href="#knowledge-graph" class="hover-ul">Graph</a>
+            <a href="/editorial" class="hover-ul">Editorial</a>
+          </div>
+          <LanguageSwitcher />
+          <button type="button" class="nav-toggle" id="genesis-nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="genesis-nav-links">
+            <span></span><span></span><span></span>
+          </button>
         </div>
-
-        <button type="button" class="nav-toggle" id="genesis-nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="genesis-nav-links">
-          <span></span><span></span><span></span>
-        </button>
       </div>
     </header>
 

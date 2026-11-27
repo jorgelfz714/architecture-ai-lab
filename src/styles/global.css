@@ -1823,7 +1823,13 @@ p {
     display: none;
   }
 
-  .g-nav-right {
+  .g-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.g-nav-right {
     display: flex;
     align-items: center;
     gap: 22px;
@@ -1997,7 +2003,13 @@ p {
       padding: 12px 14px;
     }
 
-    .g-nav-right {
+    .g-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.g-nav-right {
       display: none;
     }
 

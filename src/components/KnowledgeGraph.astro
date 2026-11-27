@@ -731,16 +731,6 @@ const graphData = {
     return null;
   }
 
-  // Mouse Wheel Zoom (zooms smoothly toward cursor)
-  canvas.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    const rect = canvas.getBoundingClientRect();
-    const sx = e.clientX - rect.left;
-    const sy = e.clientY - rect.top;
-    const factor = e.deltaY < 0 ? 1.14 : 1 / 1.14;
-    applyZoom(factor, sx, sy);
-  }, { passive: false });
-
   // Drag tracking on window (node drag OR background pan)
   window.addEventListener('mousemove', (e) => {
     if (isPanning) {
