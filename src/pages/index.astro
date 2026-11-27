@@ -8,39 +8,80 @@ const notes = await getCollection('notes');
 const resources = await getCollection('resources');
 
 const featuredExp = experiments.find(e => e.id.includes('where-ai-actually-works-in-aec')) || experiments[0];
+const frameworkExp = experiments.find(e => e.id.includes('conceptual-framework')) || experiments[1];
+const featuredTool = work[0];
+const featuredWorkflow = resources[0];
+const manifestoNote = notes[0];
+
+const allPublications = [
+  ...experiments.map(p => ({
+    title: p.data.title,
+    category: 'Experiments',
+    status: p.data.status || 'Published',
+    url: `/experiments/${p.id}`,
+    cover: p.data.coverImage || '/graphics/cover-aec-benchmark.jpg',
+    desc: p.data.description,
+  })),
+  ...work.map(p => ({
+    title: p.data.title,
+    category: 'Tools',
+    status: p.data.status || 'Prototype',
+    url: `/work/${p.id}`,
+    cover: p.data.coverImage || '/graphics/cover-urban-classification.jpg',
+    desc: p.data.description,
+  })),
+  ...resources.map(p => ({
+    title: p.data.title,
+    category: 'Workflows',
+    status: p.data.status || 'Available',
+    url: `/resources/${p.id}`,
+    cover: p.data.coverImage || '/graphics/cover-normativa-protocol.jpg',
+    desc: p.data.description,
+  })),
+  ...notes.map(p => ({
+    title: p.data.title,
+    category: 'Manifesto',
+    status: 'Lab Core',
+    url: `/notes/${p.id}`,
+    cover: p.data.coverImage || '/graphics/cover-manifiesto-laboratorio.jpg',
+    desc: p.data.description,
+  })),
+];
 ---
 
 <!DOCTYPE html>
-<html lang="es" class="genesis-root">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Architecture Lab — Genesis Futuristic Edition // 2026.4</title>
-  <meta name="description" content="Super-futuristic computational interface for AI Architecture Lab inspired by genesis.ai. Real-time spatial reasoning, empirical benchmarks, and interactive knowledge graph." />
-  
+  <title>AI Architecture Lab — Architecture is changing. Make something new.</title>
+  <meta name="description" content="Digital laboratory exploring tools, workflows, and empirical experiments at the intersection of architecture and AI." />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
 
   <style>
     :root {
-      --bg-void: #020408;
-      --bg-surface: rgba(5, 12, 28, 0.75);
-      --bg-card: rgba(8, 18, 40, 0.6);
-      --cyan: #00F0FF;
-      --cyan-glow: rgba(0, 240, 255, 0.35);
-      --violet: #A855F7;
-      --violet-glow: rgba(168, 85, 247, 0.35);
-      --emerald: #10B981;
-      --rose: #F43F5E;
-      --text-hi: #FFFFFF;
-      --text-mid: #94A3B8;
-      --text-dim: #475569;
-      --border-hud: rgba(0, 240, 255, 0.2);
-      --border-card: rgba(255, 255, 255, 0.08);
-      --mono: 'JetBrains Mono', monospace;
-      --display: 'Space Grotesk', system-ui, sans-serif;
-      --sans: 'Inter', system-ui, sans-serif;
+      --bg-page: #FFFFFF;
+      --bg-card: #F6F6F4;
+      --bg-ice: #DEE8EB;
+      --ink-navy: #1A1D34;
+      --ink-black: #000000;
+      --ink-muted: #8A8A8A;
+      --ink-soft: #5C5F6E;
+      --btn-dark: #282828;
+      --btn-gray: #EBEBEB;
+      --btn-blue: #CAD4D9;
+      --line-border: #CACACA;
+      --radius-card: 16px;
+      --radius-btn: 6px;
+      --radius-pill: 4px;
+      --site-px: 34px;
+      --card-pad: 22px;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+      --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
     }
 
     *, *::before, *::after {
@@ -49,973 +90,1466 @@ const featuredExp = experiments.find(e => e.id.includes('where-ai-actually-works
       padding: 0;
     }
 
-    html, body {
-      background: var(--bg-void);
-      color: var(--text-hi);
-      font-family: var(--sans);
-      min-height: 100vh;
-      overflow-x: hidden;
+    html {
       scroll-behavior: smooth;
-      font-size: 15px;
+      background: var(--bg-page);
+      color: var(--ink-navy);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* CYBER HUD BACKGROUND MATRIX */
-    .genesis-bg-matrix {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      background: 
-        radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.12) 0%, transparent 55%),
-        radial-gradient(circle at 85% 60%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
-        linear-gradient(to right, rgba(0, 240, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
-      background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+    body {
+      background: var(--bg-page);
+      color: var(--ink-navy);
+      min-height: 100vh;
+      overflow-x: clip;
     }
 
-    /* TOP CORNER HUD BRACKETS */
-    .hud-bracket {
-      position: fixed;
-      width: 24px;
-      height: 24px;
-      pointer-events: none;
-      z-index: 99;
-      border-color: var(--cyan);
-      opacity: 0.5;
-    }
-    .hud-tl { top: 12px; left: 12px; border-top: 2px solid; border-left: 2px solid; }
-    .hud-tr { top: 12px; right: 12px; border-top: 2px solid; border-right: 2px solid; }
-    .hud-bl { bottom: 12px; left: 12px; border-bottom: 2px solid; border-left: 2px solid; }
-    .hud-br { bottom: 12px; right: 12px; border-bottom: 2px solid; border-right: 2px solid; }
-
-    /* HUD NAV BAR */
-    .genesis-nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(2, 4, 8, 0.88);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border-hud);
-    }
-    .nav-inner {
-      max-width: 1320px;
-      margin: 0 auto;
-      padding: 0.85rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1.5rem;
-    }
-    .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
+    a {
+      color: inherit;
       text-decoration: none;
     }
-    .brand-cube {
-      width: 20px;
-      height: 20px;
-      border: 2px solid var(--cyan);
-      box-shadow: 0 0 10px var(--cyan-glow);
+
+    /* Typography scale (Genesis exact proportions) */
+    .t-xl {
+      font-family: var(--font-sans);
+      font-size: clamp(2rem, 2.35vw, 2.5rem);
+      font-weight: 400;
+      letter-spacing: -0.05em;
+      line-height: 1.04;
+      color: var(--ink-navy);
+    }
+
+    .t-l {
+      font-family: var(--font-sans);
+      font-size: 1.125rem;
+      font-weight: 400;
+      letter-spacing: -0.045em;
+      line-height: 1.16;
+      color: var(--ink-navy);
+    }
+
+    .t-s {
+      font-family: var(--font-sans);
+      font-size: 0.875rem;
+      font-weight: 400;
+      letter-spacing: -0.025em;
+      line-height: 1.38;
+      color: var(--ink-soft);
+    }
+
+    .t-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.656rem; /* 10.5px */
+      font-weight: 500;
+      letter-spacing: 0;
+      line-height: 1.2;
+      color: var(--ink-black);
+    }
+
+    .t-eyebrow-muted {
+      font-family: var(--font-mono);
+      font-size: 0.656rem;
+      font-weight: 500;
+      line-height: 1.2;
+      color: var(--ink-muted);
+    }
+
+    /* Genesis signature buttons */
+    .g-btn {
       position: relative;
-      transform: rotate(45deg);
+      display: inline-flex;
+      align-items: center;
+      height: 28px;
+      padding: 0 11px;
+      border-radius: var(--radius-btn);
+      border: 0;
+      font-family: var(--font-mono);
+      font-size: 0.656rem;
+      font-weight: 500;
+      line-height: 1;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: padding-right 0.32s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease;
+    }
+
+    .g-btn::after {
+      content: '→';
+      position: absolute;
+      right: 10px;
+      opacity: 0;
+      transform: translateX(-4px);
+      transition: opacity 0.25s ease 0.08s, transform 0.25s ease 0.08s;
+    }
+
+    .g-btn:hover {
+      padding-right: 28px;
+    }
+
+    .g-btn:hover::after {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .g-btn-dark {
+      background: var(--btn-dark);
+      color: #FFFFFF;
+    }
+    .g-btn-dark:hover {
+      background: #141414;
+    }
+
+    .g-btn-gray {
+      background: var(--btn-gray);
+      color: var(--ink-navy);
+    }
+    .g-btn-gray:hover {
+      background: #DFDFDC;
+    }
+
+    .g-btn-blue {
+      background: var(--btn-blue);
+      color: var(--ink-navy);
+    }
+
+    /* Animated underline link */
+    .hover-ul {
+      position: relative;
+      color: var(--ink-muted);
+      transition: color 0.3s ease;
+    }
+    .hover-ul::before {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      width: 0;
+      height: 1px;
+      background: var(--ink-navy);
+      transition: left 0.3s ease, width 0.3s ease;
+    }
+    .hover-ul:hover {
+      color: var(--ink-navy);
+    }
+    .hover-ul:hover::before {
+      left: 0;
+      width: 100%;
+    }
+
+    /* Registration ticks (-) */
+    .tick {
+      display: inline-block;
+      width: 10px;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.72;
+      pointer-events: none;
+    }
+
+    .card-ticks-top,
+    .card-ticks-bot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      pointer-events: none;
+    }
+
+    /* Site wrapper */
+    .site-shell {
+      max-width: 2400px;
+      margin: 0 auto;
+    }
+
+    /* Announcement bar */
+    .announce-wrap {
+      padding: 8px var(--site-px) 0;
+    }
+    .announce-bar {
+      height: 32px;
+      background: var(--ink-navy);
+      color: #FFFFFF;
+      border-radius: var(--radius-pill);
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: 8px;
+      padding: 0 14px;
+      font-family: var(--font-mono);
+      font-size: 0.656rem;
+      font-weight: 500;
+      transition: opacity 0.2s ease;
     }
-    .brand-cube::after {
-      content: '';
-      width: 6px;
-      height: 6px;
-      background: #FFFFFF;
-      box-shadow: 0 0 6px #FFFFFF;
+    .announce-bar:hover {
+      opacity: 0.94;
     }
-    .brand-name {
-      font-family: var(--display);
-      font-size: 1.15rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: #FFFFFF;
-    }
-    .brand-tag {
-      font-family: var(--mono);
-      font-size: 0.58rem;
-      font-weight: 800;
-      color: var(--cyan);
-      background: rgba(0, 240, 255, 0.1);
-      border: 1px solid var(--border-hud);
-      padding: 0.12rem 0.5rem;
-      border-radius: 4px;
-      letter-spacing: 0.08em;
+    .announce-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--bg-ice);
     }
 
-    .nav-links {
+    /* Header */
+    .g-header {
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 12px var(--site-px);
+    }
+
+    .g-header-inner {
       display: flex;
       align-items: center;
-      gap: 1.75rem;
-    }
-    .nav-lk {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      color: var(--text-mid);
-      text-decoration: none;
-      text-transform: uppercase;
-      transition: all 0.2s;
-    }
-    .nav-lk:hover {
-      color: var(--cyan);
-      text-shadow: 0 0 8px var(--cyan-glow);
+      justify-content: space-between;
+      min-height: 36px;
+      position: relative;
     }
 
-    .nav-lk-mobile { display: none; }
+    .g-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1rem;
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      color: var(--ink-navy);
+    }
+
+    .g-logo-ring {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid var(--ink-navy);
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .g-logo-ring::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1.2px solid var(--ink-navy);
+      opacity: 0.45;
+      animation: ringPulse 5s ease-in-out infinite;
+    }
+    @keyframes ringPulse {
+      0%, 100% { transform: scale(0.82); opacity: 0.35; }
+      50% { transform: scale(1.18); opacity: 0.85; }
+    }
+
+    .g-nav {
+      display: flex;
+      align-items: center;
+      gap: 56px;
+      font-size: 0.875rem;
+      letter-spacing: -0.026em;
+    }
+
+    .g-nav-right {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 0.875rem;
+      letter-spacing: -0.026em;
+    }
+
+    /* Mobile hamburger */
     .nav-toggle {
       display: none;
       flex-direction: column;
+      align-items: center;
       justify-content: center;
       gap: 5px;
       width: 40px;
       height: 40px;
-      padding: 0 9px;
-      background: rgba(0, 240, 255, 0.06);
-      border: 1px solid var(--border-hud);
-      border-radius: 4px;
+      padding: 0;
+      background: var(--bg-card);
+      border: 1px solid #E2E2DE;
+      border-radius: 8px;
       cursor: pointer;
     }
-    .nav-toggle span { display: block; height: 1.5px; width: 100%; background: var(--cyan); transition: transform .2s, opacity .2s; }
+    .nav-toggle span {
+      display: block;
+      width: 18px;
+      height: 1.5px;
+      background: var(--ink-navy);
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
     .nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
     .nav-toggle.open span:nth-child(2) { opacity: 0; }
     .nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+    .g-nav-mobile-only { display: none; }
 
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .btn-canonical-switch {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      font-weight: 700;
-      color: var(--text-mid);
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border-card);
-      padding: 0.45rem 0.85rem;
-      border-radius: 4px;
-      text-decoration: none;
-      transition: all 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-    }
-    .btn-canonical-switch:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: #FFFFFF;
-      border-color: rgba(255, 255, 255, 0.2);
+    /* =======================================================
+       HERO CARD (Full-bleed matte studio 3D sculpture)
+       ======================================================= */
+    .hero-section {
+      padding: 6px var(--site-px) 16px;
     }
 
-    /* WRAPPER */
-    .genesis-wrap {
-      max-width: 1320px;
-      margin: 0 auto;
-      padding: 3rem 2rem 6rem;
+    .hero-card {
       position: relative;
+      background: var(--bg-card);
+      border-radius: var(--radius-card);
+      height: clamp(620px, calc(100vh - 118px), 840px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: var(--card-pad);
+      scroll-margin-top: 76px;
+    }
+
+    .hero-graph-stage {
+      position: absolute;
+      inset: 0;
       z-index: 1;
     }
 
-    /* ========================================================
-       HERO: GENESIS DECK
-       ======================================================== */
-    .genesis-hero {
-      padding: 4rem 0 3.5rem;
-      border-bottom: 1px solid var(--border-card);
-      margin-bottom: 4rem;
-      position: relative;
+    .hero-graph-stage :global(.kg-container) {
+      height: 100% !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
     }
 
-    .hero-telemetry-banner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.1em;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-    }
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.3rem 0.85rem;
-      background: rgba(0, 240, 255, 0.08);
-      border: 1px solid var(--border-hud);
-      border-radius: 4px;
-      color: var(--cyan);
-      font-weight: 700;
-    }
-    .pulse-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--cyan);
-      box-shadow: 0 0 10px var(--cyan);
-      animation: pulse 1.8s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
-    }
-    .coords-txt {
-      color: var(--text-dim);
+    .hero-graph-stage :global(.kg-hud-telemetry) {
+      top: 46px;
+      left: 22px;
+      right: auto;
     }
 
-    .hero-title {
-      font-family: var(--display);
-      font-size: clamp(2.8rem, 6.2vw, 5.2rem);
-      font-weight: 900;
-      line-height: 1.02;
-      letter-spacing: -0.04em;
-      text-transform: uppercase;
-      margin-bottom: 1.75rem;
-      max-width: 1040px;
-    }
-    .title-gradient {
-      background: linear-gradient(135deg, #FFFFFF 20%, var(--cyan) 65%, var(--violet) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      display: inline-block;
+    .hero-graph-stage :global(.kg-controls) {
+      bottom: 42px;
+      right: 22px;
+      top: auto;
     }
 
-    .hero-question {
-      font-family: var(--display);
-      font-size: clamp(1.25rem, 2.4vw, 1.85rem);
-      line-height: 1.4;
-      font-weight: 500;
-      color: #F1F5F9;
-      margin-bottom: 1.35rem;
-      max-width: 880px;
-    }
-
-    .hero-lead-desc {
-      font-size: 1.15rem;
-      line-height: 1.75;
-      color: var(--text-mid);
-      max-width: 820px;
-      margin-bottom: 1.75rem;
-    }
-
-    .hero-punchline-cyber {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      background: rgba(0, 240, 255, 0.05);
-      border-left: 3px solid var(--cyan);
-      padding: 0.65rem 1.25rem;
-      border-radius: 0 6px 6px 0;
-      font-family: var(--mono);
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #FFFFFF;
-      margin-bottom: 2.5rem;
-      border-top: 1px solid rgba(0, 240, 255, 0.1);
-      border-bottom: 1px solid rgba(0, 240, 255, 0.1);
-      border-right: 1px solid rgba(0, 240, 255, 0.1);
-    }
-
-    .hero-cta-deck {
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-      margin-bottom: 2.5rem;
-      flex-wrap: wrap;
-    }
-    .btn-cyber-primary {
-      background: var(--cyan);
-      color: #020408;
-      font-family: var(--mono);
-      font-size: 0.8rem;
-      font-weight: 800;
-      letter-spacing: 0.06em;
-      padding: 0.85rem 2rem;
-      border-radius: 4px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      box-shadow: 0 0 24px var(--cyan-glow);
-      transition: all 0.2s;
-      position: relative;
-    }
-    .btn-cyber-primary:hover {
-      background: #FFFFFF;
-      box-shadow: 0 0 32px rgba(255, 255, 255, 0.6);
-      transform: translateY(-2px);
-    }
-    .btn-cyber-secondary {
-      background: transparent;
-      color: #FFFFFF;
-      border: 1px solid var(--border-hud);
-      font-family: var(--mono);
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      padding: 0.85rem 1.85rem;
-      border-radius: 4px;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-    .btn-cyber-secondary:hover {
-      background: rgba(0, 240, 255, 0.08);
-      border-color: var(--cyan);
-      box-shadow: 0 0 16px var(--cyan-glow);
-    }
-
-    /* TELEMETRY HUD TILES */
-    .telemetry-grid {
+    /* 3x3 subtle registration ticks inside hero */
+    .hero-ticks-layer {
+      position: absolute;
+      inset: var(--card-pad);
+      pointer-events: none;
+      z-index: 2;
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
-      margin-top: 2rem;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: 1fr 1fr;
     }
-    .hud-tile {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-card);
-      border-radius: 8px;
-      padding: 1.25rem 1.5rem;
+    .hero-tick-cell {
       position: relative;
-      overflow: hidden;
     }
-    .hud-tile::before {
-      content: '';
+    .ht-tl { position: absolute; top: 0; left: 0; }
+    .ht-tr { position: absolute; top: 0; right: 0; }
+    .ht-bl { position: absolute; bottom: 0; left: 0; }
+    .ht-br { position: absolute; bottom: 0; right: 0; }
+
+    .hero-top-row {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 8px;
+      pointer-events: none;
+    }
+
+    .hero-copy-block {
+      position: relative;
+      z-index: 3;
+      max-width: 340px;
+      margin-top: auto;
+      margin-bottom: auto;
+      padding: 18px 20px;
+      border-radius: 12px;
+      background: rgba(246, 246, 244, 0.78);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      pointer-events: none;
+    }
+
+    .hero-copy-block .tick {
+      margin-bottom: 14px;
+      color: var(--ink-navy);
+    }
+
+    .hero-copy-block h1 {
+      margin-bottom: 14px;
+    }
+
+    .hero-copy-block p {
+      margin-bottom: 20px;
+      color: var(--ink-navy);
+      opacity: 0.85;
+      max-width: 295px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      pointer-events: auto;
+    }
+
+    .hero-bottom-row {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 4px;
+      pointer-events: none;
+    }
+
+    /* =======================================================
+       SPLIT STICKY CONNECT SECTION (33% sticky / 67% content)
+       ======================================================= */
+    .connect-section {
+      padding: 0 var(--site-px) 16px;
+    }
+
+    .connect-block {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .connect-sticky {
+      width: 33%;
+      flex-shrink: 0;
+      position: sticky;
+      top: 72px;
+      height: calc(100vh - 88px);
+      max-height: 760px;
+      min-height: 520px;
+      background: var(--bg-card);
+      border-radius: var(--radius-card);
+      padding: var(--card-pad);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .sticky-top-text {
+      padding-top: 12px;
+      max-width: 260px;
+    }
+
+    .sticky-mid {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      border-top: 1px solid transparent;
+      padding: 14px 0;
+      position: relative;
+    }
+
+    .sticky-mid-ticks {
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(to right, var(--cyan), transparent);
-    }
-    .tile-val {
-      font-family: var(--display);
-      font-size: 1.85rem;
-      font-weight: 900;
-      color: #FFFFFF;
-      letter-spacing: -0.03em;
-      line-height: 1;
-      margin-bottom: 0.4rem;
-    }
-    .tile-lbl {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      color: var(--text-mid);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    /* ========================================================
-       INTERACTIVE KNOWLEDGE GRAPH HUD SECTION
-       ======================================================== */
-    .genesis-graph-section {
-      margin-bottom: 5.5rem;
-    }
-    .sec-kicker-cyber {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      color: var(--cyan);
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
+      right: 0;
       display: flex;
-      align-items: center;
-      gap: 0.45rem;
-    }
-    .sec-title-cyber {
-      font-family: var(--display);
-      font-size: clamp(2rem, 3.4vw, 2.75rem);
-      font-weight: 900;
-      letter-spacing: -0.03em;
-      color: #FFFFFF;
-      margin-bottom: 0.65rem;
-    }
-    .sec-desc-cyber {
-      font-size: 0.95rem;
-      color: var(--text-mid);
-      max-width: 720px;
-      line-height: 1.6;
-      margin-bottom: 1.75rem;
+      justify-content: space-between;
     }
 
-    /* ========================================================
-       THREE CORE PATHWAYS (TOOLS, WORKFLOWS, EXPERIMENTS)
-       ======================================================== */
-    .pathways-section {
-      margin-bottom: 5.5rem;
-    }
-    .pathways-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-      margin-top: 1.5rem;
-    }
-    .pathway-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-card);
-      border-radius: 12px;
-      padding: 2.25rem 2rem;
+    .sticky-chapters {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      position: relative;
-      overflow: hidden;
+      gap: 2px;
     }
-    .pathway-card:hover {
-      transform: translateY(-4px);
-      border-color: var(--border-hud);
-      box-shadow: 0 12px 32px var(--cyan-glow);
+
+    .sticky-chapter-link {
+      font-size: clamp(1.65rem, 2.1vw, 2.15rem);
+      font-weight: 400;
+      letter-spacing: -0.05em;
+      line-height: 1.08;
+      color: var(--ink-muted);
+      transition: color 0.25s ease;
     }
-    .pw-badge {
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      font-weight: 800;
-      color: var(--cyan);
-      letter-spacing: 0.1em;
-      margin-bottom: 1rem;
+    .sticky-chapter-link:hover,
+    .sticky-chapter-link.active {
+      color: var(--ink-navy);
     }
-    .pw-title {
-      font-family: var(--display);
-      font-size: 1.85rem;
-      font-weight: 900;
-      color: #FFFFFF;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.5rem;
-    }
-    .pw-headline {
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: #E2E8F0;
-      line-height: 1.45;
-      margin-bottom: 0.85rem;
-    }
-    .pw-desc {
-      font-size: 0.88rem;
-      color: var(--text-mid);
-      line-height: 1.65;
-      margin-bottom: 1.75rem;
-    }
-    .pw-link {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      font-weight: 800;
-      color: var(--cyan);
-      text-decoration: none;
+
+    .sticky-counter-box {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      letter-spacing: 0.06em;
+      gap: 4px;
+      padding-top: 6px;
     }
-
-    /* ========================================================
-       FEATURED DOSSIER HERO CARD (WHERE AI WORKS IN AEC)
-       ======================================================== */
-    .genesis-dossier {
-      background: linear-gradient(135deg, rgba(8, 18, 40, 0.9) 0%, rgba(4, 10, 24, 0.95) 100%);
-      border: 1px solid var(--border-hud);
-      box-shadow: 0 16px 48px rgba(0, 240, 255, 0.08);
-      border-radius: 16px;
-      display: grid;
-      grid-template-columns: 1.25fr 0.75fr;
-      overflow: hidden;
-      margin-bottom: 4rem;
-    }
-    .dossier-left-hud {
-      padding: 3rem 2.5rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .dossier-meta-row {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 1.25rem;
-      flex-wrap: wrap;
-    }
-    .dossier-title-hud {
-      font-family: var(--display);
-      font-size: clamp(1.85rem, 2.8vw, 2.4rem);
-      font-weight: 900;
-      letter-spacing: -0.03em;
-      color: #FFFFFF;
-      line-height: 1.15;
-      margin-bottom: 1rem;
-    }
-    .dossier-desc-hud {
-      font-size: 0.98rem;
-      line-height: 1.7;
-      color: var(--text-mid);
-      margin-bottom: 1.75rem;
-    }
-
-    .telemetry-bars-box {
-      background: rgba(2, 4, 8, 0.8);
-      border: 1px solid var(--border-card);
-      border-radius: 8px;
-      padding: 1.25rem 1.5rem;
-      margin-bottom: 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-    }
-    .tb-row {
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
-    }
-    .tb-header {
-      display: flex;
-      justify-content: space-between;
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      color: var(--text-mid);
-    }
-    .tb-header b {
-      color: var(--cyan);
-    }
-    .tb-track {
-      width: 100%;
-      height: 6px;
-      background: rgba(255, 255, 255, 0.06);
-      border-radius: 9999px;
-      overflow: hidden;
-    }
-    .tb-fill {
-      height: 100%;
-      background: linear-gradient(to right, var(--cyan), var(--violet));
-      border-radius: 9999px;
-      box-shadow: 0 0 10px var(--cyan-glow);
-    }
-
-    .dossier-right-hud {
-      background: radial-gradient(circle at center, rgba(168, 85, 247, 0.2) 0%, rgba(0, 240, 255, 0.05) 60%, transparent 100%);
-      border-left: 1px solid var(--border-card);
-      padding: 3rem 2.5rem;
-      display: flex;
+    .counter-pill {
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-    }
-    .inquiry-hologram {
-      background: rgba(2, 4, 8, 0.8);
-      border: 1px solid var(--border-hud);
-      border-radius: 12px;
-      padding: 2rem;
-      box-shadow: 0 12px 32px var(--cyan-glow);
-      backdrop-filter: blur(16px);
-      width: 100%;
-    }
-    .inquiry-quote {
-      font-family: var(--display);
-      font-size: 1.15rem;
-      line-height: 1.55;
-      color: #FFFFFF;
-      font-style: italic;
-      margin-bottom: 1.5rem;
-    }
-    .tech-stack-row {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--border-card);
-    }
-    .tech-chip {
-      background: rgba(0, 240, 255, 0.1);
-      border: 1px solid var(--border-hud);
-      padding: 0.18rem 0.55rem;
+      height: 22px;
+      padding: 0 7px;
+      background: #EBEBE8;
       border-radius: 4px;
-      color: var(--cyan);
+      font-family: var(--font-mono);
+      font-size: 0.656rem;
+      font-weight: 500;
+      color: var(--ink-navy);
+    }
+    .counter-btn {
+      width: 22px;
+      height: 22px;
+      border: 0;
+      border-radius: 4px;
+      background: #EBEBE8;
+      color: var(--ink-navy);
+      font-size: 0.6rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .counter-btn:hover {
+      background: #DCDCD8;
     }
 
-    /* ========================================================
-       BEYOND THE ORDINARY: CLOSING PORTAL
-       ======================================================== */
-    .genesis-closing {
-      margin-bottom: 4rem;
-      background: linear-gradient(135deg, rgba(8, 18, 40, 0.95), rgba(2, 4, 8, 0.98));
-      border: 1px solid var(--border-hud);
-      border-radius: 20px;
-      padding: 5rem 3rem;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 20px 60px var(--cyan-glow);
-    }
-    .closing-glow {
-      position: absolute;
-      top: -120px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 700px;
-      height: 350px;
-      background: radial-gradient(circle, var(--cyan-glow) 0%, var(--violet-glow) 50%, transparent 80%);
-      filter: blur(60px);
-      pointer-events: none;
-    }
-    .closing-kicker {
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      font-weight: 800;
-      color: var(--cyan);
-      letter-spacing: 0.15em;
-      margin-bottom: 1rem;
-    }
-    .closing-title {
-      font-family: var(--display);
-      font-size: clamp(2.4rem, 4.8vw, 3.8rem);
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      margin-bottom: 1.25rem;
-      color: #FFFFFF;
-    }
-    .closing-desc {
-      font-size: 1.2rem;
-      color: var(--text-mid);
-      max-width: 680px;
-      margin: 0 auto 2.5rem;
-      line-height: 1.6;
-    }
-
-    /* FOOTER */
-    .genesis-footer {
-      border-top: 1px solid var(--border-card);
-      padding: 3rem 2rem 2.5rem;
-      background: var(--bg-void);
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      color: var(--text-dim);
-    }
-    .footer-inner {
-      max-width: 1320px;
-      margin: 0 auto;
+    .sticky-footer-meta {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1.5rem;
+      align-items: flex-end;
+      gap: 12px;
+      padding-bottom: 10px;
     }
-    .footer-brand {
-      color: var(--text-mid);
-      font-weight: 700;
+    .sticky-meta-col {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .sticky-meta-col.right {
+      text-align: right;
     }
 
-    @media (max-width: 1024px) {
-      .pathways-grid { grid-template-columns: 1fr; }
-      .telemetry-grid { grid-template-columns: repeat(2, 1fr); }
-      .genesis-dossier { grid-template-columns: 1fr; }
-      .dossier-right-hud { border-left: none; border-top: 1px solid var(--border-card); }
+    /* Right scrolling column */
+    .connect-content {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
+
+    .g-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-card);
+      padding: var(--card-pad);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      scroll-margin-top: 76px;
+    }
+
+    /* 4-Pillar Accordion Strip (Signature Genesis 01-04 Dark-Slate-Ice-White frame) */
+    .pillar-frame {
+      background: var(--ink-navy);
+      border-radius: 12px;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      min-height: 360px;
+    }
+
+    .pillar-col {
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: transform 0.25s ease, filter 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .pillar-col:hover {
+      transform: translateY(-2px);
+    }
+
+    .pillar-col.p-1 { background: #2D3248; color: rgba(255,255,255,0.88); }
+    .pillar-col.p-2 { background: #647182; color: rgba(255,255,255,0.92); }
+    .pillar-col.p-3 { background: #C8D3D8; color: var(--ink-navy); }
+    .pillar-col.p-4 { background: #FFFFFF; color: var(--ink-navy); }
+
+    .pillar-num {
+      font-family: var(--font-mono);
+      font-size: 0.656rem;
+      font-weight: 500;
+      opacity: 0.85;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .pillar-name {
+      font-size: 1.05rem;
+      font-weight: 400;
+      letter-spacing: -0.04em;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+    .pillar-desc {
+      font-size: 0.78rem;
+      line-height: 1.35;
+      opacity: 0.78;
+    }
+    .pillar-thumb {
+      margin-top: 16px;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      border-radius: 5px;
+      opacity: 0.92;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    /* Section narrative header inside right cards */
+    .card-head {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 460px;
+    }
+    .card-eyebrow-pair {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    /* Featured media / dossier cards inside right column */
+    .media-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .media-item {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      group: true;
+    }
+
+    .media-thumb-box {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #E8E8E4;
+      aspect-ratio: 16 / 10;
+    }
+    .media-thumb-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .media-item:hover .media-thumb-box img {
+      transform: scale(1.03);
+    }
+
+    .media-overlay-cta {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      height: 24px;
+      padding: 0 10px;
+      border-radius: 6px;
+      background: rgba(26, 29, 52, 0.78);
+      backdrop-filter: blur(7px);
+      color: #FFFFFF;
+      font-family: var(--font-mono);
+      font-size: 0.656rem;
+      display: inline-flex;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .media-item:hover .media-overlay-cta {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .media-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    /* Benchmark metrics strip inside EXP_004 card */
+    .exp-metrics-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line-border);
+    }
+    .exp-metric-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .exp-metric-val {
+      font-size: 1.5rem;
+      font-weight: 400;
+      letter-spacing: -0.05em;
+      color: var(--ink-navy);
+    }
+
+    /* =======================================================
+       ABOUT / MANIFESTO ICE-BLUE CARD (#DEE8EB)
+       ======================================================= */
+    .full-band {
+      padding: 0 var(--site-px) 16px;
+    }
+
+    .ice-card {
+      background: var(--bg-ice);
+      border-radius: var(--radius-card);
+      padding: var(--card-pad);
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    .ice-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .ice-principles {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(26, 29, 52, 0.14);
+    }
+
+    /* =======================================================
+       PUBLICATIONS TABLE CARD (Genesis "Newest openings" list)
+       ======================================================= */
+    .openings-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-card);
+      padding: var(--card-pad);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .openings-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .openings-count {
+      font-family: var(--font-mono);
+      font-size: 0.656rem;
+      vertical-align: super;
+      margin-left: 4px;
+      color: var(--ink-navy);
+    }
+
+    .pub-table {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pub-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.8fr) minmax(0, 0.9fr) minmax(0, 0.7fr) 16px;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 0;
+      border-top: 1px solid var(--line-border);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--ink-black);
+      transition: padding-left 0.2s ease, background-color 0.2s ease;
+    }
+    .pub-row:last-child {
+      border-bottom: 1px solid var(--line-border);
+    }
+    .pub-row:hover {
+      padding-left: 6px;
+    }
+    .pub-row-cat {
+      color: var(--ink-soft);
+    }
+    .pub-row-status {
+      color: var(--ink-muted);
+    }
+    .pub-row-arrow {
+      text-align: right;
+      font-size: 0.7rem;
+      color: var(--ink-navy);
+    }
+
+    .openings-footer-row {
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 14px;
+    }
+
+    /* =======================================================
+       DEEP NAVY FOOTER CARD (#1A1D34)
+       ======================================================= */
+    .footer-band {
+      padding: 0 var(--site-px) 24px;
+    }
+
+    .g-footer {
+      background: var(--ink-navy);
+      color: var(--bg-ice);
+      border-radius: var(--radius-card);
+      padding: var(--card-pad);
+      min-height: 360px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 48px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .footer-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #FFFFFF;
+      font-size: 1rem;
+      letter-spacing: -0.03em;
+    }
+    .footer-brand .g-logo-ring {
+      border-color: #FFFFFF;
+    }
+    .footer-brand .g-logo-ring::after {
+      border-color: #FFFFFF;
+    }
+
+    .footer-tagline {
+      color: #FFFFFF;
+      font-size: 1.125rem;
+      letter-spacing: -0.04em;
+      line-height: 1.2;
+      margin-top: 12px;
+    }
+
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .footer-link {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--bg-ice);
+      opacity: 0.85;
+      transition: opacity 0.2s;
+    }
+    .footer-link:hover {
+      opacity: 1;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(222, 232, 235, 0.14);
+      font-family: var(--font-mono);
+      font-size: 0.656rem;
+      color: rgba(222, 232, 235, 0.65);
+    }
+
+    /* =======================================================
+       RESPONSIVE BREAKPOINTS
+       ======================================================= */
+    @media (max-width: 1080px) {
+      .connect-block {
+        flex-direction: column;
+      }
+      .connect-sticky {
+        position: static;
+        width: 100%;
+        height: auto;
+        min-height: auto;
+        max-height: none;
+        gap: 24px;
+      }
+      .pillar-frame {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .ice-grid,
+      .openings-grid {
+        grid-template-columns: 1fr;
+      }
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
     @media (max-width: 768px) {
-      .nav-inner { padding: 0.75rem 1.25rem; gap: 0.75rem; position: relative; }
-      .brand-tag { display: none; }
-      .brand-name { font-size: 1rem; }
-      .nav-toggle { display: inline-flex; margin-left: auto; }
-      .nav-actions { display: none; }
-    .nav-actions { display: none; }
-      .nav-links {
+      :root {
+        --site-px: 14px;
+        --card-pad: 16px;
+      }
+
+      .announce-bar {
+        font-size: 0.6rem;
+        text-align: center;
+      }
+
+      .g-nav-right {
+        display: none;
+      }
+      .nav-toggle {
+        display: inline-flex;
+      }
+
+      .g-nav {
         display: none;
         position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
+        top: calc(100% + 12px);
+        left: -14px;
+        right: -14px;
         flex-direction: column;
         align-items: stretch;
         gap: 0;
-        padding: 0.5rem 1.25rem 1rem;
-        background: rgba(2, 4, 8, 0.97);
-        border-bottom: 1px solid var(--border-hud);
+        padding: 8px 20px 16px;
+        background: #FFFFFF;
+        border-top: 1px solid #E8E8E4;
+        border-bottom: 1px solid #E8E8E4;
+        box-shadow: 0 18px 36px rgba(26, 29, 52, 0.08);
       }
-      .nav-links.open { display: flex; }
-      .nav-links .nav-lk { padding: 0.9rem 0; border-bottom: 1px solid var(--border-card); font-size: 0.78rem; }
-      .nav-links .nav-lk-mobile { display: block; color: var(--cyan); }
-      .telemetry-grid { grid-template-columns: 1fr; }
-      .hero-title { font-size: 2.6rem; }
-      .genesis-wrap { padding: 2rem 1.25rem 4rem; }
+      .g-nav.open {
+        display: flex;
+      }
+      .g-nav a {
+        padding: 13px 0;
+        border-bottom: 1px solid #F0F0EC;
+        color: var(--ink-navy);
+        font-size: 0.95rem;
+      }
+      .g-nav-mobile-only {
+        display: block;
+      }
+
+      .hero-card {
+        height: auto;
+        min-height: 620px;
+        gap: 14px;
+      }
+
+      .hero-graph-stage {
+        position: relative;
+        height: 360px;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-top: 6px;
+      }
+
+      .hero-graph-stage :global(.kg-hud-telemetry) {
+        top: 10px;
+        left: 10px;
+      }
+
+      .hero-graph-stage :global(.kg-controls) {
+        bottom: 10px;
+        right: 10px;
+      }
+
+      .hero-copy-block {
+        margin-top: 0;
+        margin-bottom: 0;
+        padding: 16px;
+        background: rgba(255, 255, 255, 0.72);
+        max-width: 100%;
+      }
+
+      .pillar-frame {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .media-grid-2,
+      .exp-metrics-strip,
+      .ice-principles,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .pub-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+      }
+      .pub-row-cat,
+      .pub-row-status {
+        display: none;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="site-shell">
 
-  <!-- CYBER HUD BACKGROUND -->
-  <div class="genesis-bg-matrix" aria-hidden="true"></div>
-
-  <!-- HUD CORNER BRACKETS -->
-  <div class="hud-bracket hud-tl" aria-hidden="true"></div>
-  <div class="hud-bracket hud-tr" aria-hidden="true"></div>
-  <div class="hud-bracket hud-bl" aria-hidden="true"></div>
-  <div class="hud-bracket hud-br" aria-hidden="true"></div>
-
-  <!-- HUD NAVIGATION -->
-  <header class="genesis-nav">
-    <div class="nav-inner">
-      <a href="/" class="nav-brand">
-        <div class="brand-cube"></div>
-        <span class="brand-name">AI Architecture Lab</span>
-        <span class="brand-tag">GENESIS HUD</span>
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div class="announce-wrap">
+      <a href="/experiments/where-ai-actually-works-in-aec" class="announce-bar">
+        <span class="announce-dot"></span>
+        <span>New Benchmark EXP_004: Where AI Actually Works in AEC &mdash; Read full dossier</span>
       </a>
-
-      <nav class="nav-links" id="genesis-nav-links" aria-label="Cyber Navigation">
-        <a href="#knowledge-graph" class="nav-lk">Neural Graph</a>
-        <a href="#pathways" class="nav-lk">Tools</a>
-        <a href="#pathways" class="nav-lk">Workflows</a>
-        <a href="#pathways" class="nav-lk">Experiments</a>
-        <a href="/experiments/where-ai-actually-works-in-aec" class="nav-lk">Benchmark EXP_004</a>
-        <a href="/editorial" class="nav-lk nav-lk-mobile">&larr; Ver Versión Editorial</a>
-      </nav>
-
-      <div class="nav-actions">
-        <a href="/editorial" class="btn-canonical-switch" title="Cambiar a la versión canónica Paper Minimalist">
-          &larr; Ver Versión Editorial
-        </a>
-      </div>
-
-      <button type="button" class="nav-toggle" id="genesis-nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="genesis-nav-links">
-        <span></span><span></span><span></span>
-      </button>
     </div>
-  </header>
 
-  <main class="genesis-wrap">
-    
-    <!-- HERO: GENESIS DECK -->
-    <section class="genesis-hero">
-      <div class="hero-telemetry-banner">
-        <div class="status-badge">
-          <span class="pulse-dot"></span>
-          <span>SYSTEM ONLINE // ETSAM COMPUTE NODE // MADRID</span>
-        </div>
-        <div class="coords-txt">
-          <span>LAT 40.4168° N</span> &bull; <span>LON 3.7038° W</span> &bull; <span>CYCLE 2026.4</span>
-        </div>
-      </div>
-
-      <h1 class="hero-title">
-        Architecture is changing.<br />
-        <span class="title-gradient">Make something new.</span>
-      </h1>
-
-      <p class="hero-question">
-        What if AI could change the way you design, the tools you use, and the ideas you bring to life?
-      </p>
-
-      <p class="hero-lead-desc">
-        Explore new tools, experiment with emerging technologies, and discover new ways to approach architectural design through verifiable spatial computation.
-      </p>
-
-      <div class="hero-punchline-cyber">
-        <span>&gt;&gt;</span>
-        <span>Less repetition. More exploration. New ways to create.</span>
-      </div>
-
-      <div class="hero-cta-deck">
-        <a href="#pathways" class="btn-cyber-primary">
-          INITIALIZE AI TOOLS &rarr;
+    <!-- MINIMAL HEADER -->
+    <header class="g-header">
+      <div class="g-header-inner">
+        <a href="/" class="g-brand">
+          <span class="g-logo-ring" aria-hidden="true"></span>
+          <span>AI Architecture Lab</span>
         </a>
-        <a href="#knowledge-graph" class="btn-cyber-secondary">
-          EXPLORE NEURAL GRAPH
-        </a>
-      </div>
 
-      <!-- TELEMETRY HUD TILES -->
-      <div class="telemetry-grid">
-        <div class="hud-tile">
-          <div class="tile-val" style="color:var(--cyan);">94.2%</div>
-          <div class="tile-lbl">Building Code &amp; Zoning RAG</div>
+        <nav class="g-nav" id="genesis-nav-links" aria-label="Navegación principal">
+          <a href="/work" class="hover-ul">Tools</a>
+          <a href="/resources" class="hover-ul">Workflows</a>
+          <a href="/experiments" class="hover-ul">Experiments</a>
+          <a href="/about" class="hover-ul">About</a>
+          <a href="#knowledge-graph" class="hover-ul g-nav-mobile-only">Knowledge Graph</a>
+          <a href="/editorial" class="hover-ul g-nav-mobile-only">Versión Editorial</a>
+        </nav>
+
+        <div class="g-nav-right">
+          <a href="#knowledge-graph" class="hover-ul">Graph</a>
+          <a href="/editorial" class="hover-ul">Editorial</a>
         </div>
-        <div class="hud-tile">
-          <div class="tile-val" style="color:var(--violet);">88.0%</div>
-          <div class="tile-lbl">Parametric Python Synthesis</div>
-        </div>
-        <div class="hud-tile">
-          <div class="tile-val" style="color:var(--rose);">0.0%</div>
-          <div class="tile-lbl">3D Spatial Topology Direct Edit</div>
-        </div>
-        <div class="hud-tile">
-          <div class="tile-val" style="color:var(--emerald);">$0.00</div>
-          <div class="tile-lbl">Recurring Serverless Cost</div>
-        </div>
+
+        <button type="button" class="nav-toggle" id="genesis-nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="genesis-nav-links">
+          <span></span><span></span><span></span>
+        </button>
       </div>
-    </section>
+    </header>
 
-    <!-- INTERACTIVE KNOWLEDGE GRAPH (INSPIRADO EN SEUNGHYUK.COM) -->
-    <section class="genesis-graph-section" id="knowledge-graph">
-      <div class="sec-kicker-cyber">
-        <span>[ 01 // NEURAL TOPOLOGY ]</span>
-      </div>
-      <h2 class="sec-title-cyber">Interactive Knowledge Graph</h2>
-      <p class="sec-desc-cyber">
-        Esquema dinámico de conexiones conceptuales inspirado en <a href="https://seunghyuk.com/?ref=siteinspire" target="_blank" rel="noopener" style="color:var(--cyan);text-decoration:underline;">seunghyuk.com</a>. Arrastra los nodos, despliega relaciones complejas y haz clic en cualquier investigación para acceder al dossier completo.
-      </p>
-
-      <!-- Knowledge Graph Component with Genesis Theme -->
-      <KnowledgeGraph theme="genesis" height="640px" showControls={true} />
-    </section>
-
-    <!-- THREE CORE PATHWAYS (TOOLS, WORKFLOWS, EXPERIMENTS) -->
-    <section class="pathways-section" id="pathways">
-      <div class="sec-kicker-cyber">
-        <span>[ 02 // SYSTEM MODULES ]</span>
-      </div>
-      <h2 class="sec-title-cyber">Explore What's Possible</h2>
-      <p class="sec-desc-cyber">
-        Three pathways to rethink how architectural work gets done, from automated micro-tools to connected workflows and frontier stress-testing.
-      </p>
-
-      <div class="pathways-grid">
-        <!-- 1. TOOLS -->
-        <article class="pathway-card">
-          <div>
-            <div class="pw-badge">01 // TOOLS &amp; APPS</div>
-            <h3 class="pw-title">TOOLS</h3>
-            <p class="pw-headline">New tools to rethink how architectural work gets done.</p>
-            <p class="pw-desc">Small applications, utilities, and algorithmic prototypes applying artificial intelligence directly to concrete architectural tasks.</p>
+    <main>
+      <!-- =====================================================
+           HERO: FULL-BLEED INTERACTIVE KNOWLEDGE GRAPH
+           ===================================================== -->
+      <section class="hero-section">
+        <div class="hero-card" id="knowledge-graph">
+          <!-- Registration Ticks Grid -->
+          <div class="hero-ticks-layer" aria-hidden="true">
+            <div class="hero-tick-cell"><span class="tick ht-tl"></span><span class="tick ht-tr"></span></div>
+            <div class="hero-tick-cell"><span class="tick ht-tr"></span></div>
+            <div class="hero-tick-cell"><span class="tick ht-tr"></span></div>
+            <div class="hero-tick-cell"><span class="tick ht-tl"></span><span class="tick ht-bl"></span><span class="tick ht-br"></span></div>
+            <div class="hero-tick-cell"><span class="tick ht-tr"></span><span class="tick ht-br"></span></div>
+            <div class="hero-tick-cell"><span class="tick ht-tr"></span><span class="tick ht-br"></span></div>
           </div>
-          <a href="/work" class="pw-link">ACCESS TOOLS &rarr;</a>
-        </article>
 
-        <!-- 2. WORKFLOWS -->
-        <article class="pathway-card">
-          <div>
-            <div class="pw-badge">02 // INTEGRATION</div>
-            <h3 class="pw-title">WORKFLOWS</h3>
-            <p class="pw-headline">Smarter ways to connect ideas, processes, and technology.</p>
-            <p class="pw-desc">Practical pipelines bridging foundation models, Grasshopper, Speckle, and BIM environments to eliminate repetitive overhead.</p>
+          <div class="hero-top-row">
+            <span class="t-eyebrow">Meet the Lab &middot; Interactive Knowledge Graph</span>
+            <span class="t-eyebrow" id="hero-timecode">00:01:28</span>
           </div>
-          <a href="/resources" class="pw-link">DEPLOY WORKFLOWS &rarr;</a>
-        </article>
 
-        <!-- 3. EXPERIMENTS -->
-        <article class="pathway-card">
-          <div>
-            <div class="pw-badge">03 // FRONTIER LAB</div>
-            <h3 class="pw-title">EXPERIMENTS</h3>
-            <p class="pw-headline">New possibilities at the intersection of architecture and AI.</p>
-            <p class="pw-desc">Rigorous stress-testing, topological benchmarks, and empirical evaluations examining where frontier models excel and where they fail.</p>
+          <!-- Interactive Knowledge Graph replacing 3D sculpture -->
+          <div class="hero-graph-stage">
+            <KnowledgeGraph theme="paper" height="100%" />
           </div>
-          <a href="/experiments" class="pw-link">INSPECT EXPERIMENTS &rarr;</a>
-        </article>
-      </div>
-    </section>
 
-    <!-- FEATURED BENCHMARK DOSSIER -->
-    {featuredExp && (
-      <section class="genesis-dossier" id="featured-dossier">
-        <div class="dossier-left-hud">
-          <div>
-            <div class="dossier-meta-row">
-              <span class="status-badge" style="color:var(--emerald);border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.1);">
-                DOSSIER EXP_004 &bull; PEER-REVIEWED
-              </span>
-              <span style="font-family:var(--mono);font-size:0.62rem;color:var(--text-dim);">
-                DOI: {featuredExp.data.doi || '10.1038/arch.ai.2026.042'}
-              </span>
-            </div>
-
-            <h3 class="dossier-title-hud">
-              <a href={`/experiments/${featuredExp.id}`} style="color:inherit;text-decoration:none;">
-                {featuredExp.data.title}
-              </a>
-            </h3>
-
-            <p class="dossier-desc-hud">
-              Empirical benchmark measuring frontier LLMs across 9 architectural domains. Mapping with mathematical rigor where AI accelerates practice and where it encounters an insurmountable geometric barrier.
+          <div class="hero-copy-block">
+            <span class="tick" aria-hidden="true"></span>
+            <h1 class="t-xl">Architecture is changing.<br />Make something new.</h1>
+            <p class="t-s">
+              What if AI could change the way you design, the tools you use, and the ideas you bring to life? Less repetition. More exploration.
             </p>
-
-            <div class="telemetry-bars-box">
-              <div class="tb-row">
-                <div class="tb-header">
-                  <span>Building Code &amp; Zoning RAG</span>
-                  <b>94.2%</b>
-                </div>
-                <div class="tb-track"><div class="tb-fill" style="width: 94%;"></div></div>
-              </div>
-              <div class="tb-row">
-                <div class="tb-header">
-                  <span>Grasshopper Parametric Python</span>
-                  <b>88.0%</b>
-                </div>
-                <div class="tb-track"><div class="tb-fill" style="width: 88%;"></div></div>
-              </div>
-              <div class="tb-row">
-                <div class="tb-header">
-                  <span>Multi-drawing Coordination</span>
-                  <b style="color:var(--rose);">0.0% (Structural Failure)</b>
-                </div>
-                <div class="tb-track"><div class="tb-fill" style="width: 4%; background:var(--rose);"></div></div>
-              </div>
+            <div class="hero-actions">
+              <a href="/work" class="g-btn g-btn-dark">Explore AI Tools</a>
+              <a href="#overview" class="g-btn g-btn-gray">Explore layers</a>
             </div>
           </div>
 
-          <div>
-            <a href={`/experiments/${featuredExp.id}`} class="btn-cyber-primary">
-              EXPLORE TECHNICAL DOSSIER &rarr;
-            </a>
-          </div>
-        </div>
-
-        <div class="dossier-right-hud">
-          <div class="inquiry-hologram">
-            <div style="font-family:var(--mono);font-size:0.6rem;color:var(--cyan);margin-bottom:0.75rem;letter-spacing:0.1em;">
-              // CORE INQUIRY PROTOCOL
-            </div>
-            <p class="inquiry-quote">
-              &ldquo;Why does frontier AI struggle with authentic spatial reasoning in AEC, and in which specific computational inflection points does it deliver undeniable structural value?&rdquo;
-            </p>
-            <div class="tech-stack-row">
-              <span style="color:var(--text-mid);">STACK:</span>
-              <span class="tech-chip">GPT-4o</span>
-              <span class="tech-chip">Claude 3.5</span>
-              <span class="tech-chip">IFC 4.3</span>
-              <span class="tech-chip">Speckle</span>
-            </div>
+          <div class="hero-bottom-row">
+            <span class="t-eyebrow-muted">Drag any node &middot; Click to open dossier</span>
+            <span class="t-eyebrow-muted">ETSAM &middot; Open Research</span>
           </div>
         </div>
       </section>
-    )}
 
-    <!-- CLOSING PORTAL -->
-    <section class="genesis-closing">
-      <div class="closing-glow"></div>
-      <div style="position:relative;z-index:2;">
-        <div class="closing-kicker">AI ARCHITECTURE LAB // HORIZON 2026</div>
-        <h2 class="closing-title">Beyond the ordinary.</h2>
-        <p class="closing-desc">
-          A space to explore, build, and discover what's next in architecture through computational rigor and open research.
-        </p>
-        <a href="#knowledge-graph" class="btn-cyber-primary">
-          INITIALIZE NEURAL EXPLORATION &rarr;
-        </a>
-      </div>
-    </section>
+      <!-- =====================================================
+           SPLIT STICKY CONNECT SECTION (33% LEFT / 67% RIGHT)
+           ===================================================== -->
+      <section class="connect-section">
+        <div class="connect-block">
+          <!-- Sticky Left Navigation Card -->
+          <aside class="connect-sticky" aria-label="Índice de capas del laboratorio">
+            <div>
+              <div class="card-ticks-top"><span class="tick"></span><span class="tick"></span></div>
+              <p class="t-l sticky-top-text" id="sticky-headline">
+                We explore every layer where AI meets architectural design.
+              </p>
+            </div>
 
-  </main>
+            <div class="sticky-mid">
+              <div class="sticky-mid-ticks" aria-hidden="true"><span class="tick"></span><span class="tick"></span></div>
+              <nav class="sticky-chapters" aria-label="Categorías">
+                <a href="#tools" class="sticky-chapter-link" data-chapter="1">Tools</a>
+                <a href="#workflows" class="sticky-chapter-link" data-chapter="2">Workflows</a>
+                <a href="#experiments" class="sticky-chapter-link" data-chapter="3">Experiments</a>
+              </nav>
+              <div class="sticky-counter-box">
+                <span class="counter-pill" id="sticky-counter">00/3</span>
+                <button type="button" class="counter-btn" id="btn-step-prev" aria-label="Sección anterior">▲</button>
+                <button type="button" class="counter-btn" id="btn-step-next" aria-label="Sección siguiente">▼</button>
+              </div>
+            </div>
 
-  <footer class="genesis-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">
-        AI ARCHITECTURE LAB &bull; Jorge Ludeña (ETSAM) &bull; Genesis Edition 2026.4
-      </div>
-      <div>
-        <span>Open Science &bull; Static Serverless Core &bull; Cost: $0.00 USD/mo</span>
-      </div>
+            <div>
+              <div class="sticky-footer-meta">
+                <div class="sticky-meta-col">
+                  <span class="t-eyebrow">Interactive Map</span>
+                  <a href="#knowledge-graph" class="t-eyebrow-muted hover-ul">Explore node graph</a>
+                </div>
+                <div class="sticky-meta-col right">
+                  <span class="t-eyebrow">Lab Inquiries</span>
+                  <a href="/about" class="t-eyebrow-muted hover-ul">About Jorge Ludeña</a>
+                </div>
+              </div>
+              <div class="card-ticks-bot"><span class="tick"></span><span class="tick"></span></div>
+            </div>
+          </aside>
+
+          <!-- Right Scrolling Content Cards -->
+          <div class="connect-content">
+            <!-- 00/3: 4-PILLAR OVERVIEW + KNOWLEDGE GRAPH -->
+            <article class="g-card" id="overview" data-section-index="0" data-headline="We explore every layer where AI meets architectural design.">
+              <div class="pillar-frame">
+                <a href="#tools" class="pillar-col p-1">
+                  <div>
+                    <span class="pillar-num">01</span>
+                    <div class="pillar-name">Tools</div>
+                    <p class="pillar-desc">Algorithmic analyzers and spatial prototypes.</p>
+                  </div>
+                  <img src="/graphics/cover-urban-classification.jpg" alt="Spatial Tools" class="pillar-thumb" loading="lazy" />
+                </a>
+                <a href="#workflows" class="pillar-col p-2">
+                  <div>
+                    <span class="pillar-num">02</span>
+                    <div class="pillar-name">Workflows</div>
+                    <p class="pillar-desc">Structured prompts and parametric pipelines.</p>
+                  </div>
+                  <img src="/graphics/cover-normativa-protocol.jpg" alt="AI Workflows" class="pillar-thumb" loading="lazy" />
+                </a>
+                <a href="#experiments" class="pillar-col p-3">
+                  <div>
+                    <span class="pillar-num">03</span>
+                    <div class="pillar-name">Experiments</div>
+                    <p class="pillar-desc">Empirical AEC benchmarks and stress tests.</p>
+                  </div>
+                  <img src="/graphics/cover-aec-benchmark.jpg" alt="AEC Benchmarks" class="pillar-thumb" loading="lazy" />
+                </a>
+                <a href="#knowledge-graph" class="pillar-col p-4">
+                  <div>
+                    <span class="pillar-num">04</span>
+                    <div class="pillar-name">Neural Graph</div>
+                    <p class="pillar-desc">Live connected map of every lab dossier.</p>
+                  </div>
+                  <img src="/graphics/cover-manifiesto-laboratorio.jpg" alt="Knowledge Graph" class="pillar-thumb" loading="lazy" />
+                </a>
+              </div>
+            </article>
+
+            <!-- 01/3: TOOLS -->
+            <article class="g-card" id="tools" data-section-index="1" data-headline="New tools to rethink how architectural work gets done.">
+              <div class="card-ticks-top"><span class="tick"></span><span class="tick"></span></div>
+              <div class="card-head">
+                <div class="card-eyebrow-pair">
+                  <span class="t-eyebrow-muted">01/3 &middot; Tools</span>
+                  <span class="t-eyebrow">Spatial Systems</span>
+                </div>
+                <h2 class="t-xl">New tools to rethink how architectural work gets done.</h2>
+                <p class="t-s">
+                  Small applications, spatial classifiers, and computational utilities built for real architectural workflows rather than generic demos.
+                </p>
+              </div>
+
+              <div class="media-grid-2">
+                {featuredTool && (
+                  <a href={`/work/${featuredTool.id}`} class="media-item">
+                    <div class="media-thumb-box">
+                      <img src={featuredTool.data.coverImage || '/graphics/cover-urban-classification.jpg'} alt={featuredTool.data.title} loading="lazy" />
+                      <span class="media-overlay-cta">Open Tool Dossier &rarr;</span>
+                    </div>
+                    <div class="media-meta">
+                      <span class="t-eyebrow-muted">Tool &middot; Prototype</span>
+                      <span class="t-eyebrow">{featuredTool.data.title}</span>
+                    </div>
+                  </a>
+                )}
+                {manifestoNote && (
+                  <a href={`/notes/${manifestoNote.id}`} class="media-item">
+                    <div class="media-thumb-box">
+                      <img src={manifestoNote.data.coverImage || '/graphics/cover-manifiesto-laboratorio.jpg'} alt={manifestoNote.data.title} loading="lazy" />
+                      <span class="media-overlay-cta">Read Manifesto &rarr;</span>
+                    </div>
+                    <div class="media-meta">
+                      <span class="t-eyebrow-muted">Lab Core &middot; Manifesto</span>
+                      <span class="t-eyebrow">{manifestoNote.data.title}</span>
+                    </div>
+                  </a>
+                )}
+              </div>
+
+              <div>
+                <a href="/work" class="g-btn g-btn-dark">Explore all tools</a>
+              </div>
+              <div class="card-ticks-bot"><span class="tick"></span><span class="tick"></span></div>
+            </article>
+
+            <!-- 02/3: WORKFLOWS -->
+            <article class="g-card" id="workflows" data-section-index="2" data-headline="Smarter ways to connect ideas, processes, and technology.">
+              <div class="card-ticks-top"><span class="tick"></span><span class="tick"></span></div>
+              <div class="card-head">
+                <div class="card-eyebrow-pair">
+                  <span class="t-eyebrow-muted">02/3 &middot; Workflows</span>
+                  <span class="t-eyebrow">Structured Pipelines</span>
+                </div>
+                <h2 class="t-xl">Smarter ways to connect ideas, processes, and technology.</h2>
+                <p class="t-s">
+                  Reproducible, step-by-step methodologies linking LLMs, urban zoning regulations, Grasshopper, and BIM environments with deterministic guardrails.
+                </p>
+              </div>
+
+              <div class="media-grid-2">
+                {featuredWorkflow && (
+                  <a href={`/resources/${featuredWorkflow.id}`} class="media-item">
+                    <div class="media-thumb-box">
+                      <img src={featuredWorkflow.data.coverImage || '/graphics/cover-normativa-protocol.jpg'} alt={featuredWorkflow.data.title} loading="lazy" />
+                      <span class="media-overlay-cta">Open Workflow &rarr;</span>
+                    </div>
+                    <div class="media-meta">
+                      <span class="t-eyebrow-muted">Workflow &middot; Zoning RAG</span>
+                      <span class="t-eyebrow">{featuredWorkflow.data.title}</span>
+                    </div>
+                  </a>
+                )}
+                {frameworkExp && (
+                  <a href={`/experiments/${frameworkExp.id}`} class="media-item">
+                    <div class="media-thumb-box">
+                      <img src={frameworkExp.data.coverImage || '/graphics/cover-workflow-framework.jpg'} alt={frameworkExp.data.title} loading="lazy" />
+                      <span class="media-overlay-cta">Open Framework &rarr;</span>
+                    </div>
+                    <div class="media-meta">
+                      <span class="t-eyebrow-muted">Workflow &middot; Scalable Pipeline</span>
+                      <span class="t-eyebrow">{frameworkExp.data.title}</span>
+                    </div>
+                  </a>
+                )}
+              </div>
+
+              <div>
+                <a href="/resources" class="g-btn g-btn-dark">Explore workflows</a>
+              </div>
+              <div class="card-ticks-bot"><span class="tick"></span><span class="tick"></span></div>
+            </article>
+
+            <!-- 03/3: EXPERIMENTS -->
+            <article class="g-card" id="experiments" data-section-index="3" data-headline="Empirical testing at the frontier of spatial reasoning.">
+              <div class="card-ticks-top"><span class="tick"></span><span class="tick"></span></div>
+              <div class="card-head">
+                <div class="card-eyebrow-pair">
+                  <span class="t-eyebrow-muted">03/3 &middot; Experiments</span>
+                  <span class="t-eyebrow">Empirical Benchmarks</span>
+                </div>
+                <h2 class="t-xl">New possibilities at the intersection of architecture and AI.</h2>
+                <p class="t-s">
+                  Quantitative evaluations measuring where frontier models genuinely accelerate architectural practice—and where physical, geometric, and coordination limits still hold.
+                </p>
+              </div>
+
+              {featuredExp && (
+                <a href={`/experiments/${featuredExp.id}`} class="media-item">
+                  <div class="media-thumb-box" style="aspect-ratio: 16 / 8;">
+                    <img src={featuredExp.data.coverImage || '/graphics/cover-aec-benchmark.jpg'} alt={featuredExp.data.title} loading="lazy" />
+                    <span class="media-overlay-cta">Read EXP_004 Dossier &rarr;</span>
+                  </div>
+                  <div class="media-meta">
+                    <span class="t-eyebrow-muted">EXP_004 &middot; Peer-Reviewed Benchmark</span>
+                    <span class="t-eyebrow">{featuredExp.data.title}</span>
+                  </div>
+                </a>
+              )}
+
+              <div class="exp-metrics-strip">
+                <div class="exp-metric-cell">
+                  <span class="exp-metric-val">94.2%</span>
+                  <span class="t-eyebrow-muted">Building Code &amp; Zoning RAG</span>
+                </div>
+                <div class="exp-metric-cell">
+                  <span class="exp-metric-val">88.0%</span>
+                  <span class="t-eyebrow-muted">Grasshopper Parametric Python</span>
+                </div>
+                <div class="exp-metric-cell">
+                  <span class="exp-metric-val">0.0%</span>
+                  <span class="t-eyebrow-muted">Multi-Drawing Coordination</span>
+                </div>
+              </div>
+
+              <div>
+                <a href="/experiments" class="g-btn g-btn-dark">Explore experiments</a>
+              </div>
+              <div class="card-ticks-bot"><span class="tick"></span><span class="tick"></span></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- =====================================================
+           ABOUT / MANIFESTO ICE-BLUE CARD (#DEE8EB)
+           ===================================================== -->
+      <section class="full-band">
+        <div class="ice-card">
+          <div class="card-ticks-top"><span class="tick"></span><span class="tick"></span></div>
+          <div class="ice-grid">
+            <div class="card-eyebrow-pair">
+              <span class="t-eyebrow-muted">About</span>
+              <span class="t-eyebrow">Beyond the ordinary.</span>
+            </div>
+            <div>
+              <h2 class="t-xl" style="margin-bottom: 14px; max-width: 680px;">
+                A space to explore, build, and discover what's next in architecture.
+              </h2>
+              <p class="t-s" style="max-width: 560px; margin-bottom: 20px; color: var(--ink-navy); opacity: 0.8;">
+                Architecture AI Lab is an independent computational research space led by Jorge Ludeña. We test AI systems against real architectural constraints—documenting reproducible workflows, open benchmarks, and spatial tools.
+              </p>
+              <a href="/about" class="g-btn g-btn-dark">Discover AI Architecture Lab</a>
+            </div>
+          </div>
+          <div class="ice-principles">
+            <div>
+              <span class="t-eyebrow">01 &middot; Empirical Rigor</span>
+              <p class="t-s" style="margin-top: 6px;">We measure real failure modes alongside breakthroughs—never cherry-picked renders.</p>
+            </div>
+            <div>
+              <span class="t-eyebrow">02 &middot; Open Architecture</span>
+              <p class="t-s" style="margin-top: 6px;">Static, transparent, zero-bloat publishing designed to endure as a living archive.</p>
+            </div>
+            <div>
+              <span class="t-eyebrow">03 &middot; Connected Knowledge</span>
+              <p class="t-s" style="margin-top: 6px;">Every publication links automatically into the lab's spatial knowledge graph.</p>
+            </div>
+          </div>
+          <div class="card-ticks-bot"><span class="tick"></span><span class="tick"></span></div>
+        </div>
+      </section>
+
+      <!-- =====================================================
+           INDEX TABLE CARD (Genesis "Newest openings" style)
+           ===================================================== -->
+      <section class="full-band">
+        <div class="openings-card">
+          <div class="card-ticks-top"><span class="tick"></span><span class="tick"></span></div>
+          <div class="openings-grid">
+            <div>
+              <h3 class="t-l">
+                What's taking shape<span class="openings-count">{allPublications.length}</span>
+              </h3>
+              <p class="t-s" style="margin-top: 8px; max-width: 240px;">
+                Direct index of all published tools, workflows, and experiments in the lab.
+              </p>
+            </div>
+            <div>
+              <div class="pub-table">
+                {allPublications.map((pub) => (
+                  <a href={pub.url} class="pub-row">
+                    <span>{pub.title}</span>
+                    <span class="pub-row-cat">{pub.category}</span>
+                    <span class="pub-row-status">{pub.status}</span>
+                    <span class="pub-row-arrow">▸</span>
+                  </a>
+                ))}
+              </div>
+              <div class="openings-footer-row">
+                <a href="/experiments" class="g-btn g-btn-gray">View all dossiers</a>
+              </div>
+            </div>
+          </div>
+          <div class="card-ticks-bot"><span class="tick"></span><span class="tick"></span></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- =====================================================
+         DEEP NAVY FOOTER CARD (#1A1D34)
+         ===================================================== -->
+    <div class="footer-band">
+      <footer class="g-footer">
+        <div class="card-ticks-top"><span class="tick"></span><span class="tick"></span><span class="tick"></span></div>
+
+        <div class="footer-grid">
+          <div>
+            <a href="/" class="footer-brand">
+              <span class="g-logo-ring" aria-hidden="true"></span>
+              <span>AI Architecture Lab</span>
+            </a>
+          </div>
+
+          <div>
+            <span class="tick" aria-hidden="true"></span>
+            <p class="footer-tagline">Less repetition.<br />More exploration.</p>
+          </div>
+
+          <div class="footer-col">
+            <span class="tick" aria-hidden="true" style="margin-bottom: 6px;"></span>
+            <a href="/work" class="footer-link">Tools</a>
+            <a href="/resources" class="footer-link">Workflows</a>
+            <a href="/experiments" class="footer-link">Experiments</a>
+            <a href="/about" class="footer-link">About</a>
+          </div>
+
+          <div class="footer-col">
+            <span class="tick" aria-hidden="true" style="margin-bottom: 6px;"></span>
+            <a href="#knowledge-graph" class="footer-link">Knowledge Graph</a>
+            <a href="/editorial" class="footer-link">Editorial Edition</a>
+            <a href="/Google_Stitch/" class="footer-link">Design Archive</a>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <span>&copy; 2026 Architecture AI Lab &mdash; Jorge Ludeña</span>
+          <span>Astro Static &middot; Open Research</span>
+        </div>
+      </footer>
     </div>
-  </footer>
+
+  </div>
+
+  <!-- =========================================================
+       SCRIPTS: 1) STUDIO 3D ARCHITECTURAL SCULPTURE ENGINE
+                2) STICKY CONNECT SCROLL TRACKER + STEP BUTTONS
+                3) LIVE TIMECODE + MOBILE HAMBURGER MENU
+       ========================================================= -->
   <script is:inline>
+    // 1. Mobile Hamburger Menu
     (function () {
       var btn = document.getElementById('genesis-nav-toggle');
       var links = document.getElementById('genesis-nav-links');
@@ -1031,7 +1565,76 @@ const featuredExp = experiments.find(e => e.id.includes('where-ai-actually-works
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
       window.addEventListener('resize', function () { if (window.innerWidth > 768) setOpen(false); });
     })();
-  </script>
 
+    // 2. Live Studio Timecode (00:01:28+)
+    (function () {
+      var el = document.getElementById('hero-timecode');
+      if (!el) return;
+      var secs = 88;
+      setInterval(function () {
+        secs = (secs + 1) % 3600;
+        var m = String(Math.floor(secs / 60)).padStart(2, '0');
+        var s = String(secs % 60).padStart(2, '0');
+        el.textContent = '00:' + m + ':' + s;
+      }, 1000);
+    })();
+
+    // 3. Sticky Connect Scroll Sync + Step Controls
+    (function () {
+      var sections = [
+        document.getElementById('overview'),
+        document.getElementById('tools'),
+        document.getElementById('workflows'),
+        document.getElementById('experiments')
+      ].filter(Boolean);
+
+      var counter = document.getElementById('sticky-counter');
+      var headline = document.getElementById('sticky-headline');
+      var chapterLinks = Array.prototype.slice.call(document.querySelectorAll('.sticky-chapter-link'));
+      var btnPrev = document.getElementById('btn-step-prev');
+      var btnNext = document.getElementById('btn-step-next');
+      var activeIdx = 0;
+
+      function applyActive(idx) {
+        activeIdx = Math.max(0, Math.min(sections.length - 1, idx));
+        if (counter) counter.textContent = '0' + activeIdx + '/3';
+        var sec = sections[activeIdx];
+        if (headline && sec && sec.dataset.headline) {
+          headline.textContent = sec.dataset.headline;
+        }
+        chapterLinks.forEach(function (lk) {
+          var c = parseInt(lk.getAttribute('data-chapter'), 10);
+          lk.classList.toggle('active', c === activeIdx);
+        });
+      }
+
+      if ('IntersectionObserver' in window) {
+        var obs = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              var idx = parseInt(entry.target.getAttribute('data-section-index'), 10);
+              if (!isNaN(idx)) applyActive(idx);
+            }
+          });
+        }, { rootMargin: '-35% 0px -45% 0px', threshold: 0.05 });
+
+        sections.forEach(function (s) { obs.observe(s); });
+      }
+
+      if (btnPrev) {
+        btnPrev.addEventListener('click', function () {
+          var target = sections[Math.max(0, activeIdx - 1)];
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      }
+      if (btnNext) {
+        btnNext.addEventListener('click', function () {
+          var target = sections[Math.min(sections.length - 1, activeIdx + 1)];
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      }
+    })();
+
+  </script>
 </body>
 </html>
