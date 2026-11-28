@@ -1,6 +1,7 @@
 ---
-// Architecture AI Lab - Language Switcher Component (ES / EN)
-// Full-site instant dynamic translation without external costs or framework dependencies
+// Architecture AI Lab - Dual-Layer Language Switcher (ES / EN)
+// Layer 1: Instant native UI & Home dictionary (0ms, works even with adblockers)
+// Layer 2: Google Translate Element (standard layout with real .goog-te-combo) for full articles
 interface Props {
   className?: string;
 }
@@ -9,31 +10,31 @@ const { className = '' } = Astro.props;
 
 <div class={`lang-switcher-wrap notranslate ${className}`} id="lang-switcher" translate="no">
   <div class="lang-pill" role="group" aria-label="Selector de idioma / Language Switcher">
-    <button 
-      type="button" 
-      class="lang-btn active" 
-      id="btn-lang-es" 
-      data-lang="es" 
-      aria-label="Versión en Español"
-      title="Versión original en Español"
+    <button
+      type="button"
+      class="lang-btn"
+      id="btn-lang-es"
+      data-lang="es"
+      aria-label="Cambiar a Español"
+      title="Traducir a Español"
     >
       ES
     </button>
     <span class="lang-divider">/</span>
-    <button 
-      type="button" 
-      class="lang-btn" 
-      id="btn-lang-en" 
-      data-lang="en" 
-      aria-label="English Version"
-      title="Switch entire site to English"
+    <button
+      type="button"
+      class="lang-btn"
+      id="btn-lang-en"
+      data-lang="en"
+      aria-label="Switch to English"
+      title="Translate to English"
     >
       EN
     </button>
   </div>
-  
-  <!-- Off-screen Mount Point for Google Translate Engine -->
-  <div id="google_translate_element" style="position:fixed;bottom:-200px;left:-200px;opacity:0.001;pointer-events:none;width:1px;height:1px;overflow:hidden;" aria-hidden="true"></div>
+
+  <!-- Off-screen Mount Point for Google Translate Engine (standard layout renders .goog-te-combo) -->
+  <div id="google_translate_element" style="position:fixed;bottom:-300px;left:-300px;opacity:0.001;pointer-events:none;width:1px;height:1px;overflow:hidden;" aria-hidden="true"></div>
 </div>
 
 <style>
@@ -53,8 +54,8 @@ const { className = '' } = Astro.props;
     border-radius: 9999px;
     background: #EFEFEA;
     border: 1px solid rgba(0, 0, 0, 0.12);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
+    font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
     line-height: 1;
     letter-spacing: 0.04em;
     transition: all 0.15s ease;
@@ -68,7 +69,7 @@ const { className = '' } = Astro.props;
   .lang-btn {
     background: transparent;
     border: none;
-    padding: 0.2rem 0.4rem;
+    padding: 0.22rem 0.42rem;
     color: #686862;
     font-family: inherit;
     font-size: inherit;
@@ -81,7 +82,7 @@ const { className = '' } = Astro.props;
   }
 
   .lang-btn:hover {
-    color: #0D0D0D;
+    color: #1A1D34;
   }
 
   .lang-btn.active {
@@ -103,8 +104,10 @@ const { className = '' } = Astro.props;
   :global(.goog-te-banner-frame),
   :global(.goog-te-banner-frame.skiptranslate),
   :global(iframe.goog-te-banner-frame),
+  :global(iframe.skiptranslate),
   :global(#goog-gt-tt),
-  :global(.goog-te-balloon-frame) {
+  :global(.goog-te-balloon-frame),
+  :global(.VIpgJd-ZVi9od-ORHb-OEVmcd) {
     display: none !important;
     visibility: hidden !important;
   }
@@ -124,9 +127,140 @@ const { className = '' } = Astro.props;
 </style>
 
 <script is:inline>
-  (function() {
+  (function () {
     const STORAGE_KEY = 'aai_site_lang';
-    
+    const pageLang = (document.documentElement.lang || 'es').toLowerCase().startsWith('en') ? 'en' : 'es';
+
+    // Exact bidirectional phrase dictionary for instant, 100% reliable UI & Home translation
+    const EN_TO_ES = {
+      'New Benchmark EXP_004: Where AI Actually Works in AEC — Read full dossier': 'Nuevo Benchmark EXP_004: Dónde Funciona Realmente la IA en AEC — Leer dossier completo',
+      'Tools': 'Herramientas',
+      'Workflows': 'Flujos',
+      'Experiments': 'Experimentos',
+      'About': 'Acerca de',
+      'Graph': 'Grafo',
+      'Editorial': 'Editorial',
+      'Knowledge Graph': 'Grafo de Conocimiento',
+      'Meet the Lab · Interactive Knowledge Graph': 'Conoce el Laboratorio · Grafo Interactivo',
+      'Architecture is changing.': 'La arquitectura está cambiando.',
+      'Make something new.': 'Crea algo nuevo.',
+      'What if AI could change the way you design, the tools you use, and the ideas you bring to life? Less repetition. More exploration.': '¿Y si la IA pudiera cambiar la forma en que diseñas, las herramientas que usas y las ideas que haces realidad? Menos repetición. Más exploración.',
+      'Explore AI Tools': 'Explorar Herramientas IA',
+      'Explore layers': 'Explorar capas',
+      'Drag any node · Click to open dossier': 'Arrastra cualquier nodo · Clic para abrir el dossier',
+      'ETSAM · Open Research': 'ETSAM · Investigación Abierta',
+      'We explore every layer where AI meets architectural design.': 'Exploramos cada capa donde la IA se encuentra con el diseño arquitectónico.',
+      'Interactive Map': 'Mapa Interactivo',
+      'Explore node graph': 'Explorar grafo de nodos',
+      'Lab Inquiries': 'Consultas del Lab',
+      'About Jorge Ludeña': 'Sobre Jorge Ludeña',
+      'Algorithmic analyzers and spatial prototypes.': 'Analizadores algorítmicos y prototipos espaciales.',
+      'Structured prompts and parametric pipelines.': 'Prompts estructurados y pipelines paramétricos.',
+      'Empirical AEC benchmarks and stress tests.': 'Benchmarks empíricos AEC y pruebas de estrés.',
+      'Neural Graph': 'Grafo Neural',
+      'Live connected map of every lab dossier.': 'Mapa vivo conectado de cada dossier del laboratorio.',
+      '01/3 · Tools': '01/3 · Herramientas',
+      'Spatial Systems': 'Sistemas Espaciales',
+      'New tools to rethink how architectural work gets done.': 'Nuevas herramientas para repensar cómo se hace el trabajo arquitectónico.',
+      'Small applications, spatial classifiers, and computational utilities built for real architectural workflows rather than generic demos.': 'Pequeñas aplicaciones, clasificadores espaciales y utilidades computacionales construidas para flujos arquitectónicos reales, no demos genéricas.',
+      'Open Tool Dossier →': 'Abrir Dossier de Herramienta →',
+      'Tool · Prototype': 'Herramienta · Prototipo',
+      'Read Manifesto →': 'Leer Manifiesto →',
+      'Lab Core · Manifesto': 'Núcleo del Lab · Manifiesto',
+      'Explore all tools': 'Explorar todas las herramientas',
+      '02/3 · Workflows': '02/3 · Flujos',
+      'Structured Pipelines': 'Pipelines Estructurados',
+      'Smarter ways to connect ideas, processes, and technology.': 'Formas más inteligentes de conectar ideas, procesos y tecnología.',
+      'Reproducible, step-by-step methodologies linking LLMs, urban zoning regulations, Grasshopper, and BIM environments with deterministic guardrails.': 'Metodologías reproducibles paso a paso que conectan LLMs, normativa urbanística, Grasshopper y entornos BIM con controles deterministas.',
+      'Open Workflow →': 'Abrir Flujo →',
+      'Workflow · Zoning RAG': 'Flujo · RAG Normativo',
+      'Open Framework →': 'Abrir Marco →',
+      'Workflow · Scalable Pipeline': 'Flujo · Pipeline Escalable',
+      'Explore workflows': 'Explorar flujos',
+      '03/3 · Experiments': '03/3 · Experimentos',
+      'Empirical Benchmarks': 'Benchmarks Empíricos',
+      'New possibilities at the intersection of architecture and AI.': 'Nuevas posibilidades en la intersección entre arquitectura e IA.',
+      'Quantitative evaluations measuring where frontier models genuinely accelerate architectural practice—and where physical, geometric, and coordination limits still hold.': 'Evaluaciones cuantitativas que miden dónde los modelos de frontera aceleran realmente la práctica arquitectónica y dónde persisten límites físicos, geométricos y de coordinación.',
+      'Read EXP_004 Dossier →': 'Leer Dossier EXP_004 →',
+      'EXP_004 · Peer-Reviewed Benchmark': 'EXP_004 · Benchmark Revisado',
+      'Building Code & Zoning RAG': 'RAG de Normativa y Códigos',
+      'Grasshopper Parametric Python': 'Python Paramétrico en Grasshopper',
+      'Multi-Drawing Coordination': 'Coordinación Multi-Plano',
+      'Explore experiments': 'Explorar experimentos',
+      'Beyond the ordinary.': 'Más allá de lo ordinario.',
+      "A space to explore, build, and discover what's next in architecture.": 'Un espacio para explorar, construir y descubrir lo que viene en arquitectura.',
+      'Architecture AI Lab is an independent computational research space led by Jorge Ludeña. We test AI systems against real architectural constraints—documenting reproducible workflows, open benchmarks, and spatial tools.': 'Architecture AI Lab es un espacio independiente de investigación computacional dirigido por Jorge Ludeña. Evaluamos sistemas de IA frente a restricciones arquitectónicas reales, documentando flujos reproducibles, benchmarks abiertos y herramientas espaciales.',
+      'Discover AI Architecture Lab': 'Descubrir AI Architecture Lab',
+      '01 · Empirical Rigor': '01 · Rigor Empírico',
+      'We measure real failure modes alongside breakthroughs—never cherry-picked renders.': 'Medimos los modos reales de fallo junto a los avances, nunca renders seleccionados a conveniencia.',
+      '02 · Open Architecture': '02 · Arquitectura Abierta',
+      'Static, transparent, zero-bloat publishing designed to endure as a living archive.': 'Publicación estática, transparente y ligera diseñada para perdurar como un archivo vivo.',
+      '03 · Connected Knowledge': '03 · Conocimiento Conectado',
+      "Every publication links automatically into the lab's spatial knowledge graph.": 'Cada publicación se enlaza automáticamente en el grafo de conocimiento espacial del laboratorio.',
+      "What's taking shape": 'Lo que está tomando forma',
+      'Direct index of all published tools, workflows, and experiments in the lab.': 'Índice directo de todas las herramientas, flujos y experimentos publicados en el laboratorio.',
+      'View all dossiers': 'Ver todos los dossiers',
+      'Less repetition.': 'Menos repetición.',
+      'More exploration.': 'Más exploración.',
+      'Editorial Edition': 'Edición Editorial',
+      'Design Archive': 'Archivo de Diseño',
+      'Astro Static · Open Research': 'Astro Estático · Investigación Abierta',
+      'Open Dossier →': 'Abrir Dossier →',
+      'Read': 'Leer',
+      'Published': 'Publicado',
+      'Prototype': 'Prototipo',
+      'Available': 'Disponible',
+      'Lab Core': 'Núcleo Lab',
+      'Manifesto': 'Manifiesto'
+    };
+
+    const ES_TO_EN = {};
+    Object.keys(EN_TO_ES).forEach((k) => { ES_TO_EN[EN_TO_ES[k]] = k; });
+    // Extra Spanish->English UI phrases for internal pages
+    Object.assign(ES_TO_EN, {
+      'Versión Editorial': 'Editorial Edition',
+      'Recursos': 'Workflows & Resources',
+      'Herramientas & Prototipos': 'Tools & Prototypes',
+      'Experimentos & Ensayos Empíricos': 'Experiments & Empirical Benchmarks',
+      'Notas & Manifiestos': 'Notes & Manifestos',
+      'Abrir Dossier Técnico →': 'Open Technical Dossier →',
+      'Todos los registros': 'All records'
+    });
+
+    // Store original text nodes once so switching back is lossless
+    const originalTextNodes = new WeakMap();
+
+    function applyNativeDictionary(targetLang) {
+      const dict = targetLang === 'es' ? EN_TO_ES : ES_TO_EN;
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      let node;
+      while ((node = walker.nextNode())) {
+        const parent = node.parentElement;
+        if (!parent || parent.closest('#lang-switcher') || parent.closest('script') || parent.closest('style') || parent.closest('#google_translate_element')) continue;
+        const raw = node.nodeValue;
+        if (!raw || !raw.trim()) continue;
+        if (!originalTextNodes.has(node)) {
+          originalTextNodes.set(node, raw);
+        }
+        const orig = originalTextNodes.get(node);
+        const origTrim = orig.trim();
+
+        if (targetLang === pageLang) {
+          // Restore original text if matches page's native language
+          if (node.nodeValue !== orig) node.nodeValue = orig;
+          continue;
+        }
+
+        // Normalize whitespace for lookup
+        const norm = origTrim.replace(/\s+/g, ' ');
+        if (dict[norm]) {
+          const lead = raw.match(/^\s*/)[0];
+          const trail = raw.match(/\s*$/)[0];
+          node.nodeValue = lead + dict[norm] + trail;
+        }
+      }
+    }
+
     function getCookie(name) {
       const v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
       return v ? v[2] : null;
@@ -134,28 +268,21 @@ const { className = '' } = Astro.props;
 
     function setCookie(name, value, days) {
       const d = new Date();
-      d.setTime(d.getTime() + 24*60*60*1000*(days || 30));
+      d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * (days || 30));
       const domain = window.location.hostname;
-      document.cookie = name + "=" + value + ";path=/;expires=" + d.toUTCString();
-      if (domain && domain !== 'localhost') {
-        document.cookie = name + "=" + value + ";path=/;domain=" + domain + ";expires=" + d.toUTCString();
+      document.cookie = name + '=' + value + ';path=/;expires=' + d.toUTCString();
+      if (domain && domain !== 'localhost' && domain !== '127.0.0.1') {
+        document.cookie = name + '=' + value + ';path=/;domain=.' + domain + ';expires=' + d.toUTCString();
       }
     }
 
     function clearCookie(name) {
       const domain = window.location.hostname;
       document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-      if (domain && domain !== 'localhost') {
+      if (domain && domain !== 'localhost' && domain !== '127.0.0.1') {
         document.cookie = name + '=; Path=/; Domain=' + domain + '; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = name + '=; Path=/; Domain=.' + domain + '; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
       }
-    }
-
-    let savedLang = localStorage.getItem(STORAGE_KEY) || 'en';
-    const gtCookie = getCookie('googtrans');
-    if (gtCookie && gtCookie.endsWith('/es')) {
-      savedLang = 'es';
-    } else if (gtCookie && gtCookie.endsWith('/en')) {
-      savedLang = 'en';
     }
 
     function updateSwitcherUI(lang) {
@@ -167,27 +294,17 @@ const { className = '' } = Astro.props;
       }
     }
 
-    function triggerCombo(targetLang) {
+    function triggerGoogleCombo(targetLang, retries) {
       const select = document.querySelector('.goog-te-combo');
       if (select) {
         select.value = targetLang;
-        select.dispatchEvent(new Event('change'));
+        select.dispatchEvent(new Event('change', { bubbles: true }));
         return true;
       }
-      return false;
-    }
-
-    function applyTranslation(lang) {
-      const target = lang === 'es' ? 'es' : 'en';
-      setCookie('googtrans', '/auto/' + target, 30);
-      localStorage.setItem(STORAGE_KEY, target);
-      updateSwitcherUI(target);
-
-      if (!triggerCombo(target)) {
-        loadGoogleTranslate(() => {
-          setTimeout(() => triggerCombo(target), 350);
-        });
+      if ((retries || 0) > 0) {
+        setTimeout(() => triggerGoogleCombo(targetLang, retries - 1), 250);
       }
+      return false;
     }
 
     function loadGoogleTranslate(onReady) {
@@ -197,15 +314,14 @@ const { className = '' } = Astro.props;
       }
       window.__gtScriptLoaded = true;
 
-      window.googleTranslateElementInit = function() {
+      window.googleTranslateElementInit = function () {
+        // Standard layout (NO InlineLayout.SIMPLE) so .goog-te-combo <select> is always created!
         new window.google.translate.TranslateElement({
-          pageLanguage: 'auto',
+          pageLanguage: pageLang,
           includedLanguages: 'es,en',
-          autoDisplay: false,
-          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
+          autoDisplay: false
         }, 'google_translate_element');
-
-        if (onReady) setTimeout(onReady, 250);
+        if (onReady) setTimeout(onReady, 300);
       };
 
       const s = document.createElement('script');
@@ -214,19 +330,59 @@ const { className = '' } = Astro.props;
       document.body.appendChild(s);
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    function applyTranslation(targetLang, isInit) {
+      const lang = targetLang === 'es' ? 'es' : 'en';
+      localStorage.setItem(STORAGE_KEY, lang);
+      updateSwitcherUI(lang);
+
+      // Layer 1: Instant native translation of UI & Home copy (0ms)
+      applyNativeDictionary(lang);
+
+      // Layer 2: Google Translate for full long-form articles & dynamic post titles
+      if (lang === pageLang) {
+        const hadGt = Boolean(getCookie('googtrans'));
+        clearCookie('googtrans');
+        const select = document.querySelector('.goog-te-combo');
+        if (select) {
+          select.value = pageLang;
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        // If Google Translate had mutated the DOM earlier, reload cleanly when user switches back
+        if (!isInit && (hadGt || document.documentElement.classList.contains('translated-ltr'))) {
+          window.location.reload();
+        }
+      } else {
+        setCookie('googtrans', '/' + pageLang + '/' + lang, 30);
+        if (!triggerGoogleCombo(lang, 0)) {
+          loadGoogleTranslate(() => triggerGoogleCombo(lang, 8));
+        }
+      }
+    }
+
+    function init() {
       const btnEs = document.getElementById('btn-lang-es');
       const btnEn = document.getElementById('btn-lang-en');
+      if (btnEs) btnEs.addEventListener('click', () => applyTranslation('es', false));
+      if (btnEn) btnEn.addEventListener('click', () => applyTranslation('en', false));
 
-      if (btnEs) btnEs.addEventListener('click', () => applyTranslation('es'));
-      if (btnEn) btnEn.addEventListener('click', () => applyTranslation('en'));
-
-      updateSwitcherUI(savedLang);
-      if (localStorage.getItem(STORAGE_KEY)) {
-        loadGoogleTranslate(() => {
-          setTimeout(() => triggerCombo(savedLang), 350);
-        });
+      let saved = localStorage.getItem(STORAGE_KEY);
+      const gt = getCookie('googtrans');
+      if (!saved && gt) {
+        if (gt.endsWith('/es')) saved = 'es';
+        else if (gt.endsWith('/en')) saved = 'en';
       }
-    });
+      const activeLang = saved || pageLang;
+      updateSwitcherUI(activeLang);
+
+      if (activeLang !== pageLang) {
+        applyTranslation(activeLang, true);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
   })();
 </script>
